@@ -1,13 +1,18 @@
-import java.util.ArrayList;
-import java.time.LocalDate;
+package CapStone;
+
+import java.util.Calendar;
 
 public class Policy {
+	private int polNum = 000000;
+	private String srtDate;
+	private String expDate;
 	
-	private int policyNumber;
-	private LocalDate effectiveDate;
-	private LocalDate expirationDate;
-	private PolicyHolder holder;
-	private ArrayList<Vehicle> vehicleList = new ArrayList<Vehicle>();
-	private double premium;
-
+	Vehicle car = new Vehicle();
+	
+	public Policy() {
+		
+	}
+	
+	
+	
 }

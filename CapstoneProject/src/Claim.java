@@ -1,14 +1,12 @@
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+package CapStone;
 
 public class Claim {
-
-	private String claimNumber;
-	private LocalDate accidentDate;
-	private String accidentAddress;
-	private String accidentDescription;
-	private String accidentDamage;
-	private double repairCosts;
-
+	
+	private String claimNum;
+	private String dateOfAcc;
+    private String addOfAcc;
+    
+	public void accidentClaim() {
+		
+	}
 }

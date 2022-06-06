@@ -1,11 +1,22 @@
-import java.time.LocalDate;
+package CapStone;
 
 public class PolicyHolder {
+	private String fName;
+	private String lName;
+	private String bDay;
+	private String address;
+	private String dLicense;
 	
-	private String firstName;
-	private String lastName;
-	private LocalDate birthDate;
-	private String driverLicenseNumber;
-	private LocalDate licenseDate;
+	public PolicyHolder() {
+		
+	}
+	
+	public void setfName(String fName) {
+		this.fName = fName;
+	}
+	
+	public void setlName(String lName) {
+		this.lName = lName;
+	}
 	
 }
