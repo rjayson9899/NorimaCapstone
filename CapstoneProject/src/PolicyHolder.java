@@ -19,4 +19,24 @@ public class PolicyHolder {
 		this.lName = lName;
 	}
 	
+	public void setBDay(String bDay) {
+		this.bDay = bDay;
+	}
+	
+	public void setAddress(String addz) {
+		
+	}
+	
+	public void setdLicNum(String licNum) {
+		
+	}
+	
+	public void setDateLic(String dateLic) {
+		
+	}
+	
+	public void getAddress() {
+		
+	}
 }
+

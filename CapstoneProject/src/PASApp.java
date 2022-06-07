@@ -1,47 +1,36 @@
 package CapStone;
 
-import java.sql.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PASApp {
 	
-	public static void clearScreen() {
+	private static void clearScreen() {
 		for(int x = 0; x < 50; x++) {
 			System.out.println("                    ");
 		}
 	}
 	
-	public static Connection getConnection() throws Exception {
-		try {
-			String driver = "com.mysql.cj.jdbc.Driver";
-			String url = "jdbc:mysql://localhost:3306/capstoneproject";
-			String username = "root";
-			String password = "1234";
-			Class.forName(driver);
-			
-			Connection con = DriverManager.getConnection(url,username,password);
-		    return con; 
-		} 
-		catch(SQLException ex) {
-		    ex.printStackTrace();
-		} 
-		return null;
-	}
-	
 	public static void main(String[] args) {
 		
-		int choiceOne;
+		int choiceOne, z = 0;
 		int choiceTwo = 0;
-		int custAccNum = 10000;
+		int custAccNum;
 		int policyNum;
 		int clNum = 0;
-		String fName;
-		String lName;
-		String address;
+		int pLAH;
+		String fName, lName, address;
+		String effDate, bDay, licNum, dateLic;
+		String carMake, carModel, carYear, carType, carPrice, carFuelType, carColor;
+		String accDate, addDate, depAcc, depDmgV, estRep;  
+		
 		Scanner userIn = new Scanner(System.in);
-		CustomerAccount cust = new CustomerAccount();
+		ArrayList<CustomerAccount> cust = new ArrayList<>();
+		Policy policy = new Policy();
+		Claim cl = new Claim();
 		
 		do {
+			//main menu
 			System.out.println("===================================");
 			System.out.println("Hello! Welcome to the PAS system ");
 			System.out.println("1. Create a new Customer Account ");
@@ -55,25 +44,14 @@ public class PASApp {
 			System.out.println("===================================");
 			choiceOne = userIn.nextInt();
 			switch(choiceOne) {
+				//create customer account
 			    case 1:
-			    	try {
-						Connection con = getConnection();
-						Statement st = con.createStatement();
-						
-						ResultSet res = st.executeQuery("SELECT idCusAcc FROM capstoneproject.customeraccount;");
-						while(res.next()) {
-							custAccNum = res.getInt("idCusAcc");
-
-						}	
-					}
-					catch (Exception e) {
-						System.out.println(e);
-					}
-			    	if (custAccNum > 9999) {
+			    	if (custAccNum > cust.size()) {
 			    		System.out.println("No Vacant account number available. ");
 			    	}
 			    	else {
 			    		clearScreen();
+			    		cust.add(new CustomerAccount());
 			    		System.out.println("===================================");
 			    		System.out.println("Enter your first name: ");
 			    		fName = userIn.nextLine();
@@ -82,10 +60,12 @@ public class PASApp {
 			    		System.out.println("Enter your address: ");
 			    		System.out.println("===================================");
 			    		address = userIn.nextLine();
-				    	cust.create(fName, lName, address);
+			    		System.out.println("Your Account number is: " + cust.size());
+				    	cust.get(z).createAcc(fName, lName, address);
 				    	clearScreen();
 			    	}
 			    	break;
+			    	
 			    case 2:
 			    	clearScreen();
 			    	System.out.println("Enter the Customer's Account number: ");
@@ -93,9 +73,11 @@ public class PASApp {
 			    	if(custAccNum != 0) {
 			    		System.out.println("Invalid Customer account number. ");
 			    		System.out.println("Would you like to try again or use a different verify method? ");
+			    		System.out.println("==========================================");
 			    		System.out.println("1.Enter customer account number ");
 			    		System.out.println("2.Enter first name and last name ");
 			    		System.out.println("3.Exit ");
+			    		System.out.println("========================================== ");
 			    		choiceTwo = userIn.nextInt();
 			    		switch(choiceTwo) {
 			    		case 1:
@@ -103,53 +85,121 @@ public class PASApp {
 			    		}
 			    	}
 			    	else {
-			    		System.out.println("Enter effective date:");
+			    		System.out.println("Enter effective date: (ex. Jan 01 1991) ");
+			    		effDate = userIn.nextLine();
+			    		cust.get(z).pol.get(0).setExpDate(effDate);
 			    		System.out.println("Is the policy holder the account holder? ");
-			    		if(choiceTwo != 0) {
-			    			
+			    		pLAH = userIn.nextInt();
+			    		if(pLAH == 1) {
+			    			System.out.println("===================================");
+			    			System.out.println("Enter the birthday: ");
+			    			bDay = userIn.nextLine();
+			    			cust.get(z).pol.get(0).polyHol.setBDay(bDay);
+			    			System.out.println("Driver's license number: ");
+			    			licNum = userIn.nextLine();
+			    			cust.pol.get(0).polyHol.setdLicNum(licNum);
+				    		System.out.println("Enter the date issued of the license: ");
+				    		System.out.println("===================================");
+				    		dateLic = userIn.nextLine();
+				    		cust.pol.get(0).polyHol.setDateLic(dateLic);
 			    		}
 			    		else {
-		    			System.out.println("===================================");
-			    		System.out.println("Enter the first name: ");
-			    		System.out.println("Enter the last name: ");
-			    		System.out.println("Enter the birthday: ");
-			    		System.out.println("Enter the address: ");
-			    		System.out.println("Enter the date issued of the license: ");
-			    		System.out.println("===================================");
+				    		//policy holder details
+			    			System.out.println("===================================");
+				    		System.out.println("Enter the first name: ");
+				    		fName = userIn.nextLine();
+				    		cust.pol.get(0).polyHol.setfName(fName);
+				    		System.out.println("Enter the last name: ");
+				    		lName = userIn.nextLine();
+				    		cust.pol.get(0).polyHol.setlName(lName);
+				    		System.out.println("Enter the birthday: ");
+				    		bDay = userIn.nextLine();
+				    		cust.pol.get(0).polyHol.setBDay(bDay);
+				    		System.out.println("Enter the address: ");
+				    		address = userIn.nextLine();
+				    		cust.pol.get(0).polyHol.setAddress(address);
+				    		System.out.println("Driver's license number: ");
+				    		licNum = userIn.nextLine();
+				    		cust.pol.get(0).polyHol.setdLicNum(licNum);
+				    		System.out.println("Enter the date issued of the license: ");
+				    		System.out.println("===================================");
+				    		dateLic = userIn.nextLine();
+				    		cust.pol.get(0).polyHol.setDateLic(dateLic);
 			    		}
+			    		//vehicle details
 			    		System.out.println("===================================");
 			    		System.out.println("Enter the car make: ");
+			    		carMake = userIn.nextLine();
+			    		cust.pol.get(0).car.setMake(carMake);
 			    		System.out.println("Enter the car model: ");
+			    		carModel = userIn.nextLine();
+			    		cust.pol.get(0).car.setModel(carModel);
 			    		System.out.println("Enter the year: ");
+			    		carYear = userIn.nextLine();
+			    		cust.pol.get(0).car.setYear(carYear);
 			    		System.out.println("Enter the car type: ");
+			    		carType = userIn.nextLine();
+			    		cust.pol.get(0).car.setType(carType);
 			    		System.out.println("Enter the fuel type: ");
+			    		carFuelType = userIn.nextLine();
+			    		cust.pol.get(0).car.setFuelType(carFuelType);
 			    		System.out.println("Enter the purchase price: ");
+			    		carPrice = userIn.nextLine();
+			    		cust.pol.get(0).car.setPrice(carPrice);
 			    		System.out.println("Enter the color: ");
 			    		System.out.println("===================================");
+			    		carColor = userIn.nextLine();
+			    		cust.pol.get(0).car.setColor(carColor);
+			    		
+			    		//quote policy
 			    		System.out.println("The policy will cost about: ");
 			    		System.out.println("Would you like to buy the policy? ");
-			    		System.out.println("Policy cancelled. ");
-			    		System.out.println("Policy created. ");
+			    		pLAH = userIn.nextInt();
+			    		if(pLAH == 1) {
+			    			System.out.println("Policy cancelled. ");
+			    		}
+			    		else {
+			    			System.out.println("Policy created. ");
+			    			//send data to database
+			    		}
 			    	}
 			    	break;
+			    	
 			    case 3:
 			    	System.out.println("Enter the policy number: ");
 			    	policyNum = userIn.nextInt();
+			    	//search for policy
+			    	
+			    	//delete policy from database
 			    	break;	
+			    	
 			    case 4:
 			    	if(clNum > 999999) {
 			    		System.out.println("No claiming available right now. ");
 			    	}
 			    	else {
+			    		//claim accident details
 			    		System.out.println("Enter the policy number: ");
 			    		policyNum = userIn.nextInt();
 			    		System.out.println("Enter the date of accident: ");
+			    		accDate = userIn.nextLine();
+			    		cl.setDateAcc(accDate);
 			    		System.out.println("Enter the address of the accident: ");
+			    		addDate = userIn.nextLine();
+			    		cl.setDesAcc(addDate);
 			    		System.out.println("Description of the accident: ");
+			    		depAcc = userIn.nextLine();
+			    		cl.setDesAcc(depAcc);
 			    		System.out.println("Description of the damage to vehicle: ");
+			    		depDmgV = userIn.nextLine();
+			    		cl.setDesDmgV(depDmgV);
 			    		System.out.println("Estimated cost of repairs: ");
+			    		estRep = userIn.nextLine();
+			    		cl.setCost(estRep);
+			    		System.out.println("Policy is claimed. ");
 			    	}
 			    	break;
+			    //search customer account	
 			    case 5:
 			    	clearScreen();
 			    	userIn.nextLine();
@@ -160,13 +210,18 @@ public class PASApp {
 			    	clearScreen();
 			    	cust.searchCust(fName, lName);
 			    	break;
+			    //search policy 	
 			    case 6:
+			    	clearScreen();
 			    	System.out.println("Enter the policy number: ");
-			    	
+			    	policyNum = userIn.nextInt();
 			    	break;
+			    //search for claim	
 			    case 7:
+			    	clearScreen();
 			    	System.out.println("Enter the claim number: ");
 			    	clNum = userIn.nextInt();
+		
 			    	break;
 			}
 		}

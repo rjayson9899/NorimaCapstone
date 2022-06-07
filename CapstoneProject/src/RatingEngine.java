@@ -1,6 +1,6 @@
 
 package CapStone;
-import java.util.Calendar;
+
 public class ratingEngine {
 
 	private double premium;
@@ -8,6 +8,7 @@ public class ratingEngine {
 	private double vPF;
 	private double dLX;
 	private int carAge;
+	
 	public ratingEngine() {
 		
 	}

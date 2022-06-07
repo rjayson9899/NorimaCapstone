@@ -3,15 +3,19 @@ package CapStone;
 public class Vehicle {
 	private static int ID;
 	private String carType;
-	private double price;
+	private String price;
 	private double premChar;
 	private String Color;
 	private String fuelType;
 	private String carModel;
 	private String carMake;
-	private int year;
+	private String year;
 	
 	public Vehicle() {
+		
+	}
+	
+	public void setCar(String carMake, String carModel) {
 		
 	}
 	
@@ -23,7 +27,7 @@ public class Vehicle {
 		this.carType = carType;
 	}
 	
-	public void setPrice(double Price) {
+	public void setPrice(String Price) {
 		this.price = Price;
 	}
 	public void setpremChar() {
@@ -46,11 +50,11 @@ public class Vehicle {
 		this.carMake = carMake;
 	}
 	
-	public void setYear(int year) {
+	public void setYear(String year) {
 		this.year = year;
 	}
 	
-	public int getYear() {
+	public String getYear() {
 		return year;
 	}
 	
