@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class CustomerAccount {
 	private int accountNumber;
@@ -7,13 +6,9 @@ public class CustomerAccount {
 	private String lastName;
 	private String customerAddress;
 	public static final int CUSTOMER_MAX = 9999;
-	private ArrayList<Policy> policyAccountList;
-	private ArrayList<PolicyHolder> policyHolderList;
-	Scanner input = new Scanner(System.in);
 	
-	public CustomerAccount() {
-		
-	}
+	private ArrayList<Policy> policyList;
+	private ArrayList<PolicyHolder> policyHolderList;
 	
 	public CustomerAccount(int accountNumber, String firstName, String lastName, String customerAddress) {
 		this.accountNumber = accountNumber;
@@ -22,31 +17,26 @@ public class CustomerAccount {
 		this.customerAddress = customerAddress;
 	}
 	
-	public void createCustomerAccount() {
-		System.out.print("Enter First Name: ");
-		this.firstName = input.nextLine();
-		System.out.print("Enter Last Name: ");
-		this.lastName = input.nextLine();
-		System.out.print("Enter Address: ");
-		this.customerAddress = input.nextLine();
-		
-		System.out.println("Account created succesfully");
-
-	}
-	
 	public int getAccountNumber() {
 		return accountNumber;
 	}
 	
-	
-	public String toString() {
-		String customerString;
-		
-		customerString = "Account Created Successfully! \n";
-		customerString += "First Name: " + firstName + "\n";
-		customerString += "Last Name: " + lastName + "\n";
-		customerString += "Address: " + customerAddress;
-		return(customerString);
+	public String getFirstName() {
+		return firstName;
 	}
-
+	
+	public String getLastName() {
+		return lastName;
+	}
+	
+	public void addPolicies(ArrayList<Integer> policyIDList) {
+		for(Policy polObj : policyList) {
+			policyIDList.add(Integer.valueOf(polObj.getPolicyNumber()));
+		}
+	}
+	
+	public void displayCustomerAccountInfo () {
+		System.out.printf("%04d \t\t\t%-20s \t%-20s \t%-20s\n", this.accountNumber, this.firstName, this.lastName, this.customerAddress);
+	}
+	
 }

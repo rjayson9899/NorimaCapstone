@@ -1,42 +1,34 @@
-
 public class PolicyHolder {
 	private String firstName;
 	private String lastName;
-	private String address;
+	private String birthDate;
 	private String driversLicenseNumber;
 	private String driversLicenseIssued;
 	
 	
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
+	public PolicyHolder(String firstName, String lastName, String birthDate, String driversLicenseNumber, String driversLicenseIssued) {
 		this.firstName = firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	public String getDriversLicenseNumber() {
-		return driversLicenseNumber;
-	}
-	public void setDriversLicenseNumber(String driversLicenseNumber) {
+		this.birthDate = birthDate;
 		this.driversLicenseNumber = driversLicenseNumber;
-	}
-	public String getDriversLicenseIssued() {
-		return driversLicenseIssued;
-	}
-	public void setDriversLicenseIssued(String driversLicenseIssued) {
 		this.driversLicenseIssued = driversLicenseIssued;
 	}
 	
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public String getDriversLicenseNumber() {
+		return driversLicenseNumber;
+	}
+
+	public String getDriversLicenseIssued() {
+		return driversLicenseIssued;
+	}
+
 	
 }
