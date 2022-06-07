@@ -12,7 +12,6 @@ public class Claim {
 	private double repairCosts;
 	
 	public Claim(int claimNumber) {
-		String numberString = Integer.toString(claimNumber);
 		this.claimNumber = String.format("C%06d", claimNumber);
 	}
 	

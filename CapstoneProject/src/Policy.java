@@ -53,8 +53,8 @@ public class Policy {
 		this.holder = new PolicyHolder(firstName, lastName, birthDate, driverLicenseNumber, licenseDate);
 	}
 	
-	public void addVehicle(String make, String model, int year, String type, String fuelType, double purchasePrice) {
-		vehicleList.add(new Vehicle(make, model, year, type, fuelType, purchasePrice));
+	public void addVehicle(Vehicle vhcObj) {
+		vehicleList.add(vhcObj);
 	}
 	
 	public void generateQuote() {

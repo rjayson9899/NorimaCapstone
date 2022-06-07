@@ -24,6 +24,14 @@ public class PolicyHolder {
 		return lastName;
 	}
 	
+	public LocalDate getBirthDate() {
+		return birthDate;
+	}
+	
+	public String getDriverLicenseNumber() {
+		return driverLicenseNumber;
+	}
+	
 	public int getYear() {
 		return licenseDate.getYear();
 	}

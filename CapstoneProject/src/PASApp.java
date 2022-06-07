@@ -18,15 +18,15 @@ public class PASApp {
 		Claim tempClaim;
 		LocalDate effectiveDate;
 		int choice, uniqueId, inputId;
-		String firstName, lastName, address, strChoice;
+		String firstName, lastName, address, strIn;
 		boolean foundHit;
 		
 		in = new Scanner(System.in);
 		
 		System.out.print("Test by file? [y for yes]: ");
-		strChoice = in.nextLine();
+		strIn = in.nextLine();
 		
-		if (strChoice.equalsIgnoreCase("y")) {
+		if (strIn.equalsIgnoreCase("y")) {
 			try {
 				in = new Scanner(filePath);
 			}
@@ -45,12 +45,9 @@ public class PASApp {
 					uniqueId = CustomerAccount.generateUniqueId(customerList);
 					
 					if (uniqueId >= 0) {
-						System.out.print("Input First Name: ");
-						firstName = in.nextLine();
-						System.out.print("Input Last Name: ");
-						lastName = in.nextLine();
-						System.out.print("Input Address: ");
-						address = in.nextLine();
+						firstName = getStringNonEmpty("Input First Name: ");
+						lastName = getStringNonEmpty("Input Last Name: ");
+						address = getStringNonEmpty("Input Address: ");
 						
 						foundHit = false;
 						
@@ -72,39 +69,45 @@ public class PASApp {
 					
 					break;
 				case 2:
-					System.out.println("Input Account Number to create Policy in: ");
-					inputId = in.nextInt();
-					in.nextLine();
-					foundHit = false;
-					currentAccount = null;
-					
-					for (CustomerAccount acct: customerList) {
-						if (acct.getAccountNumber() == inputId) {
-							currentAccount = acct;
-							foundHit = true;
-							break;
+					uniqueId = Policy.generateUniqueId(customerList);
+					if (uniqueId >= 0) {
+						System.out.println("Input Account Number to create Policy in: ");
+						inputId = in.nextInt();
+						in.nextLine();
+						foundHit = false;
+						currentAccount = null;
+						
+						for (CustomerAccount acct: customerList) {
+							if (acct.getAccountNumber() == inputId) {
+								currentAccount = acct;
+								foundHit = true;
+								break;
+							}
 						}
-					}
 					
-					if (foundHit) {
-						uniqueId = Policy.generateUniqueId(customerList);
-						if (uniqueId >= 0) {
+						if (foundHit) {
 							tempPolicy = new Policy(uniqueId);
 							
 							System.out.println("Set Current account as holder? [y for yes]: ");
-							strChoice = in.nextLine();
-							if (strChoice.equalsIgnoreCase("y")) {
+							strIn = in.nextLine();
+							if (strIn.equalsIgnoreCase("y")) {
 								setHolder(tempPolicy, currentAccount);
 							}
 							else {
 								setHolder(tempPolicy);
 							}
 							
-							while (addPolicyVehicle(tempPolicy));
+							do  {
+								tempPolicy.addVehicle(makeVehicle());
+								System.out.print("Input y to add another vehicle, else press enter to continue: ");
+								strIn = in.nextLine();
+							} while (strIn.equalsIgnoreCase("y"));
+							
 							tempPolicy.generateQuote();
 							System.out.print("Will you get this policy? [y for yes]: ");
-							strChoice = in.nextLine();
-							if (strChoice.equalsIgnoreCase("y")) {
+							strIn = in.nextLine();
+							
+							if (strIn.equalsIgnoreCase("y")) {
 								effectiveDate = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue() + 1, 1);
 								tempPolicy.setEffectiveDate(effectiveDate);
 								currentAccount.addPolicy(tempPolicy);
@@ -115,13 +118,12 @@ public class PASApp {
 							}
 						}
 						else {
-							System.out.println("No space left to add a new policy");
+							System.out.println("No account found");
 						}
 					}
 					else {
-						System.out.println("No account found");
+						System.out.println("No space left to add a new policy");
 					}
-					
 					break;
 				case 3:
 					System.out.println("Input Policy Number to cancel: ");
@@ -174,9 +176,9 @@ public class PASApp {
 					
 					break;
 				case 5:
-					System.out.println("Input First Name: ");
+					System.out.print("Input First Name: ");
 					firstName = in.nextLine();
-					System.out.println("Input Last Name: ");
+					System.out.print("Input Last Name: ");
 					lastName = in.nextLine();
 					foundHit = false;
 					
@@ -194,7 +196,7 @@ public class PASApp {
 					}
 					break;
 				case 6:
-					System.out.println("Input Policy Number to find: ");
+					System.out.print("Input Policy Number to find: ");
 					inputId = in.nextInt();
 					in.nextLine();
 					foundHit = false;
@@ -214,21 +216,21 @@ public class PASApp {
 				case 7:
 					inputId = 0;
 					do {
-						System.out.println("Input Claim Number to find: ");
-						strChoice = in.nextLine();
-						if ((strChoice.length() != 7) && (strChoice.charAt(0) != 'C')) {
+						System.out.print("Input Claim Number to find: ");
+						strIn = in.nextLine();
+						if ((strIn.length() != 7) && (strIn.charAt(0) != 'C')) {
 							System.out.println("Invalid input. Follow the format Cxxxxxx where x is a value between 0 - 9.");
 						}
 						else {
 							try {
-								inputId = Integer.parseInt(strChoice.substring(1));
+								inputId = Integer.parseInt(strIn.substring(1));
 							}
 							catch (NumberFormatException e) {
 								System.out.println("Invalid Claim ID value");
-								strChoice = "";
+								strIn = "";
 							}
 						}
-					} while((strChoice.length() != 7) && (strChoice.charAt(0) != 'C'));
+					} while((strIn.length() != 7) && (strIn.charAt(0) != 'C'));
 					
 					
 					foundHit = false;
@@ -293,40 +295,22 @@ public class PASApp {
 		System.out.print("Enter your choice: ");
 	}
 	
-	private static boolean addPolicyVehicle(Policy polObj) {
+	private static Vehicle makeVehicle() {
 		String make;
 		String model;
 		int year;
 		String type;
 		String fuelType;
 		double purchasePrice;
-		String choice;
 		
-		System.out.print("Enter make: ");
-		make = in.nextLine();
-		System.out.print("Enter model: ");
-		model = in.nextLine();
-		System.out.print("Enter year: ");
-		year = in.nextInt();
-		in.nextLine();
-		System.out.print("Enter type: ");
-		type = in.nextLine();
-		System.out.print("Enter fuel type: ");
-		fuelType = in.nextLine();
-		System.out.print("Enter purchase price: ");
-		purchasePrice = in.nextDouble();
-		in.nextLine();
+		make = getStringNonEmpty("Enter make: ");
+		model = getStringNonEmpty("Enter model: ");
+		year = getValidInt("Enter year: ");
+		type = getStringNonEmpty("Enter type: ");
+		fuelType = getStringNonEmpty("Enter fuel type: ");
+		purchasePrice = getValidDouble("Enter purchase price: ");
 		
-		polObj.addVehicle(make, model, year, type, fuelType, purchasePrice);
-		
-		System.out.print("Input y to add another vehicle, else press enter to continue: ");
-		choice = in.nextLine();
-		if (choice.equalsIgnoreCase("y")) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return new Vehicle(make, model, year, type, fuelType, purchasePrice);
 	}
 	
 	private static void setHolder(Policy polObj, CustomerAccount custObj) {
@@ -334,30 +318,20 @@ public class PASApp {
 		LocalDate birthDate, licenseDate;
 		
 		birthDate = getDate("birth");
-		
-		System.out.print("Input driver's license number: ");
-		licenseNumber = in.nextLine();
-		
+		licenseNumber = getStringNonEmpty("Input driver's license number: ");
 		licenseDate = getDate("license issue");
 		
 		polObj.setHolder(custObj, birthDate, licenseNumber, licenseDate);
 	}
 	
 	private static void setHolder(Policy polObj) {
-		int month, day, year;
 		String licenseNumber, firstName, lastName;
 		LocalDate birthDate, licenseDate;
 		
-		System.out.print("Enter first name: ");
-		firstName = in.nextLine();
-		System.out.print("Enter last name: ");
-		lastName = in.nextLine();
-		
+		firstName = getStringNonEmpty("Enter first name: ");
+		lastName = getStringNonEmpty("Enter last name: ");
 		birthDate = getDate("birth");
-		
-		System.out.print("Input license number: ");
-		licenseNumber = in.nextLine();
-		
+		licenseNumber = getStringNonEmpty("Input license number: ");
 		licenseDate = getDate("license issue");
 		
 		polObj.setHolder(firstName, lastName, birthDate, licenseNumber, licenseDate);
@@ -365,19 +339,10 @@ public class PASApp {
 	
 	private static void setClaimInputs(Claim clmObj) {
 		clmObj.setAccidentDate(getDate("accident"));
-		
-		System.out.println("Enter accident address: ");
-		clmObj.setAccidentAddress(in.nextLine());
-		
-		System.out.println("Enter accident description: ");
-		clmObj.setAccidentDescription(in.nextLine());
-		
-		System.out.println("Enter damage description: ");
-		clmObj.setAccidentDamage(in.nextLine());
-		
-		System.out.println("Enter repair costs: ");
-		clmObj.setRepairCosts(in.nextDouble());
-		in.nextLine();
+		clmObj.setAccidentAddress(getStringNonEmpty("Enter accident address: "));
+		clmObj.setAccidentDescription(getStringNonEmpty("Enter accident description: "));
+		clmObj.setAccidentDamage(getStringNonEmpty("Enter damage description: "));
+		clmObj.setRepairCosts(getValidDouble("Enter repair costs: "));
 	}
 	
 	private static LocalDate getDate(String type) {
@@ -442,4 +407,59 @@ public class PASApp {
 		return date;
 	}
 	
+	private static String getStringNonEmpty(String message) {
+		String strIn;
+		
+		do {
+			System.out.print(message);
+			strIn = in.nextLine();
+			if (strIn.equals("")) {
+				System.out.println("Entry cannot be blank");
+			}
+		} while(strIn.equals(""));
+		
+		return strIn;
+	}
+	
+	private static int getValidInt(String message) {
+		boolean isInvalid = true;
+		int getInt = 0;
+		
+		do {
+			System.out.println(message);
+			try {
+				getInt = in.nextInt();
+				isInvalid = false;
+			}
+			catch(InputMismatchException e) {
+				System.out.println("Input is not an integer");
+			}
+			finally {
+				in.nextLine();
+			}
+		} while (isInvalid);
+		
+		return getInt;
+	}
+	
+	private static double getValidDouble(String message) {
+		boolean isInvalid = true;
+		double getDouble = 0.0;
+		
+		do {
+			System.out.println(message);
+			try {
+				getDouble = in.nextInt();
+				isInvalid = false;
+			}
+			catch(InputMismatchException e) {
+				System.out.println("Input is not valid");
+			}
+			finally {
+				in.nextLine();
+			}
+		} while (isInvalid);
+		
+		return getDouble;
+	}
 }

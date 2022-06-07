@@ -26,12 +26,20 @@ public class Vehicle {
 		return model;
 	}
 	
-	public double getPurchasePrice() {
-		return this.purchasePrice;
-	}
-	
 	public int getYear() {
 		return this.year;
+	}
+	
+	public String getType() {
+		return type;
+	}
+	
+	public String getFuelType() {
+		return fuelType;
+	}
+	
+	public double getPurchasePrice() {
+		return this.purchasePrice;
 	}
 	
 	public double getPremium() {
