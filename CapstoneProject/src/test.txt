@@ -50,6 +50,13 @@ Jazz
 Hatchback
 Gas Unleaded
 13500
+y
+Toyota
+Vios
+2017
+Sedan
+Gas Unleaded
+9000
 n
 y
 
@@ -70,7 +77,8 @@ Smashed Side
 10000
 
 5
-0000
+Roger
+Mendez
 
 6
 000000

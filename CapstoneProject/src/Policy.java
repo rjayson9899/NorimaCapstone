@@ -29,6 +29,10 @@ public class Policy {
 		return expirationDate;
 	}
 	
+	public PolicyHolder getHolder() {
+		return holder;
+	}
+	
 	public double getPremium() {
 		return this.premium;
 	}

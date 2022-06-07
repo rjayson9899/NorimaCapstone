@@ -162,14 +162,15 @@ public class PASApp {
 					
 					break;
 				case 5:
-					System.out.println("Input Account Number to find: ");
-					inputId = in.nextInt();
-					in.nextLine();
+					System.out.println("Input First Name: ");
+					firstName = in.nextLine();
+					System.out.println("Input Last Name: ");
+					lastName = in.nextLine();
 					foundHit = false;
 					
 					
 					for (CustomerAccount custObj: customerList) {
-						if (custObj.getAccountNumber() == inputId) {
+						if (custObj.getFirstName().equalsIgnoreCase(firstName) && custObj.getLastName().equalsIgnoreCase(lastName)) {
 							CustomerAccount.printCustomerAccountHeader();
 							custObj.printCustomerAccountDetails();
 							foundHit = true;
@@ -199,11 +200,26 @@ public class PASApp {
 					}
 					break;
 				case 7:
-					System.out.println("Input Claim Number to find: ");
-					strChoice = in.nextLine();
-					inputId = Integer.parseInt(strChoice.substring(1));
-					foundHit = false;
+					inputId = 0;
+					do {
+						System.out.println("Input Claim Number to find: ");
+						strChoice = in.nextLine();
+						if ((strChoice.length() != 7) && (strChoice.charAt(0) != 'C')) {
+							System.out.println("Invalid input. Follow the format Cxxxxxx where x is a value between 0 - 9.");
+						}
+						else {
+							try {
+								inputId = Integer.parseInt(strChoice.substring(1));
+							}
+							catch (NumberFormatException e) {
+								System.out.println("Invalid Claim ID value");
+								strChoice = "";
+							}
+						}
+					} while((strChoice.length() != 7) && (strChoice.charAt(0) != 'C'));
 					
+					
+					foundHit = false;
 					
 					for (Claim clmObj: claimList) {
 						if (clmObj.getIntId() == inputId) {
@@ -307,7 +323,7 @@ public class PASApp {
 		
 		birthDate = getDate("birth");
 		
-		System.out.println("Input driver's license number: ");
+		System.out.print("Input driver's license number: ");
 		licenseNumber = in.nextLine();
 		
 		licenseDate = getDate("license issue");
@@ -320,14 +336,14 @@ public class PASApp {
 		String licenseNumber, firstName, lastName;
 		LocalDate birthDate, licenseDate;
 		
-		System.out.println("Enter first name: ");
+		System.out.print("Enter first name: ");
 		firstName = in.nextLine();
-		System.out.println("Enter last name: ");
+		System.out.print("Enter last name: ");
 		lastName = in.nextLine();
 		
 		birthDate = getDate("birth");
 		
-		System.out.println("Input license number: ");
+		System.out.print("Input license number: ");
 		licenseNumber = in.nextLine();
 		
 		licenseDate = getDate("license issue");
@@ -336,18 +352,7 @@ public class PASApp {
 	}
 	
 	private static void setClaimInputs(Claim clmObj) {
-		int month, day, year;
-		
-		System.out.println("Enter accident year: ");
-		year = in.nextInt();
-		in.nextLine();
-		System.out.println("Enter accident month: ");
-		month = in.nextInt();
-		in.nextLine();
-		System.out.println("Enter accident day: ");
-		day = in.nextInt();
-		in.nextLine();
-		clmObj.setAccidentDate(LocalDate.of(year, month, month));
+		clmObj.setAccidentDate(getDate("accident"));
 		
 		System.out.println("Enter accident address: ");
 		clmObj.setAccidentAddress(in.nextLine());

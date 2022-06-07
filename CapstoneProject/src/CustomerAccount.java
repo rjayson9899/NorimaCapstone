@@ -32,6 +32,7 @@ public class CustomerAccount {
 	
 	public void addPolicy(Policy polObj) {
 		this.policyList.add(polObj);
+		this.policyHolderList.add(polObj.getHolder());
 	}
 	
 	public boolean hasPolicy(int policyId) {

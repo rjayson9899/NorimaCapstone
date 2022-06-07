@@ -43,8 +43,6 @@ public class RatingEngine {
 		premium = (vp * vpf);
 		premium += (vp / 100) / dlx;
 		
-		System.out.println("[DEBUG] Premium Computed: " + premium);
-		
 		return premium;
 	}
 	
