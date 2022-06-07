@@ -7,14 +7,15 @@ public class Policy {
 	private int policyNum;
 	private Date effectDate;
 	private Date expDate;
-	private ArrayList<PolicyHolder> policyHolders;
+	private PolicyHolder policyHolder;
 	private ArrayList<Vehicle> vehicles;
 	private double cost;
 	private String relationship;
 	
 	
-	public Policy() {
-		
+	public Policy(Date effectDate, PolicyHolder policyHolder) {
+		this.effectDate = effectDate;
+		this.policyHolder = policyHolder;
 	}
 	
 	public int getPolicyNum() {
@@ -35,17 +36,20 @@ public class Policy {
 	public void setExpDate(Date expDate) {
 		this.expDate = expDate;
 	}
-	public ArrayList<PolicyHolder> getPolicyHolders() {
-		return policyHolders;
+	
+	public PolicyHolder getPolicyHolder() {
+		return policyHolder;
 	}
-	public void setPolicyHolders(ArrayList<PolicyHolder> policyHolders) {
-		this.policyHolders = policyHolders;
+
+	public void setPolicyHolder(PolicyHolder policyHolder) {
+		this.policyHolder = policyHolder;
 	}
+
 	public ArrayList<Vehicle> getVehicles() {
 		return vehicles;
 	}
-	public void setVehicles(ArrayList<Vehicle> vehicles) {
-		this.vehicles = vehicles;
+	public void addVehicles(Vehicle car) {
+		vehicles.add(car);
 	}
 	public double getCost() {
 		return cost;
@@ -58,6 +62,10 @@ public class Policy {
 	}
 	public void setRelationship(String relationship) {
 		this.relationship = relationship;
+	}
+	
+	public void generateId(int count) {
+		this.policyNum = count + 1;
 	}
 	
 	

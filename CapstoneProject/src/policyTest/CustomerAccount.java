@@ -17,8 +17,8 @@ public class CustomerAccount {
 		this.address = address;
 	}
 	
-	public void generateId() {
-		this.accountNum = 1;
+	public void generateId(int count) {
+		this.accountNum = count + 1;
 		//input code for id generation
 	}
 
@@ -58,16 +58,16 @@ public class CustomerAccount {
 		return policyAct;
 	}
 
-	public void setPolicyAct(ArrayList<Policy> policyAct) {
-		this.policyAct = policyAct;
+	public void addPolicyAct(Policy policyAct) {
+		this.policyAct.add(policyAct);
 	}
 
 	public ArrayList<PolicyHolder> getPolicyHolders() {
 		return policyHolders;
 	}
 
-	public void setPolicyHolders(ArrayList<PolicyHolder> policyHolders) {
-		this.policyHolders = policyHolders;
+	public void addPolicyHolders(PolicyHolder policyHolders) {
+		this.policyHolders.add(policyHolders);
 	}
 	
 	

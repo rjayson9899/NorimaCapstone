@@ -6,11 +6,16 @@ public class PolicyHolder {
 
 	private String fname;
 	private String lname;
+	private Date dateOfBirth;
 	private String license;
 	private Date licenseIssueDate;
 	
-	public PolicyHolder() {
-		
+	public PolicyHolder(String fname, String lname,Date dateOfBirth, String license, Date licenseDateIssueDate) {
+		this.fname = fname;
+		this.lname = lname;
+		this.dateOfBirth = dateOfBirth;
+		this.license = license;
+		this.licenseIssueDate = licenseDateIssueDate;
 	}
 	
 	public String getFname() {
@@ -36,6 +41,14 @@ public class PolicyHolder {
 	}
 	public void setLicenseIssueDate(Date licenseIssueDate) {
 		this.licenseIssueDate = licenseIssueDate;
+	}
+
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 	
 	
