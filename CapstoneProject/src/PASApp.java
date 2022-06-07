@@ -37,8 +37,7 @@ public class PASApp {
 		
 		do {
 			printMenu();
-			choice = in.nextInt();
-			in.nextLine();
+			choice = getValidInt("Enter your choice: ");
 			
 			switch (choice) {
 				case 1:
@@ -71,9 +70,7 @@ public class PASApp {
 				case 2:
 					uniqueId = Policy.generateUniqueId(customerList);
 					if (uniqueId >= 0) {
-						System.out.println("Input Account Number to create Policy in: ");
-						inputId = in.nextInt();
-						in.nextLine();
+						inputId = getValidInt("Input Account Number to create Policy in: ");
 						foundHit = false;
 						currentAccount = null;
 						
@@ -91,10 +88,10 @@ public class PASApp {
 							System.out.println("Set Current account as holder? [y for yes]: ");
 							strIn = in.nextLine();
 							if (strIn.equalsIgnoreCase("y")) {
-								setHolder(tempPolicy, currentAccount);
+								tempPolicy.setPolicyHolder(makeHolder(currentAccount));
 							}
 							else {
-								setHolder(tempPolicy);
+								tempPolicy.setPolicyHolder(makeHolder());
 							}
 							
 							do  {
@@ -126,9 +123,7 @@ public class PASApp {
 					}
 					break;
 				case 3:
-					System.out.println("Input Policy Number to cancel: ");
-					inputId = in.nextInt();
-					in.nextLine();
+					inputId = getValidInt("Input Policy Number to cancel: ");
 					foundHit = false;
 					
 					for (CustomerAccount custObj: customerList) {
@@ -145,9 +140,7 @@ public class PASApp {
 					
 					break;
 				case 4:
-					System.out.println("Input Policy Number to file claim: ");
-					inputId = in.nextInt();
-					in.nextLine();
+					inputId = getValidInt("Input Policy Number to file claim: ");
 					foundHit = false;
 					currentAccount = null;
 					
@@ -176,10 +169,8 @@ public class PASApp {
 					
 					break;
 				case 5:
-					System.out.print("Input First Name: ");
-					firstName = in.nextLine();
-					System.out.print("Input Last Name: ");
-					lastName = in.nextLine();
+					firstName = getStringNonEmpty("Input First Name: ");
+					lastName = getStringNonEmpty("Input Last Name: ");
 					foundHit = false;
 					
 					
@@ -197,8 +188,7 @@ public class PASApp {
 					break;
 				case 6:
 					System.out.print("Input Policy Number to find: ");
-					inputId = in.nextInt();
-					in.nextLine();
+					inputId = getValidInt("Input Policy Number to find: ");
 					foundHit = false;
 					
 					for (CustomerAccount custObj: customerList) {
@@ -292,7 +282,6 @@ public class PASApp {
 		System.out.println("7. Search Claim");
 		System.out.println("8. Exit");
 		System.out.println("==================================");
-		System.out.print("Enter your choice: ");
 	}
 	
 	private static Vehicle makeVehicle() {
@@ -313,7 +302,7 @@ public class PASApp {
 		return new Vehicle(make, model, year, type, fuelType, purchasePrice);
 	}
 	
-	private static void setHolder(Policy polObj, CustomerAccount custObj) {
+	private static PolicyHolder makeHolder(CustomerAccount custObj) {
 		String licenseNumber;
 		LocalDate birthDate, licenseDate;
 		
@@ -321,10 +310,10 @@ public class PASApp {
 		licenseNumber = getStringNonEmpty("Input driver's license number: ");
 		licenseDate = getDate("license issue");
 		
-		polObj.setHolder(custObj, birthDate, licenseNumber, licenseDate);
+		return new PolicyHolder(custObj, birthDate, licenseNumber, licenseDate);
 	}
 	
-	private static void setHolder(Policy polObj) {
+	private static PolicyHolder makeHolder() {
 		String licenseNumber, firstName, lastName;
 		LocalDate birthDate, licenseDate;
 		
@@ -334,7 +323,7 @@ public class PASApp {
 		licenseNumber = getStringNonEmpty("Input license number: ");
 		licenseDate = getDate("license issue");
 		
-		polObj.setHolder(firstName, lastName, birthDate, licenseNumber, licenseDate);
+		return new PolicyHolder(firstName, lastName, birthDate, licenseNumber, licenseDate);
 	}
 	
 	private static void setClaimInputs(Claim clmObj) {
@@ -426,7 +415,7 @@ public class PASApp {
 		int getInt = 0;
 		
 		do {
-			System.out.println(message);
+			System.out.print(message);
 			try {
 				getInt = in.nextInt();
 				isInvalid = false;
@@ -447,7 +436,7 @@ public class PASApp {
 		double getDouble = 0.0;
 		
 		do {
-			System.out.println(message);
+			System.out.print(message);
 			try {
 				getDouble = in.nextInt();
 				isInvalid = false;

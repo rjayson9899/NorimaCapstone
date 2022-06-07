@@ -16,6 +16,14 @@ public class PolicyHolder {
 		this.licenseDate = licenseDate;
 	}
 	
+	public PolicyHolder(CustomerAccount acctObj, LocalDate birthDate, String driverLicenseNumber, LocalDate licenseDate) {
+		this.firstName = acctObj.getFirstName();
+		this.lastName = acctObj.getLastName();
+		this.birthDate = birthDate;
+		this.driverLicenseNumber = driverLicenseNumber;
+		this.licenseDate = licenseDate;
+	}
+	
 	public String getFirstName() {
 		return firstName;
 	}

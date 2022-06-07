@@ -45,12 +45,8 @@ public class Policy {
 		this.expirationDate = effectiveDate.plusMonths(6);
 	}
 	
-	public void setHolder(CustomerAccount acctObj, LocalDate birthDate, String driverLicenseNumber, LocalDate licenseDate) {
-		this.holder = new PolicyHolder(acctObj.getFirstName(), acctObj.getLastName(), birthDate, driverLicenseNumber, licenseDate);
-	}
-	
-	public void setHolder(String firstName, String lastName, LocalDate birthDate, String driverLicenseNumber, LocalDate licenseDate) {
-		this.holder = new PolicyHolder(firstName, lastName, birthDate, driverLicenseNumber, licenseDate);
+	public void setPolicyHolder(PolicyHolder holderObj) {
+		this.holder = holderObj;
 	}
 	
 	public void addVehicle(Vehicle vhcObj) {
