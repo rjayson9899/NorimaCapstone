@@ -71,6 +71,13 @@ public class CustomerAccount {
 		return -1;
 	}
 	
+	protected void addPolicyIds(List<Integer> idList) {
+		for (Policy polObj: policyList) {
+			idList.add(Integer.valueOf(polObj.getPolicyNumber()));
+		}
+	}
+	
+	
 	public static void printCustomerAccountHeader() {
 		System.out.printf("\n%-20s\t%-20s\t%-20s\t%-20s\n", "Account Number", "First Name", "Last Name", "Address");
 	}

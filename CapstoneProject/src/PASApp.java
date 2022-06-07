@@ -51,8 +51,20 @@ public class PASApp {
 						lastName = in.nextLine();
 						System.out.print("Input Address: ");
 						address = in.nextLine();
-						customerList.add(new CustomerAccount(uniqueId, firstName, lastName, address));
-						System.out.printf("Account Registered with account Number %04d\n", uniqueId);
+						
+						foundHit = false;
+						
+						for (CustomerAccount custObj: customerList) {
+							if (custObj.getFirstName().equalsIgnoreCase(firstName) && custObj.getLastName().equalsIgnoreCase(lastName)) {
+								System.out.println("Account name taken");
+								foundHit = true;
+							}
+						}
+						
+						if (!foundHit) {
+							customerList.add(new CustomerAccount(uniqueId, firstName, lastName, address));
+							System.out.printf("Account Registered with account Number %04d\n", uniqueId);
+						}
 					}
 					else {
 						System.out.println("No space left to add a new account");
@@ -75,7 +87,7 @@ public class PASApp {
 					}
 					
 					if (foundHit) {
-						uniqueId = Policy.generateUniqueId();
+						uniqueId = Policy.generateUniqueId(customerList);
 						if (uniqueId >= 0) {
 							tempPolicy = new Policy(uniqueId);
 							

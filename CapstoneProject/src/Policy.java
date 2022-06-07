@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalDate;
 
 public class Policy {
@@ -10,11 +11,8 @@ public class Policy {
 	private ArrayList<Vehicle> vehicleList = new ArrayList<Vehicle>();
 	private double premium;
 	
-	private static ArrayList<Integer> idList = new ArrayList<Integer>();
-	
 	public Policy(int policyNumber) {
 		this.policyNumber = policyNumber;
-		idList.add(Integer.valueOf(policyNumber));
 	}
 	
 	public int getPolicyNumber() {
@@ -77,11 +75,16 @@ public class Policy {
 		expirationDate = now.minusDays(1);
 	}
 	
-	public static int generateUniqueId() {
+	public static int generateUniqueId(List<CustomerAccount> customerList) {
 		int limit = 999999;
+		ArrayList<Integer> idList = new ArrayList<Integer>();
+		
+		for (CustomerAccount custObj: customerList) {
+			custObj.addPolicyIds(idList);
+		}
 		
 		for (int i = 0; i <= limit; i++) {
-			if (!(Policy.idList.contains(Integer.valueOf(i)))) {
+			if (!(idList.contains(Integer.valueOf(i)))) {
 				return i;
 			}
 		}
