@@ -1,7 +1,9 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class PASApp {
@@ -32,9 +34,6 @@ public class PASApp {
 				e.printStackTrace();
 			}
 		}
-		
-		
-		
 		
 		do {
 			printMenu();
@@ -232,6 +231,22 @@ public class PASApp {
 			}
 			
 		} while (choice != 8);
+		
+		//DEBUG
+		System.out.println("Data dump");
+		CustomerAccount.printCustomerAccountHeader();
+		for (CustomerAccount cstObj: customerList) {
+			cstObj.printCustomerAccountDetails();
+		}
+		CustomerAccount.printPolicyHeader();
+		for (CustomerAccount cstObj: customerList) {
+			cstObj.printPolicies();
+		}
+		Claim.printClaimHeader();
+		for (Claim clmObj: claimList) {
+			clmObj.printClaimDetails();
+		}
+		
 	}
 	
 	private static void printMenu() {
@@ -287,34 +302,15 @@ public class PASApp {
 	}
 	
 	private static void setHolder(Policy polObj, CustomerAccount custObj) {
-		int month, day, year;
 		String licenseNumber;
 		LocalDate birthDate, licenseDate;
 		
-		System.out.println("Enter birth year: ");
-		year = in.nextInt();
-		in.nextLine();
-		System.out.println("Enter birth month: ");
-		month = in.nextInt();
-		in.nextLine();
-		System.out.println("Enter birth day: ");
-		day = in.nextInt();
-		in.nextLine();
-		birthDate = LocalDate.of(year, month, day);
+		birthDate = getDate("birth");
 		
 		System.out.println("Input driver's license number: ");
 		licenseNumber = in.nextLine();
 		
-		System.out.println("Enter license year: ");
-		year = in.nextInt();
-		in.nextLine();
-		System.out.println("Enter license month: ");
-		month = in.nextInt();
-		in.nextLine();
-		System.out.println("Enter license day: ");
-		day = in.nextInt();
-		in.nextLine();
-		licenseDate = LocalDate.of(year, month, day);
+		licenseDate = getDate("license issue");
 		
 		polObj.setHolder(custObj, birthDate, licenseNumber, licenseDate);
 	}
@@ -329,30 +325,12 @@ public class PASApp {
 		System.out.println("Enter last name: ");
 		lastName = in.nextLine();
 		
-		System.out.println("Enter birth year: ");
-		year = in.nextInt();
-		in.nextLine();
-		System.out.println("Enter birth month: ");
-		month = in.nextInt();
-		in.nextLine();
-		System.out.println("Enter birth day: ");
-		day = in.nextInt();
-		in.nextLine();
-		birthDate = LocalDate.of(year, month, day);
+		birthDate = getDate("birth");
 		
 		System.out.println("Input license number: ");
 		licenseNumber = in.nextLine();
 		
-		System.out.println("Enter license year: ");
-		year = in.nextInt();
-		in.nextLine();
-		System.out.println("Enter license month: ");
-		month = in.nextInt();
-		in.nextLine();
-		System.out.println("Enter license day: ");
-		day = in.nextInt();
-		in.nextLine();
-		licenseDate = LocalDate.of(year, month, day);
+		licenseDate = getDate("license issue");
 		
 		polObj.setHolder(firstName, lastName, birthDate, licenseNumber, licenseDate);
 	}
@@ -383,6 +361,68 @@ public class PASApp {
 		System.out.println("Enter repair costs: ");
 		clmObj.setRepairCosts(in.nextDouble());
 		in.nextLine();
+	}
+	
+	private static LocalDate getDate(String type) {
+		LocalDate date = LocalDate.now();
+		int month = 0;
+		int day = 0;
+		int year = 0;
+		boolean isInvalid = true;
+		
+		do {
+			try {
+				System.out.print("Enter " + type + " year: ");
+				year = in.nextInt();
+				if (year < 1900) {
+					System.out.println("Only years beyond 1900 are valid");
+				}
+			}
+			catch (InputMismatchException e) {
+				System.out.println("Invalid input");
+				year = -1;
+			}
+			finally {
+				in.nextLine();
+			}
+		} while (year < 1900);
+		
+		do {
+			try {
+				System.out.print("Enter " + type + " month: ");
+				month = in.nextInt();
+				if (month > 12 || month < 1) {
+					System.out.println("Only values 1 - 12 are valid");
+				}
+			}
+			catch (InputMismatchException e) {
+				System.out.println("Invalid input");
+			}
+			finally {
+				in.nextLine();
+			}
+		} while(month > 12 || month < 1);
+		
+		do {
+			try {
+				System.out.print("Enter " + type + " day: ");
+				day = in.nextInt();
+				date = LocalDate.of(year, month, day);
+				isInvalid = false;
+			}
+			catch (InputMismatchException e) {
+				System.out.println("Invalid input");
+			}
+			catch (DateTimeException e) {
+				System.out.println("Invalid day for month");
+			}
+			finally {
+				in.nextLine();
+			}
+			
+		} while (isInvalid);		
+		
+		return date;
 	}
 	
 }

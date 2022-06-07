@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,23 +80,35 @@ public class CustomerAccount {
 	}
 	
 	public static void printPolicyHeader() {
-		System.out.printf("\n%-20s\t%-20s\t%-20s\t%-20s\t%-20s\n", "Policy Number", "Effective Date", "Expiration Date", "Policy Holder Name", "Premium");
+		System.out.printf("\n%-20s\t%-20s\t%-20s\t%-20s\t%-20s\t%-20s\n", "Policy Number", "Effective Date", "Expiration Date", "Policy Holder Name", "Premium", "Valid?");
 	}
 	
 	public void printPolicies() {
-		String policyIdString;
+		String policyIdString, validString;
 		for (Policy polObj: policyList) {
 			policyIdString = String.format("%06d", polObj.getPolicyNumber());
-			System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%-20.2f\n", policyIdString, polObj.getEffectiveDate(), polObj.getExpirationDate(), polObj.getHolderName(), polObj.getPremium());
+			if ((polObj.getExpirationDate().compareTo(LocalDate.now())) < 0) {
+				validString = "No";
+			}
+			else {
+				validString = "Yes";
+			}
+			System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%-20.2f\t%-20s\n", policyIdString, polObj.getEffectiveDate(), polObj.getExpirationDate(), polObj.getHolderName(), polObj.getPremium(), validString);
 		}
 	}
 	
 	public void printPolicyMatchingId(int id) {
-		String policyIdString;
+		String policyIdString, validString;
 		for (Policy polObj: policyList) {
 			if (polObj.getPolicyNumber() == id) {
 				policyIdString = String.format("%06d", polObj.getPolicyNumber());
-				System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%-20.2f\n", policyIdString, polObj.getEffectiveDate(), polObj.getExpirationDate(), polObj.getHolderName(), polObj.getPremium());
+				if ((polObj.getExpirationDate().compareTo(LocalDate.now())) < 0) {
+					validString = "No";
+				}
+				else {
+					validString = "Yes";
+				}
+				System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%-20.2f\t%-20s\n", policyIdString, polObj.getEffectiveDate(), polObj.getExpirationDate(), polObj.getHolderName(), polObj.getPremium(), validString);
 			}
 		}
 	}
