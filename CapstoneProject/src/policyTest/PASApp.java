@@ -93,7 +93,7 @@ public class PASApp {
 
 					//Policy Holder Details
 					
-					if(accExist) {
+					if(accExist) { 
 						clrscrn();
 						System.out.println("\n-------------------------------");
 						System.out.println("Policy Holder Details");
@@ -110,7 +110,7 @@ public class PASApp {
 						System.out.print("Is the account owner also the policy holder? (y/n) ");
 						Character decision = input.nextLine().charAt(0);
 						
-						if(decision.equals('y') || decision.equals('Y')) {
+						if(decision.equals('y') || decision.equals('Y')) { //condition if the account owner is also the policy holder
 							for(int x=0; x < customerAccounts.size(); x++) {
 								if(accNum == customerAccounts.get(x).getAccountNum()) {
 									fnamePol = customerAccounts.get(x).getFname();
