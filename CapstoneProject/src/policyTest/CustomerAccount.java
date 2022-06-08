@@ -8,8 +8,8 @@ public class CustomerAccount {
 	private String fname;
 	private String lname;
 	private String address;
-	private ArrayList<Policy> policyAct;
-	private ArrayList<PolicyHolder> policyHolders;
+	private ArrayList<Policy> policyAct = new ArrayList<>();
+	private ArrayList<PolicyHolder> policyHolders = new ArrayList<>();
 	
 	public CustomerAccount(String fname, String lname, String address) {
 		this.fname = fname;
