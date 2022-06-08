@@ -3,7 +3,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.MissingResourceException;
 
 public class CustomerAccount {
 	
@@ -146,6 +145,16 @@ public class CustomerAccount {
 			}
 		}
 
+	}
+	
+	public static void printPolicyHolderHeader() {
+		System.out.printf("\n%-20s\t%-20s\t%-20s\t%-20s\t%-20s\n", "First Name", "Last Name", "Birth Date", "License Number", "License Date");
+	}
+	
+	public void printPolicyHolders() {
+		for (PolicyHolder hldrObj: policyHolderList) {
+			System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%-20s\n", hldrObj.getFirstName(), hldrObj.getLastName(), hldrObj.getBirthDate(), hldrObj.getDriverLicenseNumber(), hldrObj.getLicenseDate());
+		}
 	}
 	
 	protected void addPolicyIds(List<Integer> idList) {

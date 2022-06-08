@@ -40,6 +40,10 @@ public class PolicyHolder {
 		return driverLicenseNumber;
 	}
 	
+	public LocalDate getLicenseDate() {
+		return licenseDate;
+	}
+	
 	public int getLicenseYear() {
 		return licenseDate.getYear();
 	}
