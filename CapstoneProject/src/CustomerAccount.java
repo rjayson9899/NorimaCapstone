@@ -7,8 +7,8 @@ public class CustomerAccount {
 	private String customerAddress;
 	public static final int CUSTOMER_MAX = 9999;
 	
-	private ArrayList<Policy> policyList;
-	private ArrayList<PolicyHolder> policyHolderList;
+	private ArrayList<Policy> policyList = new ArrayList<Policy>();
+	private ArrayList<PolicyHolder> policyHolderList = new ArrayList<PolicyHolder>();
 	
 	public CustomerAccount(int accountNumber, String firstName, String lastName, String customerAddress) {
 		this.accountNumber = accountNumber;
@@ -29,7 +29,11 @@ public class CustomerAccount {
 		return lastName;
 	}
 	
-	public void addPolicies(ArrayList<Integer> policyIDList) {
+	public String getCustomerAddress() {
+		return customerAddress;
+	}
+	
+	public void addPolicyIDs(ArrayList<Integer> policyIDList) {
 		for(Policy polObj : policyList) {
 			policyIDList.add(Integer.valueOf(polObj.getPolicyNumber()));
 		}
