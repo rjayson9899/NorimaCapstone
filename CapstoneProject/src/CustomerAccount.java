@@ -1,6 +1,9 @@
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.MissingResourceException;
 
 public class CustomerAccount {
 	
@@ -28,6 +31,16 @@ public class CustomerAccount {
 
 	public String getLastName() {
 		return lastName;
+	}
+	
+	public Policy getPolicyMatchingId(int id) throws IllegalArgumentException {
+		for (Policy polObj: policyList) {
+			if (polObj.getPolicyNumber() == id) {
+				return polObj;
+			}
+		}
+		
+		throw new IllegalArgumentException("No Policy found with matching ID");
 	}
 	
 	public void addPolicy(Policy polObj) {
@@ -71,13 +84,6 @@ public class CustomerAccount {
 		return -1;
 	}
 	
-	protected void addPolicyIds(List<Integer> idList) {
-		for (Policy polObj: policyList) {
-			idList.add(Integer.valueOf(polObj.getPolicyNumber()));
-		}
-	}
-	
-	
 	public static void printCustomerAccountHeader() {
 		System.out.printf("\n%-20s\t%-20s\t%-20s\t%-20s\n", "Account Number", "First Name", "Last Name", "Address");
 	}
@@ -88,36 +94,46 @@ public class CustomerAccount {
 	}
 	
 	public static void printPolicyHeader() {
-		System.out.printf("\n%-20s\t%-20s\t%-20s\t%-20s\t%-20s\t%-20s\n", "Policy Number", "Effective Date", "Expiration Date", "Policy Holder Name", "Premium", "Valid?");
+		System.out.printf("\n%-20s\t%-20s\t%-20s\t%-20s\t%20s\t%20s\n", "Policy Number", "Effective Date", "Expiration Date", "Policy Holder Name", "Premium", "Valid?");
 	}
 	
 	public void printPolicies() {
-		String policyIdString, validString;
+		NumberFormat money = NumberFormat.getCurrencyInstance(Locale.US);
+		String policyIdString, validString, premiumString;
 		for (Policy polObj: policyList) {
 			policyIdString = String.format("%06d", polObj.getPolicyNumber());
+			premiumString = money.format(polObj.getPremium());
 			if ((polObj.getExpirationDate().compareTo(LocalDate.now())) < 0) {
 				validString = "No";
 			}
 			else {
 				validString = "Yes";
 			}
-			System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%-20.2f\t%-20s\n", policyIdString, polObj.getEffectiveDate(), polObj.getExpirationDate(), polObj.getHolderName(), polObj.getPremium(), validString);
+			System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%20s\t%20s\n", policyIdString, polObj.getEffectiveDate(), polObj.getExpirationDate(), polObj.getHolderName(), premiumString, validString);
 		}
 	}
 	
 	public void printPolicyMatchingId(int id) {
-		String policyIdString, validString;
+		NumberFormat money = NumberFormat.getCurrencyInstance(Locale.US);
+		String policyIdString, validString, premiumString;
 		for (Policy polObj: policyList) {
 			if (polObj.getPolicyNumber() == id) {
 				policyIdString = String.format("%06d", polObj.getPolicyNumber());
+				premiumString = money.format(polObj.getPremium());
 				if ((polObj.getExpirationDate().compareTo(LocalDate.now())) < 0) {
 					validString = "No";
 				}
 				else {
 					validString = "Yes";
 				}
-				System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%-20.2f\t%-20s\n", policyIdString, polObj.getEffectiveDate(), polObj.getExpirationDate(), polObj.getHolderName(), polObj.getPremium(), validString);
+				System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%20s\t%20s\n", policyIdString, polObj.getEffectiveDate(), polObj.getExpirationDate(), polObj.getHolderName(), premiumString, validString);
 			}
+		}
+	}
+	
+	protected void addPolicyIds(List<Integer> idList) {
+		for (Policy polObj: policyList) {
+			idList.add(Integer.valueOf(polObj.getPolicyNumber()));
 		}
 	}
 	

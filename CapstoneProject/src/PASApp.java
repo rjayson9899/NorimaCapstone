@@ -1,7 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -17,9 +17,9 @@ public class PASApp {
 		CustomerAccount currentAccount;
 		Claim tempClaim;
 		LocalDate effectiveDate;
-		int choice, uniqueId, inputId;
 		String firstName, lastName, address, strIn;
-		boolean foundHit;
+		int choice, uniqueId, inputId;
+		boolean foundHit, isExpired;
 		
 		in = new Scanner(System.in);
 		
@@ -142,12 +142,18 @@ public class PASApp {
 				case 4:
 					inputId = getValidInt("Input Policy Number to file claim: ");
 					foundHit = false;
+					isExpired = false;
 					currentAccount = null;
 					
 					for (CustomerAccount custObj: customerList) {
 						if (custObj.hasPolicy(inputId)) {
-							currentAccount = custObj;
-							foundHit = true;
+							if (custObj.getPolicyMatchingId(inputId).getExpirationDate().compareTo(LocalDate.now()) < 0) {
+								isExpired = true;
+							}
+							else {
+								currentAccount = custObj;
+								foundHit = true;
+							}
 						}
 					}
 					
@@ -162,6 +168,9 @@ public class PASApp {
 						else {
 							System.out.println("No space left to add a new claim");
 						}
+					}
+					else if (isExpired) {
+						System.out.println("Policy selected is expired");
 					}
 					else {
 						System.out.println("No match found");
@@ -187,7 +196,6 @@ public class PASApp {
 					}
 					break;
 				case 6:
-					System.out.print("Input Policy Number to find: ");
 					inputId = getValidInt("Input Policy Number to find: ");
 					foundHit = false;
 					

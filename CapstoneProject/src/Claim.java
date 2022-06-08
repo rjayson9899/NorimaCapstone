@@ -1,6 +1,8 @@
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Claim {
 
@@ -62,11 +64,14 @@ public class Claim {
 	}
 	
 	public static void printClaimHeader() {
-		System.out.printf("\n%-20s\t%-20s\t%-20s\t%-20s\t%-20s\t%-20s\n", "Claim Number", "Accident Date", "Accident Address", "Accident Description", "Damage Description", "Repair Costs");
+		System.out.printf("\n%-20s\t%-20s\t%-20s\t%-20s\t%-20s\t%20s\n", "Claim Number", "Accident Date", "Accident Address", "Accident Description", "Damage Description", "Repair Costs");
 	}
 	
 	public void printClaimDetails() {
-		System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%-20s\t%-20.2f\n", this.claimNumber, this.accidentDate, this.accidentAddress, this.accidentDescription, this.accidentDamage, this.repairCosts);
+		NumberFormat money = NumberFormat.getCurrencyInstance(Locale.US);
+		String repairCostsString;
+		repairCostsString = money.format(this.repairCosts);
+		System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%-20s\t%20s\n", this.claimNumber, this.accidentDate, this.accidentAddress, this.accidentDescription, this.accidentDamage, repairCostsString);
 	}
 	
 }
