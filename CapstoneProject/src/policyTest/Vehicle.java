@@ -7,12 +7,20 @@ public class Vehicle {
 	private int year;
 	private int type;
 	private int fuel;
+	private int yearLicense;
 	private double price;
 	private String color;
 	private double premium;
 	
-	public Vehicle() {
-		
+	public Vehicle(String make, String model, int year, int type, int fuel, double price, String color, int yearLicense) {
+		this.make = make;
+		this.model = model;
+		this.year = year;
+		this.type = type;
+		this.fuel = fuel;
+		this.price = price;
+		this.color = color;
+		this.yearLicense = yearLicense;
 	}
 	
 	public String getMake() {
@@ -52,10 +60,19 @@ public class Vehicle {
 		this.price = price;
 	}
 	public double getPremium() {
+		this.premium = RatingEngine.rate(year, price, yearLicense);
 		return premium;
 	}
 	public void setPremium(double premium) {
 		this.premium = premium;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 	
 	

@@ -1,7 +1,6 @@
 package policyTest;
 
 import java.util.Scanner;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ public class PASApp {
 		ArrayList<Policy> policies = new ArrayList<>();
 		int choice = 0;
 		int accountNumGenerator = 0;
+		int policyNumGenerator = 0;
 		
 		do {
 			//main menu user interface
@@ -36,7 +36,7 @@ public class PASApp {
 			
 			switch(choice) {
 			
-				case 1:
+				case 1: //Creating Account
 					clrscrn();
 					input.nextLine();
 					boolean checker = false;
@@ -70,7 +70,7 @@ public class PASApp {
 					
 					break;
 					
-				case 2:
+				case 2: // Quote/Buy policy
 					clrscrn();
 					System.out.println("\n-------------------------------");
 					System.out.println("Quoting policy");
@@ -79,6 +79,9 @@ public class PASApp {
 					int accNum = input.nextInt();
 					int indexGet = 0;
 					boolean accExist = false;
+					String make = "",model = "",color = "";
+					int year = 0, type = 0, fuel = 0;
+					double price = 0, total = 0;
 					
 					for(CustomerAccount x: customerAccounts) { //for each loop to get index of the account number , checks if account exist
 						if(x.getAccountNum() == accNum) {
@@ -104,7 +107,7 @@ public class PASApp {
 						
 						//Add checker if the one who creates policy is the account holder or different person
 						String fnamePol = "", lnamePol = "";
-						System.out.println("Is the account owner also the policy holder? ");
+						System.out.print("Is the account owner also the policy holder? (y/n) ");
 						Character decision = input.nextLine().charAt(0);
 						
 						if(decision.equals('y') || decision.equals('Y')) {
@@ -129,67 +132,135 @@ public class PASApp {
 						System.out.print("Input birth date(dd/mm/yyyy): ");
 						String birthDateString = input.nextLine();
 						Date birthDate = new SimpleDateFormat("dd/MM/yyyy").parse(birthDateString);
-						System.out.println("Input license number: ");
+						System.out.print("Input license number: ");
 						String license = input.nextLine();
 						System.out.print("Input license date issued(dd/mm/yyyy): ");
 						String licenseDateString = input.nextLine();
+						int licenseYear = Integer.parseInt(licenseDateString.substring(licenseDateString.lastIndexOf('/') + 1));
 						Date licenseDate = new SimpleDateFormat("dd/MM/yyyy").parse(licenseDateString);
-						
+						policies.add(new Policy(effectDate, new PolicyHolder(fnamePol, lnamePol, birthDate, license, licenseDate)));
 						
 						
 						//Vehicle Details
-						
-						clrscrn();
-						System
-						.out.println("\n-------------------------------");
-						System.out.println("Vehicle Details");
-						System.out.println("-------------------------------");
-						System.out.print("Make: ");
-						String make = input.nextLine();
-						System.out.print("Model: ");
-						String model = input.nextLine();
-						System.out.print("Year: ");
-						int year = input.nextInt();
-						
-						System.out.println("Choose which type your vehicle is: ");
-						System.out.println("[1] 4-door sedan");
-						System.out.println("[2] 2-door sports car, SUV, or truck");
-						System.out.println("-------------------------------");
-						System.out.print("Your type of vehicle: ");
-						int type = input.nextInt();
-						
-						System.out.println("Choose which type of fuel: ");
-						System.out.println("[1] Diesel");
-						System.out.println("[2] Electric");
-						System.out.println("[3] Petrol");
-						System.out.println("-------------------------------");
-						System.out.print("Your type of fuel: ");
-						int fuel = input.nextInt();
-						
-						System.out.print("Purchase price: ");
-						double price = input.nextDouble();
-						System.out.print("Color: ");
+						System.out.print("How many vehicles for this policy? : ");
+						int numVehicle = input.nextInt();
 						input.nextLine();
-						String color = input.nextLine();
-						double premium = 200;
 						
-						System.out.println("Premium is " + premium);
+						while(numVehicle > 0) {
+							clrscrn();
+							System.out.println("\n-------------------------------");
+							System.out.println("Vehicle Details");
+							System.out.println("-------------------------------");
+							System.out.print("Make: ");
+							make = input.nextLine();
+							System.out.print("Model: ");
+							model = input.nextLine();
+							System.out.print("Year: ");
+							year = input.nextInt();
+							
+							System.out.println("Choose which type your vehicle is: ");
+							System.out.println("[1] 4-door sedan");
+							System.out.println("[2] 2-door sports car, SUV, or truck");
+							System.out.println("-------------------------------");
+							System.out.print("Your type of vehicle: ");
+							type = input.nextInt();
+							
+							System.out.println("Choose which type of fuel: ");
+							System.out.println("[1] Diesel");
+							System.out.println("[2] Electric");
+							System.out.println("[3] Petrol");
+							System.out.println("-------------------------------");
+							System.out.print("Your type of fuel: ");
+							fuel = input.nextInt();
+							
+							System.out.print("Purchase price: ");
+							price = input.nextDouble();
+							System.out.print("Color: ");
+							input.nextLine();
+							color = input.nextLine();
+							policies.get(policies.size() - 1).addVehicles(new Vehicle(make,model,year, type, fuel, price, color, licenseYear));
+							numVehicle--;
+						}
+						clrscrn();
+						System.out.println("-------------------------------");
+						System.out.println(" Details of your Policy Holder ");
+						System.out.println("-------------------------------");
+						System.out.println("Full name: " + fnamePol + " " + lnamePol );
+						System.out.println("Effective Date: " + effectDate );
+						System.out.format("Birthdate: %-5s \n", birthDate );
+						System.out.format("License Number:  %-5s \n", license );
+						System.out.format("License Date: %-5s ", licenseDate );
+						System.out.println("\n-------------------------------");
+						
+						for(Vehicle v: policies.get(policies.size() - 1).getVehicles()) {
+							System.out.println("-------------------------------");
+							System.out.println("    Details of your Vehicle    ");
+							System.out.println("-------------------------------");
+							System.out.println("Make: " + v.getMake());
+							System.out.println("Model: " + v.getModel());
+							System.out.println("Year: " + v.getYear());
+							
+							if(v.getType() == 1) {
+								System.out.println("Type of vehicle: 4-door sedan");
+							}
+							
+							else if(v.getType() == 2) {
+								System.out.println("Type of vehicle: 2-door sports car, SUV, or truck");
+							}
+							
+							if(v.getFuel() == 1) {
+								System.out.println("Type of fuel: Diesel");
+							}
+							
+							else if(v.getFuel() == 2) {
+								System.out.println("Type of fuel: Electronic");
+							}
+							
+							else if (v.getFuel() == 3) {
+								System.out.println("Type of fuel: Petrol");
+							}
+							
+							System.out.println("Purchase price: " + price);
+							System.out.println("Color: " + color);
+							System.out.println("-------------------------------\n");
+							
+							total += v.getPremium();
+						}
+						
+						System.out.println("-------------------------------");
+						System.out.println(" Total Premium: $" + total);
+						System.out.println("-------------------------------");
+						
+						//policies.get(policies.size() - 1).addVehicles(new Vehicle(make,model,year, type, fuel, price, color, licenseYear));
+						//double sample = policies.get(policies.size() - 1).getVehicles().get( policies.get(policies.size() - 1).getVehicles().size() - 1).getPremium();
 						
 						
-						policies.add(new Policy(effectDate, new PolicyHolder(fnamePol, lnamePol, birthDate, license, licenseDate)));
+						System.out.println("-------------------------------");
+						System.out.println("Would you like to buy policy? (y/n)");
+						decision = input.nextLine().charAt(0);
 						
-						customerAccounts.get(indexGet).addPolicyAct(policies.get(policies.size() - 1));
+						if(decision.equals('y') || decision.equals('Y')) {
+							
+							customerAccounts.get(indexGet).addPolicyAct(policies.get(policies.size() - 1));
+							
+							
+							System.out.println("Policy bought!");
+						}
+						
+						else {
+							System.out.println("Policy cancelled!");
+							policies.remove(policies.size() - 1);
+						}
+						
+						
+					
 					}
 					
 					else {
 						System.out.println("Account does not exist!");
 					}
-					
-					
-					
+	
 					break;
-					
-					
 					
 				case 3:
 					clrscrn();

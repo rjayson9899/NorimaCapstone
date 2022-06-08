@@ -8,7 +8,7 @@ public class Policy {
 	private Date effectDate;
 	private Date expDate;
 	private PolicyHolder policyHolder;
-	private ArrayList<Vehicle> vehicles;
+	private ArrayList<Vehicle> vehicles = new ArrayList<>();
 	private double cost;
 	private String relationship;
 	
