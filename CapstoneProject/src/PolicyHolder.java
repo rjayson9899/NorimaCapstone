@@ -6,11 +6,21 @@ public class PolicyHolder {
 	private String bDay;
 	private String address;
 	private String dLicense;
+	private String dateLic;
 	
-	public PolicyHolder() {
-		
+	public PolicyHolder(String fName, String lName, String bDay, String address, String dL, String dateLic) {
+		this.fName = fName;
+		this.lName = lName;
+		this.bDay = bDay;
+		this.address = address;
+		this.dLicense = dL;
+		this.dateLic = dateLic;
 	}
 	
+	public void seetDeets() {
+		System.out.println(fName+lName+bDay+address+dLicense+dateLic);
+	}
+
 	public void setfName(String fName) {
 		this.fName = fName;
 	}

@@ -14,19 +14,18 @@ public class PASApp {
 	public static void main(String[] args) {
 		
 		int choiceOne, z = 0;
-		int choiceTwo = 0;
-		int custAccNum;
-		int policyNum;
+		int cusAccTwo;
+		int custAccNum = 0;
+		int policyNum = 0;
 		int clNum = 0;
 		int pLAH;
-		String fName, lName, address;
-		String effDate, bDay, licNum, dateLic;
+		String accNum, fName = null, lName = null, address = null;
+		String effDate = null, bDay = null, licNum = null, dateLic = null;
 		String carMake, carModel, carYear, carType, carPrice, carFuelType, carColor;
 		String accDate, addDate, depAcc, depDmgV, estRep;  
 		
 		Scanner userIn = new Scanner(System.in);
 		ArrayList<CustomerAccount> cust = new ArrayList<>();
-		Policy policy = new Policy();
 		Claim cl = new Claim();
 		
 		do {
@@ -47,122 +46,146 @@ public class PASApp {
 				//create customer account
 			    case 1:
 			    	if (custAccNum > cust.size()) {
-			    		System.out.println("No Vacant account number available. ");
+			    		System.out.println("No vacant account available. ");
 			    	}
 			    	else {
 			    		clearScreen();
-			    		cust.add(new CustomerAccount());
+			    		userIn.nextLine();
 			    		System.out.println("===================================");
 			    		System.out.println("Enter your first name: ");
 			    		fName = userIn.nextLine();
 			    		System.out.println("Enter your last name: ");
 			    		lName = userIn.nextLine();
 			    		System.out.println("Enter your address: ");
-			    		System.out.println("===================================");
 			    		address = userIn.nextLine();
-			    		System.out.println("Your Account number is: " + cust.size());
-				    	cust.get(z).createAcc(fName, lName, address);
-				    	clearScreen();
+			    		accNum = String.format("%04d", custAccNum);
+			    		if(custAccNum == 0) {
+			    			System.out.println("Your Account number is: " + accNum);
+				    		System.out.println("===================================");
+				    		cust.add(new CustomerAccount(fName, lName, address, accNum));
+					    	custAccNum++;
+					    	userIn.nextLine();
+					    	clearScreen();
+			    		}
+			    		else {
+			    			for(CustomerAccount cus : cust) {
+				    	    if (cus.getfName().equals(fName) && cus.getlName().equals(lName)) {
+				    	      System.out.println("Account already exist. ");
+				    	    }
+				    	    else {
+					    		System.out.println("Your Account number is: " + accNum);
+					    		System.out.println("===================================");
+					    		cust.add(new CustomerAccount(fName, lName, address, accNum));
+						    	custAccNum++;
+						    	userIn.nextLine();
+						    	clearScreen();
+				    	    	}
+			    			}	
+			    		}
 			    	}
 			    	break;
 			    	
 			    case 2:
 			    	clearScreen();
-			    	System.out.println("Enter the Customer's Account number: ");
-			    	custAccNum = userIn.nextInt();
-			    	if(custAccNum != 0) {
-			    		System.out.println("Invalid Customer account number. ");
-			    		System.out.println("Would you like to try again or use a different verify method? ");
-			    		System.out.println("==========================================");
-			    		System.out.println("1.Enter customer account number ");
-			    		System.out.println("2.Enter first name and last name ");
-			    		System.out.println("3.Exit ");
-			    		System.out.println("========================================== ");
-			    		choiceTwo = userIn.nextInt();
-			    		switch(choiceTwo) {
-			    		case 1:
-			    			break;
-			    		}
+			    	if(policyNum > 999999) {
+			    		System.out.println("Policy already full.");
 			    	}
 			    	else {
-			    		System.out.println("Enter effective date: (ex. Jan 01 1991) ");
-			    		effDate = userIn.nextLine();
-			    		cust.get(z).pol.get(0).setExpDate(effDate);
-			    		System.out.println("Is the policy holder the account holder? ");
-			    		pLAH = userIn.nextInt();
-			    		if(pLAH == 1) {
-			    			System.out.println("===================================");
-			    			System.out.println("Enter the birthday: ");
-			    			bDay = userIn.nextLine();
-			    			cust.get(z).pol.get(0).polyHol.setBDay(bDay);
-			    			System.out.println("Driver's license number: ");
-			    			licNum = userIn.nextLine();
-			    			cust.pol.get(0).polyHol.setdLicNum(licNum);
-				    		System.out.println("Enter the date issued of the license: ");
+				    	System.out.println("Enter the Customer's Account number: ");
+				    	 cusAccTwo = userIn.nextInt();
+				    	 String cuString = String.format("%04d", cusAccTwo);
+				    	 for(CustomerAccount cus : cust) {
+					    	    if (cus.getAccNum().equals(cuString)) {
+					    	    	userIn.nextLine();
+						    		System.out.println("Is the policy holder the account holder? ");
+						    		pLAH = userIn.nextInt();
+						    		if(pLAH == 1) {
+						    			userIn.nextLine();
+						    			fName = cust.get(cusAccTwo).getfName();
+						    			lName = cust.get(cusAccTwo).getlName();
+						    			address = cust.get(cusAccTwo).getAddress();
+						    			System.out.println("===================================");
+						    			System.out.println("Enter the birthday: ");
+						    			bDay = userIn.nextLine();
+						    			System.out.println("Driver's license number: ");
+						    			licNum = userIn.nextLine();
+							    		System.out.println("Enter the date issued of the license: ");
+							    		dateLic = userIn.nextLine();
+							    		System.out.println("===================================");
+						    		}
+						    		else { 
+							    		//policy holder details
+						    			System.out.println("===================================");
+							    		System.out.println("Enter the first name: ");
+							    		fName = userIn.nextLine();
+							    		System.out.println("Enter the last name: ");
+							    		lName = userIn.nextLine();
+							    		System.out.println("Enter the birthday: ");
+							    		bDay = userIn.nextLine();
+							    		System.out.println("Enter the address: ");
+							    		address = userIn.nextLine();
+							    		System.out.println("Driver's license number: ");
+							    		licNum = userIn.nextLine();
+							    		System.out.println("Enter the date issued of the license: ");
+							    		dateLic = userIn.nextLine();
+							    		System.out.println("===================================");
+						    		}
+					    	    }
+				    	 }	    
+				 /*   	if(cusAccTwo != 0) {
+				    		System.out.println("Invalid Customer account number. ");
+				    		System.out.println("Would you like to try again or use a different verify method? ");
+				    		System.out.println("==========================================");
+				    		System.out.println("1.Enter customer account number ");
+				    		System.out.println("2.Enter first name and last name ");
+				    		System.out.println("3.Exit ");
+				    		System.out.println("========================================== ");
+				    		choiceTwo = userIn.nextInt();
+				    		switch(choiceTwo) {
+				    		case 1:
+				    			break;
+				    		}
+				    	} */
+				    		//vehicle details
 				    		System.out.println("===================================");
-				    		dateLic = userIn.nextLine();
-				    		cust.pol.get(0).polyHol.setDateLic(dateLic);
-			    		}
-			    		else {
-				    		//policy holder details
-			    			System.out.println("===================================");
-				    		System.out.println("Enter the first name: ");
-				    		fName = userIn.nextLine();
-				    		cust.pol.get(0).polyHol.setfName(fName);
-				    		System.out.println("Enter the last name: ");
-				    		lName = userIn.nextLine();
-				    		cust.pol.get(0).polyHol.setlName(lName);
-				    		System.out.println("Enter the birthday: ");
-				    		bDay = userIn.nextLine();
-				    		cust.pol.get(0).polyHol.setBDay(bDay);
-				    		System.out.println("Enter the address: ");
-				    		address = userIn.nextLine();
-				    		cust.pol.get(0).polyHol.setAddress(address);
-				    		System.out.println("Driver's license number: ");
-				    		licNum = userIn.nextLine();
-				    		cust.pol.get(0).polyHol.setdLicNum(licNum);
-				    		System.out.println("Enter the date issued of the license: ");
+				    		System.out.println("Enter the car make: ");
+				    		carMake = userIn.nextLine();
+				    		System.out.println("Enter the car model: ");
+				    		carModel = userIn.nextLine();
+				    		System.out.println("Enter the year: ");
+				    		carYear = userIn.nextLine();
+				    		System.out.println("Enter the car type: ");
+				    		carType = userIn.nextLine();
+				    		System.out.println("Enter the fuel type: ");
+				    		carFuelType = userIn.nextLine();
+				    		System.out.println("Enter the purchase price: ");
+				    		carPrice = userIn.nextLine();
+				    		System.out.println("Enter the color: ");
+				    		carColor = userIn.nextLine();
 				    		System.out.println("===================================");
-				    		dateLic = userIn.nextLine();
-				    		cust.pol.get(0).polyHol.setDateLic(dateLic);
-			    		}
-			    		//vehicle details
-			    		System.out.println("===================================");
-			    		System.out.println("Enter the car make: ");
-			    		carMake = userIn.nextLine();
-			    		cust.pol.get(0).car.setMake(carMake);
-			    		System.out.println("Enter the car model: ");
-			    		carModel = userIn.nextLine();
-			    		cust.pol.get(0).car.setModel(carModel);
-			    		System.out.println("Enter the year: ");
-			    		carYear = userIn.nextLine();
-			    		cust.pol.get(0).car.setYear(carYear);
-			    		System.out.println("Enter the car type: ");
-			    		carType = userIn.nextLine();
-			    		cust.pol.get(0).car.setType(carType);
-			    		System.out.println("Enter the fuel type: ");
-			    		carFuelType = userIn.nextLine();
-			    		cust.pol.get(0).car.setFuelType(carFuelType);
-			    		System.out.println("Enter the purchase price: ");
-			    		carPrice = userIn.nextLine();
-			    		cust.pol.get(0).car.setPrice(carPrice);
-			    		System.out.println("Enter the color: ");
-			    		System.out.println("===================================");
-			    		carColor = userIn.nextLine();
-			    		cust.pol.get(0).car.setColor(carColor);
-			    		
-			    		//quote policy
-			    		System.out.println("The policy will cost about: ");
-			    		System.out.println("Would you like to buy the policy? ");
-			    		pLAH = userIn.nextInt();
-			    		if(pLAH == 1) {
-			    			System.out.println("Policy cancelled. ");
-			    		}
-			    		else {
-			    			System.out.println("Policy created. ");
-			    			//send data to database
-			    		}
-			    	}
+				    		System.out.println("Will you add another car? ");
+				    		
+				    		//quote policy
+				    		System.out.println("The policy will cost about: ");
+				    		System.out.println("Would you like to buy the policy? ");
+				    		pLAH = userIn.nextInt();
+				    		if(pLAH == 1) {
+				    			System.out.println("Policy cancelled. ");
+				    		}
+				    		else {
+				    			System.out.println("Policy created. ");
+				    	    	System.out.println("Enter effective date: (ex. Jan 01 1991) ");
+					    		effDate = userIn.nextLine();
+				    			cust.get(cusAccTwo).pol.add(new Policy());
+				    			cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).setPolH(fName, lName, bDay, address, licNum, dateLic);
+				    			cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).setCar(carMake, carModel, carYear, carType, carFuelType, carColor);
+				    			cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).setExpDate(effDate);
+				    			cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).polyHol.seetDeets();
+				    			cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).car.get(cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).car.size()-1).seeDeets();
+				    		}
+				    	}	
+			    	
+		
 			    	break;
 			    	
 			    case 3:
@@ -208,7 +231,14 @@ public class PASApp {
 			    	System.out.println("Enter the customer's last name: ");
 			    	lName = userIn.nextLine();
 			    	clearScreen();
-			    	cust.searchCust(fName, lName);
+			    	for(CustomerAccount cus : cust) {
+			    	    if (cus.getfName().equals(fName) && cus.getlName().equals(lName)) {
+			    	       cus.showDets();
+			    	    }
+			    	    else {
+			    	    	System.out.println("Cant find.");
+			    	    }
+			    	}
 			    	break;
 			    //search policy 	
 			    case 6:
@@ -228,4 +258,5 @@ public class PASApp {
 		while(choiceOne != 8);
 		userIn.close();
 	}
+	
 }

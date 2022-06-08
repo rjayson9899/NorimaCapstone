@@ -5,18 +5,23 @@ public class Vehicle {
 	private String carType;
 	private String price;
 	private double premChar;
-	private String Color;
+	private String color;
 	private String fuelType;
 	private String carModel;
 	private String carMake;
 	private String year;
 	
-	public Vehicle() {
-		
+	public Vehicle(String carMake, String carModel, String carYear, String carType, String carFuelT, String carColor) {
+		this.carMake = carMake;
+		this.carModel = carModel;
+		this.year = carYear;
+		this.carType = carType;
+		this.fuelType = carFuelT;
+		this.color = carColor;
 	}
-	
-	public void setCar(String carMake, String carModel) {
-		
+	//see details
+	public void seeDeets() {
+		System.out.println(carMake+carModel+year+carType+fuelType+color);
 	}
 	
 	public static void setID() {
@@ -39,7 +44,7 @@ public class Vehicle {
 	}
 	
 	public void setColor(String color) {
-		this.Color = color;
+		this.color = color;
 	}
 	
 	public void setModel(String carModel) {
@@ -71,7 +76,7 @@ public class Vehicle {
 	}
 	
 	public String getColor() {
-		return Color;
+		return color;
 	}
 
 }
