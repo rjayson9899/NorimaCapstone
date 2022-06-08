@@ -131,6 +131,23 @@ public class CustomerAccount {
 		}
 	}
 	
+	public static void printVehicleHeader() {
+		System.out.printf("\n%-20s\t%-20s\t%-20s\t%-20s\t%-20s\t%-20s\t%20s\t%20s\n", "Policy Number", "Make", "Model", "Year", "Type", "Fuel Type", "Purchase Price", "Premium");
+	}
+	
+	public void printVehicles() {
+		NumberFormat money = NumberFormat.getCurrencyInstance(Locale.US);
+		String policyNumberString;
+		
+		for (Policy polObj: policyList) {
+			for (Vehicle vhcObj: polObj.getVehicleList()) {
+				policyNumberString = String.format("%06d", polObj.getPolicyNumber());
+				System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%-20s\t%-20s\t%20s\t%20s\n", policyNumberString, vhcObj.getMake(), vhcObj.getModel(), vhcObj.getYear(), vhcObj.getType(), vhcObj.getFuelType(), money.format(vhcObj.getPurchasePrice()), money.format(vhcObj.getPremium()));
+			}
+		}
+
+	}
+	
 	protected void addPolicyIds(List<Integer> idList) {
 		for (Policy polObj: policyList) {
 			idList.add(Integer.valueOf(polObj.getPolicyNumber()));

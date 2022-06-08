@@ -2,13 +2,13 @@ import java.time.LocalDate;
 
 public class RatingEngine {
 	
-	public static double ratePremium(PolicyHolder holObj, Vehicle vhcObj) {
+	public static double ratePremium(int licenseYear, int vehicleYear, double vehiclePurchasePrice) {
 		double premium;
-		double vp = vhcObj.getPurchasePrice();
+		double vp = vehiclePurchasePrice;
 		double vpf;
 		double dlx;
 		int yearNow = LocalDate.now().getYear();
-		int yearDif = yearNow - vhcObj.getYear();
+		int yearDif = yearNow - vehicleYear;
 		
 		if (yearDif < 1) {
 			vpf = 0.01;
@@ -32,10 +32,10 @@ public class RatingEngine {
 			vpf = 0.001;
 		}
 		else {
-			vpf = 0.00;
+			vpf = 0.0005;
 		}
 		
-		dlx = yearNow - holObj.getYear();
+		dlx = yearNow - licenseYear;
 		if (dlx < 1) {
 			dlx = 1;
 		}

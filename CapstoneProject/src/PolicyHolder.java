@@ -40,7 +40,7 @@ public class PolicyHolder {
 		return driverLicenseNumber;
 	}
 	
-	public int getYear() {
+	public int getLicenseYear() {
 		return licenseDate.getYear();
 	}
 	

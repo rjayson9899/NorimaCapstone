@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 
 public class Policy {
@@ -35,6 +37,10 @@ public class Policy {
 		return this.premium;
 	}
 	
+	public ArrayList<Vehicle> getVehicleList() {
+		return vehicleList;
+	}
+	
 	public String getHolderName() {
 		String name = holder.getFirstName() + " " + holder.getLastName();
 		return name;
@@ -54,16 +60,19 @@ public class Policy {
 	}
 	
 	public void generateQuote() {
+		NumberFormat money = NumberFormat.getCurrencyInstance(Locale.US);
 		double singlePremium;
 		this.premium = 0;
+		
+		System.out.println("\nPOLICY QUOTE");
 		for (Vehicle vhcObj: vehicleList) {
-			singlePremium = RatingEngine.ratePremium(holder, vhcObj);
+			singlePremium = RatingEngine.ratePremium(holder.getLicenseYear(), vhcObj.getYear(), vhcObj.getPurchasePrice());
 			vhcObj.setPremium(singlePremium);
 			this.premium += singlePremium;
-			System.out.printf("%-30s: %.2f\n", (vhcObj.getMake() + " " + vhcObj.getModel()), singlePremium);
+			System.out.printf("%-30s: %10s\n", (vhcObj.getMake() + " " + vhcObj.getModel()), money.format(singlePremium));
 		}
 		System.out.println("-------------------------------------------------------------------------------");
-		System.out.printf("%-30s: %.2f\n", "TOTAL", this.premium);
+		System.out.printf("%-30s: %10s\n", "TOTAL", money.format(this.premium));
 	}
 	
 	public void cancelPolicy() {

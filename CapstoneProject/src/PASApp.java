@@ -270,6 +270,10 @@ public class PASApp {
 		for (CustomerAccount cstObj: customerList) {
 			cstObj.printPolicies();
 		}
+		CustomerAccount.printVehicleHeader();
+		for(CustomerAccount cstObj: customerList) {
+			cstObj.printVehicles();
+		}
 		Claim.printClaimHeader();
 		for (Claim clmObj: claimList) {
 			clmObj.printClaimDetails();
