@@ -13,8 +13,13 @@ public class Claim {
 	private String accidentDamage;
 	private double repairCosts;
 	
-	public Claim(int claimNumber) {
-		this.claimNumber = String.format("C%06d", claimNumber);
+	public Claim(int claimNumber, LocalDate accidentDate, String accidentAddress, String accidentDescription, String accidentDamage, double repairCosts) {
+		this.claimNumber = "C" + String.format("%06d", claimNumber);
+		this.accidentDate = accidentDate;
+		this.accidentAddress = accidentAddress;
+		this.accidentDescription = accidentDescription;
+		this.accidentDamage = accidentDamage;
+		this.repairCosts = repairCosts;
 	}
 	
 	public void setAccidentDate(LocalDate accidentDate) {

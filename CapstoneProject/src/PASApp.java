@@ -1,3 +1,17 @@
+/**
+ * Norima Capstone Project, PASApp Client Code
+ * 
+ * For the Norima Capstone project, the student is assigned to create a console-based
+ * Policy and Claims Administration System based on the specifications provided in the 
+ * Robertson Brightspace Java 102 Part 2 course.
+ * 
+ * This class file covers the main functionality of the project. It is from here where 
+ * the program will interface with other designed classes that cover the various aspects
+ * of the PAS system.
+ * 
+ * @author Roger Jayson M. Mendez III
+ */
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
@@ -8,7 +22,7 @@ import java.util.Scanner;
 
 public class PASApp {
 	static File filePath = new File("src/test.txt");
-	private static Scanner in;
+	private static Scanner in = new Scanner(System.in);;
 	
 	public static void main(String[] args) {
 		ArrayList<CustomerAccount> customerList = new ArrayList<CustomerAccount>();
@@ -21,8 +35,8 @@ public class PASApp {
 		int choice, uniqueId, inputId;
 		boolean foundHit, isExpired;
 		
-		in = new Scanner(System.in);
-		
+		// Debug Function: Enable testing program via inputs from a file
+		// ====================================================================================================
 		System.out.print("Test by file? [y for yes]: ");
 		strIn = in.nextLine();
 		
@@ -34,12 +48,36 @@ public class PASApp {
 				e.printStackTrace();
 			}
 		}
+		// ====================================================================================================
 		
 		do {
 			printMenu();
 			choice = getValidInt("Enter your choice: ");
 			
 			switch (choice) {
+				/*
+				 * Generates a new account and stores in program
+				 * 
+				 * Before taking inputs, the program will generate a unique ID
+				 * based on what is available in the system. This ID is generated
+				 * through a class method in the CustomerAccount class. It's behavior
+				 * will be thoroughly explained in the class file. The program will
+				 * proceed if a valid unique ID is returned. The only time it will
+				 * return an invalid ID is when the system has accounts occupying all
+				 * ID spaces. In this case, account creation will be aborted. Otherwise,
+				 * the program will proceed as follows:
+				 * 
+				 * Takes 3 inputs:
+				 * 		(String)	First Name	- first name of customer to register, cannot be blank
+				 * 		(String)	Last Name	- last name of customer to register, cannot be blank
+				 * 		(String)	Address	- address of customer to register, cannot be blank
+				 * 
+				 * Inputed first name and last name will be compared to 
+				 * names already present in the system. If a match for both
+				 * is found, the program will abort the creation of the new
+				 * account. Otherwise, a new account will be made along with
+				 * an automated unique ID.
+				 */
 				case 1:
 					uniqueId = CustomerAccount.generateUniqueId(customerList);
 					
@@ -67,6 +105,59 @@ public class PASApp {
 					}
 					
 					break;
+					
+					
+				/*
+				 * Quotes and/or Creates a Policy based on a series of inputs
+				 * 
+				 * Will first generate a unique ID for the policy. Unique ID is generated
+				 * through a class method available in the Policy class. If the method 
+				 * does not return a valid ID, policy creation will be aborted. This would
+				 * mean the unique ID space for policies has been fully occupied and can no
+				 * longer accommodate another entry.
+				 * 
+				 * To create a Policy, a customer account is required. The program will ask
+				 * for the ID of the account where the Policy will be created on. Failure to
+				 * provide a valid ID will result in the program aborting this process.
+				 * 
+				 * The first step in the creation of the policy is to set the policy holder.
+				 * While the customer account itself can be the holder, the program also
+				 * accommodates custom named account holders. The decision whether the customer
+				 * itself or a custom name will be used as the holder will be decided by
+				 * user input. Inputting 'Y' regardless of case will result in the customer
+				 * account being the basis of the policy holder name. Any other input, including
+				 * blank string, will result in the program asking for a custom name. The handling
+				 * of inputs for creating a policy holder instance will be done through helper methods
+				 * found after the main method.
+				 * 
+				 * Inputs for the above process:
+				 * 		(String) choice	- input if to use customer account or custom name
+				 * For information on the inputs for policy holder, refer to the following helper method:
+				 * 		> makeHolder()			- For creating a policy holder with custom name
+				 * 		> makeHolder(custObj)	- For creating a policy holder using customer account name
+				 * 
+				 * After creating a policy holder, the program will require the creation of one vehicle
+				 * to tie the policy with. The first vehicle is mandatory. For inputs, refer to the respective
+				 * helper method. After inputting the first vehicle, the program will ask if another vehicle
+				 * is to be added. An input of "Y", regardless of case, will result in another loop to get
+				 * the details of the next vehicle. Any other inputs, including whitespace, will allow the
+				 * program to proceed.
+				 * 
+				 * Inputs for the above process:
+				 * 		(String)	choice	- input if to add another vehicle
+				 * For information on the inputs for policy holder, refer to the following helper method:
+				 * 		> makeVehicle()			- For creating a vehicle
+				 * 
+				 * Finally, a quote is generated. For logic on how the quote is generated, refer to
+				 * documentation on Policy instance method generateQuote(). A prompt will ask the user
+				 * if they wish to get the policy. An input of "Y", regardless of case, will register the 
+				 * Policy into the account. Any other inputs, will result in the disposal of the generated
+				 * Policy so far. In the event that the user accepts the policy, the effective date is
+				 * immediately set to the current system date.
+				 * 
+				 * Inputs for the above process:
+				 * 		(String)	choice	- input if to accept quoted policy
+				 */
 				case 2:
 					uniqueId = Policy.generateUniqueId(customerList);
 					if (uniqueId >= 0) {
@@ -105,7 +196,7 @@ public class PASApp {
 							strIn = in.nextLine();
 							
 							if (strIn.equalsIgnoreCase("y")) {
-								effectiveDate = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue() + 1, 1);
+								effectiveDate = LocalDate.now();
 								tempPolicy.setEffectiveDate(effectiveDate);
 								currentAccount.addPolicy(tempPolicy);
 								System.out.printf("Policy created with id %06d\n", uniqueId);
@@ -122,14 +213,31 @@ public class PASApp {
 						System.out.println("No space left to add a new policy");
 					}
 					break;
+					
+				/*
+				 * Cancel an active policy
+				 * 
+				 * Input an ID number corresponding to the Policy to cancel. If a match
+				 * is found, the program will verify its status. If the Policy is still valid,
+				 * The program will proceed with canceling it. If the Policy is already expired,
+				 * The program will abort the cancellation process. If no match is found, the
+				 * program will return back to the main menu.
+				 * 
+				 * Inputs:
+				 * 		(Int)	inputID - The ID of the Policy to cancel
+				 */
 				case 3:
 					inputId = getValidInt("Input Policy Number to cancel: ");
 					foundHit = false;
 					
 					for (CustomerAccount custObj: customerList) {
 						if (custObj.hasPolicy(inputId)) {
-							custObj.cancelAccountPolicy(inputId);
-							System.out.printf("Policy %06d Cancelled\n", inputId);
+							if (custObj.cancelAccountPolicy(inputId)) {
+								System.out.printf("Policy %06d Cancelled\n", inputId);
+							}
+							else {
+								System.out.println("Policy already expired");
+							}
 							foundHit = true;
 						}
 					}
@@ -139,6 +247,25 @@ public class PASApp {
 					}
 					
 					break;
+					
+				/*
+				 * File a claim using Policy ID
+				 * 
+				 * Input an ID number corresponding to the Policy to file the claim with.
+				 * If no match is found, the program returns back to the main menu. Otherwise,
+				 * the program will then check if the corresponding policy has expired. If the
+				 * Policy is expired, program will return back to the main menu. Else, program
+				 * will proceed to generate a unique claim ID. Unique ID is generated through
+				 * class method available in Claim class. if a valid ID is returned, the program
+				 * will begin gathering necessary details before registering claim into the system.
+				 * Otherwise, the program will abort since an invalid ID indicates that the ID space
+				 * of the system has run out.
+				 * 
+				 * Inputs:
+				 * 		(Int)	inputID - ID of Pollicy to file claim against
+				 * For information on the inputs to make a claim, refer to the following helper method:
+				 * 		> makeClaim();
+				 */
 				case 4:
 					inputId = getValidInt("Input Policy Number to file claim: ");
 					foundHit = false;
@@ -147,7 +274,7 @@ public class PASApp {
 					
 					for (CustomerAccount custObj: customerList) {
 						if (custObj.hasPolicy(inputId)) {
-							if (custObj.getPolicyMatchingId(inputId).getExpirationDate().compareTo(LocalDate.now()) < 0) {
+							if (custObj.getPolicyMatchingId(inputId).isExpired()) {
 								isExpired = true;
 							}
 							else {
@@ -160,8 +287,7 @@ public class PASApp {
 					if (foundHit) {
 						uniqueId = Claim.generateUniqueId(claimList);
 						if (uniqueId >= 0) {
-							tempClaim = new Claim(uniqueId);
-							setClaimInputs(tempClaim);
+							tempClaim = makeClaim(uniqueId);
 							claimList.add(tempClaim);
 							System.out.printf("Claim added with id %s\n", tempClaim.getClaimNumber());
 						}
@@ -216,6 +342,8 @@ public class PASApp {
 					do {
 						System.out.print("Input Claim Number to find: ");
 						strIn = in.nextLine();
+						// Debug
+						//System.out.println(strIn);
 						if ((strIn.length() != 7) && (strIn.charAt(0) != 'C')) {
 							System.out.println("Invalid input. Follow the format Cxxxxxx where x is a value between 0 - 9.");
 						}
@@ -342,12 +470,18 @@ public class PASApp {
 		return new PolicyHolder(firstName, lastName, birthDate, licenseNumber, licenseDate);
 	}
 	
-	private static void setClaimInputs(Claim clmObj) {
-		clmObj.setAccidentDate(getDate("accident"));
-		clmObj.setAccidentAddress(getStringNonEmpty("Enter accident address: "));
-		clmObj.setAccidentDescription(getStringNonEmpty("Enter accident description: "));
-		clmObj.setAccidentDamage(getStringNonEmpty("Enter damage description: "));
-		clmObj.setRepairCosts(getValidDouble("Enter repair costs: "));
+	private static Claim makeClaim(int uniqueId) {
+		LocalDate accidentDate;
+		String accidentAddress, accidentDescription, accidentDamage;
+		double repairCosts;
+		
+		accidentDate = getDate("accident");
+		accidentAddress = getStringNonEmpty("Enter accident address: ");
+		accidentDescription = getStringNonEmpty("Enter accident description: ");
+		accidentDamage = getStringNonEmpty("Enter damage description: ");
+		repairCosts = getValidDouble("Enter repair costs: ");
+		
+		return new Claim(uniqueId, accidentDate, accidentAddress, accidentDescription, accidentDamage, repairCosts);
 	}
 	
 	private static LocalDate getDate(String type) {
@@ -361,6 +495,8 @@ public class PASApp {
 			try {
 				System.out.print("Enter " + type + " year: ");
 				year = in.nextInt();
+				// Debug
+				//System.out.println(year);
 				if (year < 1900) {
 					System.out.println("Only years beyond 1900 are valid");
 				}
@@ -378,6 +514,8 @@ public class PASApp {
 			try {
 				System.out.print("Enter " + type + " month: ");
 				month = in.nextInt();
+				// Debug
+				//System.out.println(month);
 				if (month > 12 || month < 1) {
 					System.out.println("Only values 1 - 12 are valid");
 				}
@@ -394,6 +532,8 @@ public class PASApp {
 			try {
 				System.out.print("Enter " + type + " day: ");
 				day = in.nextInt();
+				// Debug
+				//System.out.println(day);
 				date = LocalDate.of(year, month, day);
 				isInvalid = false;
 			}
@@ -423,6 +563,9 @@ public class PASApp {
 			}
 		} while(strIn.equals(""));
 		
+		// Debug
+		//System.out.println(strIn);
+		
 		return strIn;
 	}
 	
@@ -444,6 +587,9 @@ public class PASApp {
 			}
 		} while (isInvalid);
 		
+		// Debug
+		//System.out.println(getInt);
+		
 		return getInt;
 	}
 	
@@ -464,6 +610,9 @@ public class PASApp {
 				in.nextLine();
 			}
 		} while (isInvalid);
+		
+		// Debug
+		//System.out.println(getDouble);
 		
 		return getDouble;
 	}

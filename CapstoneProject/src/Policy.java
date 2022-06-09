@@ -77,7 +77,20 @@ public class Policy {
 	
 	public void cancelPolicy() {
 		LocalDate now = LocalDate.now();
-		expirationDate = now.minusDays(1);
+		
+		if (!(isExpired())) {
+			expirationDate = now.minusDays(1);
+		}
+	}
+	
+	public boolean isExpired() {
+		LocalDate now = LocalDate.now();
+		if (this.expirationDate.compareTo(now) < 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	public static int generateUniqueId(List<CustomerAccount> customerList) {

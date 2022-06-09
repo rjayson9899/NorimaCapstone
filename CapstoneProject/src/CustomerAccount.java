@@ -57,12 +57,20 @@ public class CustomerAccount {
 		return false;
 	}
 	
-	public void cancelAccountPolicy(int policyId) {
+	public boolean cancelAccountPolicy(int policyId) throws IllegalArgumentException {
 		for (Policy polObj: policyList) {
 			if (polObj.getPolicyNumber() == policyId) {
-				polObj.cancelPolicy();
+				if (polObj.isExpired()) {
+					return false;
+				}
+				else {
+					polObj.cancelPolicy();
+					return true;
+				}
 			}
 		}
+		
+		throw new IllegalArgumentException("No Policy found with matching ID");
 	}
 	
 	public static int generateUniqueId(List<CustomerAccount> customerList) {
@@ -102,7 +110,7 @@ public class CustomerAccount {
 		for (Policy polObj: policyList) {
 			policyIdString = String.format("%06d", polObj.getPolicyNumber());
 			premiumString = money.format(polObj.getPremium());
-			if ((polObj.getExpirationDate().compareTo(LocalDate.now())) < 0) {
+			if (polObj.isExpired()) {
 				validString = "No";
 			}
 			else {
