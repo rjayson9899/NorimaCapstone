@@ -8,6 +8,7 @@ public class Claim {
     private String desAcc;
     private String desDmgV;
     private String cost;
+    private boolean claimed;
     
 	public void accidentClaim() {
 
@@ -31,5 +32,9 @@ public class Claim {
 	
 	public void setCost(String cost) {
 		
+	}
+	
+	public void claimed() {
+		claimed = true;
 	}
 }

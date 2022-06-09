@@ -75,4 +75,22 @@ public class dump {
 			this.fName = res.getString("firstName");
 			this.lName = res.getString("lastName");
 			this.address = res.getString("address");
+			
+			 /*   	if(cusAccTwo != 0) {
+    		System.out.println("Invalid Customer account number. ");
+    		System.out.println("Would you like to try again or use a different verify method? ");
+    		System.out.println("==========================================");
+    		System.out.println("1.Enter customer account number ");
+    		System.out.println("2.Enter first name and last name ");
+    		System.out.println("3.Exit ");
+    		System.out.println("========================================== ");
+    		choiceTwo = userIn.nextInt();
+    		switch(choiceTwo) {
+    		case 1:
+    			break;
+    		}
+    	} */
+			
+			else if
+			System.out.println("Claimed");
 }

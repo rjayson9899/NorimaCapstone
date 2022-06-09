@@ -1,3 +1,6 @@
+/*
+ * This is the customer object that 
+ */
 package CapStone;
 
 import java.util.ArrayList;
@@ -30,7 +33,7 @@ public class CustomerAccount {
 		
 	}
 	
-	public void showDets() {
+	public void seeDetails() {
 		
 		System.out.println("================================");
 		System.out.println("Account number: " + cusAccNum);
