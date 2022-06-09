@@ -9,8 +9,7 @@ public class Policy {
 	private PolicyHolder policyHolder;
 	private ArrayList<Vehicle> vehicleList = new ArrayList<Vehicle>();
 	private double totalPremium;
-	
-	
+	private String policyStatus; //For Claims purposes and Cancel purposes
 	
 	public Policy(int policyNumber) {
 		this.policyNumber = policyNumber;
@@ -28,8 +27,41 @@ public class Policy {
 		return policyNumber;
 	}
 	
+	public String getName() {
+		String firstName;
+		String lastName;
+		String policyHolderName;
+		
+		firstName = policyHolder.getFirstName();
+		lastName = policyHolder.getLastName();
+		policyHolderName = firstName + " " + lastName;
+		
+		return policyHolderName;
+	}
+	
+	public PolicyHolder getPolicyHolder() {
+		return policyHolder;
+	}
+	
+	public double getTotalPremium() {
+		return totalPremium;
+	}
+	
+	
 	public void setPolicyHolder(PolicyHolder policyHolderObj) {
 		this.policyHolder = policyHolderObj;
+	}
+	
+	public void setEffectiveDatePolicy(LocalDate effectiveDatePolicy) {
+		this.effectiveDatePolicy = effectiveDatePolicy;
+		this.expirationDatePolicy = effectiveDatePolicy.plusMonths(6);
+	}
+	
+	public void cancelPolicy() {
+		LocalDate dateToday;
+		
+		dateToday = LocalDate.now();
+		expirationDatePolicy = dateToday.minusYears(1);
 	}
 	
 	public void addVehicle(Vehicle vehicleObj) {
@@ -47,20 +79,19 @@ public class Policy {
 			vehicleObj.setVehiclePremium(premium);
 			this.totalPremium += premium;
 			
-			System.out.printf("%-20s \t%-20s \t%-20s\n", "Vehicle Make", "Vehicle Model", "Premium");
-			System.out.printf("%-20s \t%-20s %.2f\n", vehicleObj.getVehicleMake(), vehicleObj.getVehicleModel(), premium);
+			System.out.printf("%-20s \t%-20s \t%.2f\n", vehicleObj.getVehicleMake(), vehicleObj.getVehicleModel(), premium);
 		}
 		
 		System.out.println();
-		System.out.printf("Total Vehicle Premium: %.2f", totalPremium);
-		
-		
+		System.out.printf("Total Vehicle Premium: %.2f\n", totalPremium);
+	}
+
+	public String getPolicyStatus() {
+		return policyStatus;
+	}
+
+	public void setPolicyStatus(String policyStatus) {
+		this.policyStatus = policyStatus;
 	}
 	
-	
-	
-	
-	
-
-
 }

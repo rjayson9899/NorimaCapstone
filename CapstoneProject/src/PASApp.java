@@ -2,8 +2,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.naming.CannotProceedException;
-
 public class PASApp {
 
 	private static void mainMenu() {
@@ -23,17 +21,21 @@ public class PASApp {
 		int choice;
 		int tempID = 0;
 		int year, month, day;
-		LocalDate effectiveDatePolicy, expirationDatePolicy;
+		int policyIDInput;
+		
+		LocalDate effectiveDatePolicy;
 		LocalDate licensedIssueDate;
 
 		String firstName, lastName, customerAddress;
-		String birthDate, driversLicenseNumber, driversLicenseIssued;
+		String birthDate, driversLicenseNumber;
 		String inputString;
 
 		CustomerAccount customer;
 		Policy policy;
 		PolicyHolder policyHolderObj;
 		Vehicle vehicleObj;
+
+		boolean isMatch;
 
 		ArrayList<Integer> customerIDList = new ArrayList<Integer>();
 		ArrayList<CustomerAccount> customerList = new ArrayList<CustomerAccount>();
@@ -43,8 +45,10 @@ public class PASApp {
 		do {
 			mainMenu();
 			choice = input.nextInt();
+			input.nextLine(); //Flush
 			switch (choice) {
 			case 1:
+				isMatch = false;
 				// Generate a unique Customer ID
 				for (CustomerAccount custObj : customerList) {
 					customerIDList.add(Integer.valueOf(custObj.getAccountNumber()));
@@ -62,7 +66,6 @@ public class PASApp {
 				// Validation if full
 				if (tempID <= CustomerAccount.CUSTOMER_MAX) {
 					// Create a Customer Account
-					input.nextLine(); // Flush
 					System.out.println("\nCreating a Customer Account");
 					System.out.print("Enter First Name: ");
 					firstName = input.nextLine();
@@ -71,11 +74,18 @@ public class PASApp {
 					System.out.print("Enter Address: ");
 					customerAddress = input.nextLine();
 
-					customerList.add(new CustomerAccount(tempID, firstName, lastName, customerAddress));
+					for (CustomerAccount custObj : customerList) {
+						if (custObj.getFirstName().equals(firstName) && custObj.getLastName().equals(lastName)) {
+							System.out.println("Account already exist!");
+							isMatch = true;
+						}
+					}
 
-					System.out.println("Account created succesfully!");
-					System.out.printf("Your account number is: %04d", tempID);
-					System.out.println("\n");
+					if (!isMatch) {
+						customerList.add(new CustomerAccount(tempID, firstName, lastName, customerAddress));
+						System.out.println("\nAccount created succesfully!");
+						System.out.printf("Your account number is: %04d\n", tempID);
+					}
 
 				} else {
 					System.out.println("System is full of users cannot create a new account!");
@@ -85,9 +95,9 @@ public class PASApp {
 			case 2:
 				customer = null;
 				// Quote Policy
-				
+
 				// Validation if Customer ID already exists
-				Boolean isMatch = false;
+				isMatch = false;
 				System.out.print("Input Customer ID number: ");
 				int inputCustomerID = input.nextInt();
 				input.nextLine(); // Flush
@@ -129,7 +139,8 @@ public class PASApp {
 						inputString = input.nextLine();
 						if (inputString.equalsIgnoreCase("y")) {
 							System.out.println("Account Holder is the same as Policy Holder");
-							System.out.print("Enter birth date: "); //Fix Format for consistency Convert LocalDate to String
+							System.out.print("Enter birth date: "); // Fix Format for consistency Convert LocalDate to
+																	// String
 							birthDate = input.nextLine();
 							System.out.print("Enter drivers License Number: ");
 							driversLicenseNumber = input.nextLine();
@@ -147,9 +158,9 @@ public class PASApp {
 							policyHolderObj = new PolicyHolder(customer, birthDate, driversLicenseNumber,
 									licensedIssueDate);
 							policy.setPolicyHolder(policyHolderObj);
-							
-							//Debug Code System.out.printf("%06d\n",policy.getPolicyNumber());
-							//Debug Code System.out.println(policyHolderObj.toString());
+
+							// Debug Code System.out.printf("%06d\n",policy.getPolicyNumber());
+							// Debug Code System.out.println(policyHolderObj.toString());
 
 						} else {
 							System.out.println("Create a Policy Holder");
@@ -157,7 +168,8 @@ public class PASApp {
 							firstName = input.nextLine();
 							System.out.print("Enter last name: ");
 							lastName = input.nextLine();
-							System.out.print("Enter birth date: "); //Fix Format for consistency Convert LocalDate to String
+							System.out.print("Enter birth date: "); // Fix Format for consistency Convert LocalDate to
+																	// String
 							birthDate = input.nextLine();
 							System.out.print("Enter address: ");
 							customerAddress = input.nextLine();
@@ -177,11 +189,11 @@ public class PASApp {
 							policyHolderObj = new PolicyHolder(firstName, lastName, birthDate, customerAddress,
 									driversLicenseNumber, licensedIssueDate);
 							policy.setPolicyHolder(policyHolderObj);
-							
-							//Debug Code System.out.printf("%06d\n",policy.getPolicyNumber());
-							//Debug Code System.out.println(policyHolderObj.toString());
+
+							// Debug Code System.out.printf("%06d\n",policy.getPolicyNumber());
+							// Debug Code System.out.println(policyHolderObj.toString());
 						}
-						//Create a Vehicle 
+						// Create a Vehicle
 						do {
 							System.out.println("Create a Vehicle");
 							System.out.print("Input Car Make (Brand): ");
@@ -197,41 +209,55 @@ public class PASApp {
 							String vehicleFuel = input.nextLine();
 							System.out.print("Input Vehicle Purchase Price: ");
 							double vehiclePrice = input.nextDouble();
-							input.nextLine(); //Flush
+							input.nextLine(); // Flush
 							System.out.print("Input Vehicle Color: ");
 							String vehicleColor = input.nextLine();
-							
-							vehicleObj = new Vehicle(vehicleMake, vehicleModel, vehicleYear, vehicleType, vehicleFuel, vehiclePrice, vehicleColor);
+
+							vehicleObj = new Vehicle(vehicleMake, vehicleModel, vehicleYear, vehicleType, vehicleFuel,
+									vehiclePrice, vehicleColor);
 							policy.addVehicle(vehicleObj);
-							
+
 							System.out.print("Do you want to add another vehicle [y] to add more: ");
 							inputString = input.nextLine();
-							
-						} while(inputString.equalsIgnoreCase("y"));
-						
-						//Issue a Policy and Create Quote (Premium)
+
+						} while (inputString.equalsIgnoreCase("y"));
+
+						// Issue a Policy and Create Quote (Premium)
+						System.out.printf("%-20s \t%-20s \t%-20s\n", "Vehicle Make", "Vehicle Model", "Premium");
 						policy.createPolicyQuote();
-						//Verification if get policy or not (If Yes Issue Policy Date)
-						
-						// Create a Policy Date
-						// policy.createPolicyDate();
-						/*
-						System.out.println("Create a Policy Date");
-						System.out.print("Enter year (yyyy): ");
-						year = input.nextInt();
-						System.out.print("Enter month (mm): ");
-						month = input.nextInt();
-						System.out.print("Enter day (dd): ");
-						day = input.nextInt();
+						// Verification if get policy or not (If Yes Issue Policy Date)
+						System.out.print("Get the policy? [y] for yes: ");
+						inputString = input.nextLine();
 
-						LocalDate customDate = LocalDate.of(year, month, day);
-						effectiveDatePolicy = customDate;
-						customDate = customDate.plusMonths(6);
-						expirationDatePolicy = customDate;
+						if (inputString.equalsIgnoreCase("y")) {
+							// Create a Policy Date
+							System.out.println("\nCreate a Policy Date");
+							System.out.print("Enter year (yyyy): ");
+							year = input.nextInt();
+							System.out.print("Enter month (mm): ");
+							month = input.nextInt();
+							System.out.print("Enter day (dd): ");
+							day = input.nextInt();
+							input.nextLine(); // Flush
 
-						System.out.println("Policy Effective Date: " + effectiveDatePolicy);
-						System.out.println("Policy Expiration Date: " + expirationDatePolicy);
-						*/
+							LocalDate customDate = LocalDate.of(year, month, day);
+							effectiveDatePolicy = customDate;
+							policy.setEffectiveDatePolicy(effectiveDatePolicy);
+							customer.addPolicy(policy);
+							System.out.println("\nPolicy is Created");
+							System.out.printf("Policy Number is: %06d\n", tempID);
+							// customDate = customDate.plusMonths(6);
+							// expirationDatePolicy = customDate;
+
+							// Create Status Validation Local Date
+							
+
+							// System.out.println("Policy Effective Date: " + effectiveDatePolicy);
+							// System.out.println("Policy Expiration Date: " + expirationDatePolicy);
+
+						} else {
+							System.out.println("Policy Quote not taken");
+						}
 					} else {
 						System.out.println("System is full of policies, cannot create a new policy!");
 					}
@@ -240,37 +266,92 @@ public class PASApp {
 				}
 
 				break;
-			case 3:
-				break;
-			case 4:
-				break;
-
-			case 5: // Search Account Functionality
-				System.out.println("\nSearch for an Account");
-				System.out.print("Input Account Number: ");
-				int acctIDInput = input.nextInt();
-				input.nextLine(); // Flush
+			case 3: //Cancel a specific policy, Change the expiration date of a policy to an earlier date than specified
+				System.out.println("Cancel a Policy");
+				System.out.print("Input Policy Number: ");
+				policyIDInput = input.nextInt();
+				input.nextLine(); //Flush
 				isMatch = false;
 
 				for (CustomerAccount custObj : customerList) {
-					if (custObj.getAccountNumber() == acctIDInput) {
-						System.out.printf("%-20s \t%-20s \t%-20s \t%-20s\n", "Account Number", "First Name",
-								"Last Name", "Address");
-						custObj.displayCustomerAccountInfo();
+					if (custObj.getPolicy(policyIDInput)) {
+						
 						isMatch = true;
 					}
 				}
 
 				if (!isMatch) {
+					System.out.println("Policy does not exist!");
+				}
+				
+				break;
+			case 4: // Claim Functionality
+				break;
+
+			case 5: // Search Account Functionality
+				isMatch = false;
+
+				System.out.println("\nSearch for an Account");
+				System.out.print("Search Account via name? [y] if yes: ");
+				inputString = input.nextLine();
+				
+				if (inputString.equalsIgnoreCase("y")) {
+					System.out.print("Input Customer's First Name: ");
+					firstName = input.nextLine();
+					System.out.print("Input Customer's Last Name: ");
+					lastName = input.nextLine();
+
+					for (CustomerAccount custObj : customerList) {
+						if (custObj.getFirstName().equals(firstName) && custObj.getLastName().equals(lastName)) {
+							System.out.printf("%-20s \t%-20s \t%-20s \t%-20s\n", "Account Number", "First Name",
+									"Last Name", "Address");
+							custObj.displayCustomerAccountInfo();
+							isMatch = true;
+						}
+					}
+				} else {
+					System.out.print("Input Account Number: ");
+					int acctIDInput = input.nextInt();
+					input.nextLine(); // Flush
+
+					for (CustomerAccount custObj : customerList) {
+						if (custObj.getAccountNumber() == acctIDInput) {
+							System.out.printf("%-20s \t%-20s \t%-20s \t%-20s\n", "Account Number", "First Name",
+									"Last Name", "Address");
+							custObj.displayCustomerAccountInfo();
+							isMatch = true;
+						}
+					}
+				}
+				
+				if (!isMatch) {
 					System.out.println("Account does not exist!");
 				}
 
 				break;
-			case 6:
+			case 6: // Search Policy Functionality
+				System.out.println("\nSearch for a Policy");
+				System.out.print("Input Policy Number: ");
+				policyIDInput = input.nextInt();
+				input.nextLine(); // Flush
+				isMatch = false;
+
+				for (CustomerAccount custObj : customerList) {
+					if (custObj.getPolicy(policyIDInput)) {
+						System.out.printf("%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", "Policy Number", "Effective Date",
+								"Expiration Date", "Policy Holder Name", "Premium Cost");
+						custObj.displayCustomerPolicy(policyIDInput);
+						isMatch = true;
+					}
+				}
+
+				if (!isMatch) {
+					System.out.println("Policy does not exist!");
+				}
 				break;
-			case 7:
+			case 7: //Search Claim Functionality
 				break;
-			case 8:
+			case 8: // Exit
 				break;
 			default:
 				System.out.println("Invalid choice!");
@@ -279,6 +360,13 @@ public class PASApp {
 			}
 
 		} while (choice != 8);
+
+		// Debug Code
+		System.out.printf("%-20s \t%-20s \t%-20s \t%-20s\n", "Account Number", "First Name", "Last Name", "Address");
+		for (CustomerAccount custObj : customerList) {
+			custObj.displayCustomerAccountInfo();
+		}
+		
 
 	}
 
