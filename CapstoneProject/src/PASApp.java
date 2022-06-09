@@ -70,7 +70,7 @@ public class PASApp {
 				 * Takes 3 inputs:
 				 * 		(String)	First Name	- first name of customer to register, cannot be blank
 				 * 		(String)	Last Name	- last name of customer to register, cannot be blank
-				 * 		(String)	Address	- address of customer to register, cannot be blank
+				 * 		(String)	Address		- address of customer to register, cannot be blank
 				 * 
 				 * Inputed first name and last name will be compared to 
 				 * names already present in the system. If a match for both
@@ -224,7 +224,7 @@ public class PASApp {
 				 * program will return back to the main menu.
 				 * 
 				 * Inputs:
-				 * 		(Int)	inputID - The ID of the Policy to cancel
+				 * 		(int)	inputID - The ID of the Policy to cancel
 				 */
 				case 3:
 					inputId = getValidInt("Input Policy Number to cancel: ");
@@ -262,7 +262,7 @@ public class PASApp {
 				 * of the system has run out.
 				 * 
 				 * Inputs:
-				 * 		(Int)	inputID - ID of Pollicy to file claim against
+				 * 		(int)	inputID - ID of Pollicy to file claim against
 				 * For information on the inputs to make a claim, refer to the following helper method:
 				 * 		> makeClaim();
 				 */
@@ -303,6 +303,18 @@ public class PASApp {
 					}
 					
 					break;
+					
+				/*
+				 * Find Customer Account by First Name and Last Name
+				 * 
+				 * Takes 2 Inputs:
+				 * 		(String)	First Name	- First name of account to find
+				 * 		(String)	Last Name	- Last name of account to find
+				 * 	
+				 * Using these inputs, the program will search all customer accounts
+				 * for a match. If a match is found, complete details matching the 
+				 * account will be printed. Otherwise, program will output "no match."
+				 */
 				case 5:
 					firstName = getStringNonEmpty("Input First Name: ");
 					lastName = getStringNonEmpty("Input Last Name: ");
@@ -321,6 +333,17 @@ public class PASApp {
 						System.out.println("No match found");
 					}
 					break;
+					
+				/*
+				 * Find Policy by ID
+				 * 
+				 * Takes 1 input:
+				 * 		(int)	inputID	- ID of policy to find
+				 * 
+				 * Program will check all customer accounts for a matching policy ID.
+				 * If a match is found, all related information to the policy will be 
+				 * printed. Otherwise, program will output "no match."
+				 */
 				case 6:
 					inputId = getValidInt("Input Policy Number to find: ");
 					foundHit = false;
@@ -337,8 +360,21 @@ public class PASApp {
 						System.out.println("No match found");
 					}
 					break;
+				
+				/*
+				 * Find claim by ID
+				 * 
+				 * Takes 1 Input
+				 * 		(String)	strIn - Claim ID of claim to find
+				 * 
+				 * Input must match the format Cxxxxxx where x is a digit from 0-9.
+				 * If the input does not match the format, the program will require
+				 * the user to input again until a valid input is received. The program
+				 * will then search for a claim matching the ID. If a match is found, all
+				 * information related to the claim is printed. Otherwise, program will 
+				 * output "no match."
+				 */
 				case 7:
-					inputId = 0;
 					do {
 						System.out.print("Input Claim Number to find: ");
 						strIn = in.nextLine();
@@ -362,7 +398,7 @@ public class PASApp {
 					foundHit = false;
 					
 					for (Claim clmObj: claimList) {
-						if (clmObj.getIntId() == inputId) {
+						if (clmObj.getClaimNumber().equals(strIn)) {
 							Claim.printClaimHeader();
 							clmObj.printClaimDetails();
 							foundHit = true;
@@ -389,6 +425,7 @@ public class PASApp {
 		} while (choice != 8);
 		
 		//DEBUG
+		// ===========================================================================================
 		System.out.println("Data dump");
 		CustomerAccount.printCustomerAccountHeader();
 		for (CustomerAccount cstObj: customerList) {
@@ -410,9 +447,15 @@ public class PASApp {
 		for (Claim clmObj: claimList) {
 			clmObj.printClaimDetails();
 		}
+		// ===========================================================================================
 		
 	}
 	
+	/**
+	 * Prints the menu of the PAS System
+	 * 
+	 * @param none
+	 */
 	private static void printMenu() {
 		System.out.println("==================================");
 		System.out.println("||          PAS System          ||");
@@ -428,6 +471,24 @@ public class PASApp {
 		System.out.println("==================================");
 	}
 	
+	/**
+	 * Gets input from users and creates an instance of a Vehicle
+	 * 
+	 * Inputs:
+	 * 		(String)	make			- Maker of the vehicle
+	 * 		(String)	model 			- Model of the vehicle
+	 * 		(int)		year			- Year vehicle was made
+	 * 		(String)	type			- Vehicle type
+	 * 		(String)	fuel type		- Fuel type of vehicle
+	 * 		(double)	purchase price	- Price the vehicle was purchased
+	 * 
+	 * Uses input validator methods. See following for documentation
+	 * 		> getStringNonEmpty(message)
+	 * 		> getValidInt(message)
+	 * 		> getValidDouble(message)
+	 * 
+	 * @return Vehicle instance
+	 */
 	private static Vehicle makeVehicle() {
 		String make;
 		String model;
@@ -446,6 +507,24 @@ public class PASApp {
 		return new Vehicle(make, model, year, type, fuelType, purchasePrice);
 	}
 	
+	/**
+	 * Gets Input from user and creates a PolicyHolder instance.
+	 * 
+	 * First name and last name of instance is retrieved from CustomerAccount
+	 * object passed as parameter.
+	 * 
+	 * Inputs:
+	 * 		(LocalDate)	birth date		- Date of birth of customer, ref. to getDate(message) method.
+	 * 		(String)	license number	- License number of customer
+	 * 		(LocalDate)	license date	- Date customer license was issued
+	 * 
+	 * Uses input validator methods. See following for documentation
+	 * 		> getDate(message)
+	 * 		> getStringNonEmpty(message)
+	 * 
+	 * @param custObj - CustomerAccount instance where name is taken
+	 * @return PolicyHolder instance
+	 */
 	private static PolicyHolder makeHolder(CustomerAccount custObj) {
 		String licenseNumber;
 		LocalDate birthDate, licenseDate;
@@ -457,6 +536,22 @@ public class PASApp {
 		return new PolicyHolder(custObj, birthDate, licenseNumber, licenseDate);
 	}
 	
+	/**
+	 * Gets Input from user and creates a PolicyHolder instance.
+	 * 
+	 * Inputs:
+	 * 		(String)	first name		- Get first name of custom policy holder
+	 * 		(String)	first name		- Get last name of custom policy holder
+	 * 		(LocalDate)	birth date		- Date of birth of policy holder to be set, ref. to getDate(message) method.
+	 * 		(String)	license number	- License number of customer
+	 * 		(LocalDate)	license date	- Date policy holder license was issued, ref. to getDate(message) method.
+	 * 
+	 * Uses input validator methods. See following for documentation
+	 * 		> getDate(message)
+	 * 		> getStringNonEmpty(message)
+	 * 
+	 * @return PolicyHolder instance
+	 */
 	private static PolicyHolder makeHolder() {
 		String licenseNumber, firstName, lastName;
 		LocalDate birthDate, licenseDate;
@@ -470,6 +565,24 @@ public class PASApp {
 		return new PolicyHolder(firstName, lastName, birthDate, licenseNumber, licenseDate);
 	}
 	
+	/**
+	 * Gets inputs from user and creates a Claim instance
+	 * 
+	 * Inputs:
+	 * 		(LocalDate)	accident date			- Date accident took place, ref. to getDate(message) method.
+	 * 		(String)	accident address		- location of accident
+	 * 		(String)	accident description	- description of how accident occurred
+	 * 		(String)	accident damage			- description of damage
+	 * 		(Double)	repair costs			- Repair costs of damaged vehicle
+	 * 		
+	 * Uses input validator methods. See following for documentation
+	 * 		> getDate(message)
+	 * 		> getStringNonEmpty(message)
+	 * 		> getValidDouble(message)
+	 * 
+	 * @param uniqueId - ID of claim to be instantiated
+	 * @return Claim instance
+	 */
 	private static Claim makeClaim(int uniqueId) {
 		LocalDate accidentDate;
 		String accidentAddress, accidentDescription, accidentDamage;
@@ -484,11 +597,35 @@ public class PASApp {
 		return new Claim(uniqueId, accidentDate, accidentAddress, accidentDescription, accidentDamage, repairCosts);
 	}
 	
+	/**
+	 * Generates a LocalDate instance based on user input
+	 * 
+	 * Inputs:
+	 * 		(int)	year	-	Year of date to create, limited to 1900 to present year
+	 * 		(int)	month	-	Month of date to create, limited to 1 - 12
+	 * 		(int)	day		-	Day of date to create, limited to valid days of month inputed
+	 * 
+	 * Input validation via exception handling and conditionals is present for
+	 * each input. Input order follow year then month then finally day. Additionally,
+	 * day validity is determined by attempting to instantiate a LocalDate instance
+	 * using prior year and month input. The day is invalid if LocalDate throws an
+	 * exception. For each step in the input chain, invalid inputs will force the user
+	 * to input another value until a valid value is placed.
+	 * 
+	 * The message prompt shown to the user is when asking for input is customized through 
+	 * the String parameter "type."
+	 * 
+	 * i.e. type = "new", then output is "Enter new year: "
+	 * 
+	 * @param type - Description of date type, in string
+	 * @return LocalDate instance
+	 */
 	private static LocalDate getDate(String type) {
 		LocalDate date = LocalDate.now();
 		int month = 0;
 		int day = 0;
 		int year = 0;
+		int yearNow = LocalDate.now().getYear();
 		boolean isInvalid = true;
 		
 		do {
@@ -497,8 +634,8 @@ public class PASApp {
 				year = in.nextInt();
 				// Debug
 				//System.out.println(year);
-				if (year < 1900) {
-					System.out.println("Only years beyond 1900 are valid");
+				if (year < 1900 || year > yearNow) {
+					System.out.println("Only years between 1900 and " + yearNow + " are valid");
 				}
 			}
 			catch (InputMismatchException e) {
@@ -508,7 +645,7 @@ public class PASApp {
 			finally {
 				in.nextLine();
 			}
-		} while (year < 1900);
+		} while (year < 1900 || year > yearNow);
 		
 		do {
 			try {
@@ -552,6 +689,18 @@ public class PASApp {
 		return date;
 	}
 	
+	/**
+	 * Creates a string instance after verifying if input is not blank.
+	 * Can display custom message requesting what type of input string is desired.
+	 * 
+	 * Input:
+	 * 		(String)	strIn	- String to be verified.
+	 * 
+	 * Program will ask for a new input if a blank string is inputed.
+	 * 
+	 * @param message - Custom message to display for every input attempt
+	 * @return String instance
+	 */
 	private static String getStringNonEmpty(String message) {
 		String strIn;
 		
@@ -569,6 +718,19 @@ public class PASApp {
 		return strIn;
 	}
 	
+	/**
+	 * Return inputed integer after verifying if input is valid.
+	 * Can display custom message requesting what type of input is desired.
+	 * 
+	 * Input:
+	 * 		(int)	getInt	- integer to be verified.
+	 * 
+	 * Verification is done via exception handling. Invalid inputs involve values
+	 * that will trigger a InputMismatchException whenever Scanner.nextInt() is called
+	 * 
+	 * @param message
+	 * @return int - validated integer
+	 */
 	private static int getValidInt(String message) {
 		boolean isInvalid = true;
 		int getInt = 0;
@@ -593,6 +755,19 @@ public class PASApp {
 		return getInt;
 	}
 	
+	/**
+	 * Return inputed double after verifying if input is valid.
+	 * Can display custom message requesting what type of input is desired.
+	 * 
+	 * Input:
+	 * 		(double)	getInt	- integer to be verified.
+	 * 
+	 * Verification is done via exception handling. Invalid inputs involve values
+	 * that will trigger a InputMismatchException whenever Scanner.nextDouble() is called
+	 * 
+	 * @param message
+	 * @return double - validated double
+	 */
 	private static double getValidDouble(String message) {
 		boolean isInvalid = true;
 		double getDouble = 0.0;
