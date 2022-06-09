@@ -2,7 +2,7 @@ package policyTest;
 
 import java.util.Date;
 
-public class Claim {
+public class Claim{
 
 	private int claimNum;
 	private Date accidentDate;

@@ -1,8 +1,10 @@
 package policyTest;
 
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -12,13 +14,14 @@ public class PASApp {
 		Scanner input = new Scanner(System.in);
 		ArrayList<CustomerAccount> customerAccounts = new ArrayList<>();
 		ArrayList<Policy> policies = new ArrayList<>();
+		ArrayList<Claim> claims = new ArrayList<>();
 		int choice = 0;
 		int accountNumGenerator = 0;
 		int policyNumGenerator = 0;
 		
 		do {
 			//main menu user interface
-			clrscrn();
+			clrscrn(1);
 			System.out.println("-------------------------------");
 			System.out.println("          PAS System           ");
 			System.out.println("-------------------------------");
@@ -37,11 +40,11 @@ public class PASApp {
 			switch(choice) {
 			
 				case 1: //Creating Account
-					clrscrn();
+					clrscrn(1);
 					input.nextLine();
 					boolean checker = false;
 					System.out.println("\n-------------------------------");
-					System.out.println("Creating account");
+					System.out.println("       Creating account");
 					System.out.println("-------------------------------");
 					System.out.print("First Name: ");
 					String fname = input.nextLine();
@@ -62,26 +65,30 @@ public class PASApp {
 					
 					if(!checker) {
 						customerAccounts.add(new CustomerAccount(fname, lname, address));
+						customerAccounts.get(customerAccounts.size() - 1).generateId(accountNumGenerator);
+						accountNumGenerator++;
 						System.out.println("Created account!");
+						System.out.println("Your account number is: " + customerAccounts
+						.get(customerAccounts.size() - 1).getAccountNum());
 					}	
 					
-					customerAccounts.get(customerAccounts.size() - 1).generateId(accountNumGenerator);
-					accountNumGenerator++;
+					
 					
 					break;
 					
 				case 2: // Quote/Buy policy
-					clrscrn();
+					clrscrn(1);
 					System.out.println("\n-------------------------------");
-					System.out.println("Quoting policy");
+					System.out.println("        Quoting policy");
 					System.out.println("-------------------------------");
 					System.out.print("Input account number: ");
 					int accNum = input.nextInt();
 					int indexGet = 0;
-					boolean accExist = false;
+					boolean accExist = false, wrongDate = true;
 					String make = "",model = "",color = "";
 					int year = 0, type = 0, fuel = 0;
 					double price = 0, total = 0;
+					LocalDate effectDate, expiredDate;
 					
 					for(CustomerAccount x: customerAccounts) { //for each loop to get index of the account number , checks if account exist
 						if(x.getAccountNum() == accNum) {
@@ -94,17 +101,21 @@ public class PASApp {
 					//Policy Holder Details
 					
 					if(accExist) { 
-						clrscrn();
+						clrscrn(1);
 						System.out.println("\n-------------------------------");
-						System.out.println("Policy Holder Details");
+						System.out.println("    Policy Holder Details");
 						System.out.println("-------------------------------");
-
-						System.out.print("Input effective date(dd/mm/yyyy): ");
 						input.nextLine();
-						String date = input.nextLine();
-						Date effectDate = new SimpleDateFormat("dd/MM/yyyy").parse(date);
-						
-						
+						do{
+							System.out.println("Input effective date(yyyy-mm-dd): ");
+							System.out.print("ex.'2022-09-18': ");
+							String date = input.nextLine();
+							effectDate = LocalDate.parse(date);
+							wrongDate = Policy.checkDate(effectDate);
+						}while(!wrongDate);
+
+						expiredDate= effectDate.plusMonths(6);
+						System.out.println(expiredDate);
 						//Add checker if the one who creates policy is the account holder or different person
 						String fnamePol = "", lnamePol = "";
 						System.out.print("Is the account owner also the policy holder? (y/n) ");
@@ -129,17 +140,22 @@ public class PASApp {
 							lnamePol = input.nextLine();	
 						}
 						
-						System.out.print("Input birth date(dd/mm/yyyy): ");
+						System.out.println("Input birth date(yyyy-mm-dd): ");
+						System.out.print("ex.'2022-09-18': ");
 						String birthDateString = input.nextLine();
-						Date birthDate = new SimpleDateFormat("dd/MM/yyyy").parse(birthDateString);
+						LocalDate birthDate = LocalDate.parse(birthDateString);
 						System.out.print("Input license number: ");
 						String license = input.nextLine();
-						System.out.print("Input license date issued(dd/mm/yyyy): ");
+						System.out.println("Input license date issued(yyyy-mm-dd): ");
+						System.out.print("ex.'2022-09-18': ");
 						String licenseDateString = input.nextLine();
-						int licenseYear = Integer.parseInt(licenseDateString.substring(licenseDateString.lastIndexOf('/') + 1));
-						Date licenseDate = new SimpleDateFormat("dd/MM/yyyy").parse(licenseDateString);
+						LocalDate licenseDate = LocalDate.parse(licenseDateString);
+						int licenseYear =licenseDate.getYear() ;
 						policies.add(new Policy(effectDate, new PolicyHolder(fnamePol, lnamePol, birthDate, license, licenseDate)));
-						
+						policies.get(policies.size() - 1).generateId(policyNumGenerator);
+						policies.get(policies.size() - 1).setStatus();
+						policies.get(policies.size() - 1).setExpDate(expiredDate);
+						policyNumGenerator++;
 						
 						//Vehicle Details
 						System.out.print("How many vehicles for this policy? : ");
@@ -147,9 +163,9 @@ public class PASApp {
 						input.nextLine();
 						
 						while(numVehicle > 0) {
-							clrscrn();
+							clrscrn(1);
 							System.out.println("\n-------------------------------");
-							System.out.println("Vehicle Details");
+							System.out.println("       Vehicle Details");
 							System.out.println("-------------------------------");
 							System.out.print("Make: ");
 							make = input.nextLine();
@@ -179,12 +195,15 @@ public class PASApp {
 							input.nextLine();
 							color = input.nextLine();
 							policies.get(policies.size() - 1).addVehicles(new Vehicle(make,model,year, type, fuel, price, color, licenseYear));
+							
+							
 							numVehicle--;
 						}
-						clrscrn();
+						clrscrn(1);
 						System.out.println("-------------------------------");
 						System.out.println(" Details of your Policy Holder ");
 						System.out.println("-------------------------------");
+						System.out.println("Policy Number: " + policies.get(policies.size() - 1).getPolicyNum() );
 						System.out.println("Full name: " + fnamePol + " " + lnamePol );
 						System.out.println("Effective Date: " + effectDate );
 						System.out.format("Birthdate: %-5s \n", birthDate );
@@ -192,6 +211,7 @@ public class PASApp {
 						System.out.format("License Date: %-5s ", licenseDate );
 						System.out.println("\n-------------------------------");
 						
+
 						for(Vehicle v: policies.get(policies.size() - 1).getVehicles()) {
 							System.out.println("-------------------------------");
 							System.out.println("    Details of your Vehicle    ");
@@ -227,16 +247,13 @@ public class PASApp {
 							total += v.getPremium();
 						}
 						
+						policies.get(policies.size() - 1).setCost(total);
 						System.out.println("-------------------------------");
 						System.out.println(" Total Premium: $" + total);
-						System.out.println("-------------------------------");
-						
-						//policies.get(policies.size() - 1).addVehicles(new Vehicle(make,model,year, type, fuel, price, color, licenseYear));
-						//double sample = policies.get(policies.size() - 1).getVehicles().get( policies.get(policies.size() - 1).getVehicles().size() - 1).getPremium();
-						
+						System.out.println("-------------------------------\n");
 						
 						System.out.println("-------------------------------");
-						System.out.println("Would you like to buy policy? (y/n)");
+						System.out.println("Would you like to buy the policy? (y/n)");
 						decision = input.nextLine().charAt(0);
 						
 						if(decision.equals('y') || decision.equals('Y')) {
@@ -250,6 +267,7 @@ public class PASApp {
 						else {
 							System.out.println("Policy cancelled!");
 							policies.remove(policies.size() - 1);
+							policyNumGenerator--;
 						}
 						
 						
@@ -263,34 +281,90 @@ public class PASApp {
 					break;
 					
 				case 3:
-					clrscrn();
+					clrscrn(1);
+					int indexPol = 0, indexCusPol = 0, indexCus = 0;
+					boolean doesExist = false;
+					Character confirm;
+
 					System.out.println("\n-------------------------------");
-					System.out.println("Cancel Policy");
+					System.out.println("        Cancel Policy");
 					System.out.println("-------------------------------");
 					System.out.print("Input Policy Number: ");
 					int policy = input.nextInt();
 					
-					System.out.println("Successfully cancelled policy!");
+
+					for(Policy p: policies){
+						if(p.getPolicyNum() == policy){
+							doesExist = true;
+							indexPol = policies.indexOf(p);
+							for(CustomerAccount c: customerAccounts){
+								for(Policy o: c.getPolicyAct()){
+									if(o.getPolicyNum() == policy){
+										indexCusPol = c.getPolicyAct().indexOf(o);
+										indexCus = customerAccounts.indexOf(c);
+									}
+								}
+							}
+							p.displayInfo();
+							break;
+						}
+
+						else{
+							doesExist = false;
+						}
+					}
+					
+					if(policies.get(indexPol).getStatus().equals("Expired")){
+						System.out.println("Policy is Expired!");
+						System.out.println("Going back to main menu");
+						clrscrn(3);
+					}
+
+					else{
+						input.nextLine();
+						System.out.println("Would you like to cancel this policy? (y/n)");
+						confirm = input.nextLine().charAt(0);
+
+						if(confirm.equals('y') || confirm.equals('Y')){
+							System.out.println("Input new expiration date(yyyy-mm-dd): ");
+							System.out.print("ex.'2022-09-18': ");
+							String expDateString = input.nextLine();
+							LocalDate expDate = LocalDate.parse(expDateString);
+							customerAccounts.get(indexCus).getPolicyAct().get(indexCusPol).setExpDate(expDate);;
+							customerAccounts.get(indexCus).getPolicyAct().get(indexCusPol).setStatus();
+							policies.get(indexPol).setExpDate(expDate);
+							policies.get(indexPol).setStatus();
+							System.out.println("Successfully edited expiration policy!"); 
+						}
+
+						else{
+							System.out.println("Going back to main menu");
+						}
+					}
+					
 					break;
 					
 				case 4:
-					clrscrn();
+					clrscrn(1);
 
 					System.out.println("\n-------------------------------");
-					System.out.println("File Accident Claim");
+					System.out.println("     File Accident Claim");
 					System.out.println("-------------------------------");
 					System.out.print("Input Policy Number: ");
 					int policy1 = input.nextInt();
+
+					
 					
 					//Add condition if policy exist
-					clrscrn();
+					clrscrn(1);
 					input.nextLine();
 					System.out.println("\n-------------------------------");
 					System.out.println("Claim Details");
 					System.out.println("-------------------------------");
-					System.out.print("Input accident date(dd/mm/yyyy): ");
+					System.out.println("Input accident date(yyyy-mm-dd): ");
+					System.out.print("ex.'2022-09-18': ");
 					String accidentDateString = input.nextLine();
-					Date accidentDate = new SimpleDateFormat("dd/MM/yyyy").parse(accidentDateString);
+					LocalDate accidentDate = LocalDate.parse(accidentDateString);
 					System.out.print("Address of where the accident happened: ");
 					String accidentAdd = input.nextLine();
 					System.out.print("Description of the accident: ");
@@ -307,9 +381,9 @@ public class PASApp {
 					
 					
 				case 5:
-					clrscrn();
+					clrscrn(1);
 					System.out.println("\n-------------------------------");
-					System.out.println("Search Customer");
+					System.out.println("       Search Customer");
 					System.out.println("-------------------------------");
 					System.out.println("How would you like to search for customer?");
 					System.out.println("[1] Using first and last name");
@@ -339,10 +413,10 @@ public class PASApp {
 					
 					
 				case 6:
-					clrscrn();
+					clrscrn(1);
 
 					System.out.println("\n-------------------------------");
-					System.out.println("Search Policy");
+					System.out.println("        Search Policy");
 					System.out.println("-------------------------------");
 					System.out.print("Input policy number: ");
 					int policyNum = input.nextInt();
@@ -351,9 +425,9 @@ public class PASApp {
 					break;
 					
 				case 7:
-					clrscrn();
+					clrscrn(1);
 					System.out.println("\n-------------------------------");
-					System.out.println("Search Claim");
+					System.out.println("        Search Claim");
 					System.out.println("-------------------------------");
 					System.out.print("Input claim number: ");
 					int claimNum = input.nextInt();
@@ -361,7 +435,7 @@ public class PASApp {
 					break;
 				
 				default:
-					clrscrn();
+					clrscrn(1);
 					
 				
 			}
@@ -371,10 +445,16 @@ public class PASApp {
 		input.close();
 	}
 	
-	private static void clrscrn() {
-		for(int x = 0; x < 30; x++) { // for clear screen on eclipse console
-			System.out.println();
-		}
+	private static void clrscrn(int timer) {
+		System.out.println("Processing...");
+		try {
+			TimeUnit.SECONDS.sleep(timer);
+			System.out.print("\033[H\033[2J");  
+			System.out.flush();  
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 	
 	

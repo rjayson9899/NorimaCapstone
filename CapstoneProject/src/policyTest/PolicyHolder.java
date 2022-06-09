@@ -1,16 +1,17 @@
 package policyTest;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class PolicyHolder {
 
 	private String fname;
 	private String lname;
-	private Date dateOfBirth;
+	private LocalDate dateOfBirth;
 	private String license;
-	private Date licenseIssueDate;
+	private LocalDate licenseIssueDate;
 	
-	public PolicyHolder(String fname, String lname,Date dateOfBirth, String license, Date licenseDateIssueDate) {
+	
+	public PolicyHolder(String fname, String lname,LocalDate dateOfBirth, String license, LocalDate licenseDateIssueDate) {
 		this.fname = fname;
 		this.lname = lname;
 		this.dateOfBirth = dateOfBirth;
@@ -36,20 +37,21 @@ public class PolicyHolder {
 	public void setLicense(String license) {
 		this.license = license;
 	}
-	public Date getLicenseIssueDate() {
+	public LocalDate getLicenseIssueDate() {
 		return licenseIssueDate;
 	}
-	public void setLicenseIssueDate(Date licenseIssueDate) {
+	public void setLicenseIssueDate(LocalDate licenseIssueDate) {
 		this.licenseIssueDate = licenseIssueDate;
 	}
 
-	public Date getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(Date dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
+
 	
 	
 }
