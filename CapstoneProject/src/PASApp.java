@@ -1,5 +1,13 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.time.LocalDate;
+import java.time.DateTimeException;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
 /**
- * Norima Capstone Project, PASApp Client Code
+ * Norima Capstone Project, PASApp Client Code.
  * 
  * For the Norima Capstone project, the student is assigned to create a console-based
  * Policy and Claims Administration System based on the specifications provided in the 
@@ -11,14 +19,6 @@
  * 
  * @author Roger Jayson M. Mendez III
  */
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.time.LocalDate;
-import java.time.DateTimeException;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 public class PASApp {
 	static File filePath = new File("src/test.txt");
@@ -262,7 +262,7 @@ public class PASApp {
 				 * of the system has run out.
 				 * 
 				 * Inputs:
-				 * 		(int)	inputID - ID of Pollicy to file claim against
+				 * 		(int)	inputID - ID of Policy to file claim against
 				 * For information on the inputs to make a claim, refer to the following helper method:
 				 * 		> makeClaim();
 				 */

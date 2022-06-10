@@ -28,9 +28,9 @@ public class Policy {
 	
 	
 	/**
-	 * Constructor for instantiation of a Policy object.
+	 * Constructor
 	 * 
-	 * @param policyNumber
+	 * @param policyNumber - unique id
 	 */
 	public Policy(int policyNumber) {
 		this.policyNumber = policyNumber;
@@ -151,7 +151,7 @@ public class Policy {
 	}
 	
 	/**
-	 * Sets 
+	 * Sets expiration date of policy to one day before the effective
 	 */
 	public void cancelPolicy() {
 		if (!(isExpired())) {
@@ -159,6 +159,13 @@ public class Policy {
 		}
 	}
 	
+	/**
+	 * Checks if current policy is expired. by comparing current date to expiration date.
+	 * If the expiration date is less than the current date, the policy is considered
+	 * expired.
+	 * 
+	 * @return boolean - true if policy is expired, false if not
+	 */
 	public boolean isExpired() {
 		LocalDate now = LocalDate.now();
 		if (this.expirationDate.compareTo(now) < 0) {
@@ -169,6 +176,18 @@ public class Policy {
 		}
 	}
 	
+	/**
+	 * Class Method.
+	 * Generates a unique ID based on policies found in a CustomerAccount list param.
+	 * 
+	 * List is checked for a matching id from 0 to 999999. The first value found to
+	 * have no match will be returned as the unique ID. Otherwise, a -1 will be returned
+	 * signifying all IDs are in use.
+	 * 
+	 * @param customerList
+	 * @return int - unique ID if vacant value is found
+	 * 				 -1 if no vacant value is found
+	 */
 	public static int generateUniqueId(List<CustomerAccount> customerList) {
 		int limit = 999999;
 		ArrayList<Integer> idList = new ArrayList<Integer>();
