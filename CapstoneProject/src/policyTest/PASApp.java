@@ -2,18 +2,15 @@ package policyTest;
 
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 public class PASApp {
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args)  {
 		Scanner input = new Scanner(System.in);
 		ArrayList<CustomerAccount> customerAccounts = new ArrayList<>();
-		ArrayList<Policy> policies = new ArrayList<>();
 		ArrayList<Claim> claims = new ArrayList<>();
 		int choice = 0;
 		int accountNumGenerator = 0;
@@ -151,10 +148,13 @@ public class PASApp {
 						String licenseDateString = input.nextLine();
 						LocalDate licenseDate = LocalDate.parse(licenseDateString);
 						int licenseYear =licenseDate.getYear() ;
-						policies.add(new Policy(effectDate, new PolicyHolder(fnamePol, lnamePol, birthDate, license, licenseDate)));
-						policies.get(policies.size() - 1).generateId(policyNumGenerator);
-						policies.get(policies.size() - 1).setStatus();
-						policies.get(policies.size() - 1).setExpDate(expiredDate);
+
+						customerAccounts.get(indexGet).addPolicyAct(new Policy(effectDate, 
+																		new PolicyHolder(fnamePol, lnamePol, birthDate, license, licenseDate)));
+						customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).generateId(policyNumGenerator);
+						customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).setExpDate(expiredDate);
+						customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).setStatus();
+																	
 						policyNumGenerator++;
 						
 						//Vehicle Details
@@ -194,8 +194,10 @@ public class PASApp {
 							System.out.print("Color: ");
 							input.nextLine();
 							color = input.nextLine();
-							policies.get(policies.size() - 1).addVehicles(new Vehicle(make,model,year, type, fuel, price, color, licenseYear));
-							
+					
+
+							customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1)
+												.addVehicles(new Vehicle(make,model,year, type, fuel, price, color, licenseYear));
 							
 							numVehicle--;
 						}
@@ -203,7 +205,7 @@ public class PASApp {
 						System.out.println("-------------------------------");
 						System.out.println(" Details of your Policy Holder ");
 						System.out.println("-------------------------------");
-						System.out.println("Policy Number: " + policies.get(policies.size() - 1).getPolicyNum() );
+						System.out.println("Policy Number: " +(policyNumGenerator + 1));
 						System.out.println("Full name: " + fnamePol + " " + lnamePol );
 						System.out.println("Effective Date: " + effectDate );
 						System.out.format("Birthdate: %-5s \n", birthDate );
@@ -212,7 +214,9 @@ public class PASApp {
 						System.out.println("\n-------------------------------");
 						
 
-						for(Vehicle v: policies.get(policies.size() - 1).getVehicles()) {
+						for(Vehicle v: customerAccounts.get(indexGet).getPolicyAct()
+										.get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).getVehicles()) {
+
 							System.out.println("-------------------------------");
 							System.out.println("    Details of your Vehicle    ");
 							System.out.println("-------------------------------");
@@ -247,7 +251,8 @@ public class PASApp {
 							total += v.getPremium();
 						}
 						
-						policies.get(policies.size() - 1).setCost(total);
+						customerAccounts.get(indexGet).getPolicyAct()
+							.get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).setCost(total);
 						System.out.println("-------------------------------");
 						System.out.println(" Total Premium: $" + total);
 						System.out.println("-------------------------------\n");
@@ -258,15 +263,12 @@ public class PASApp {
 						
 						if(decision.equals('y') || decision.equals('Y')) {
 							
-							customerAccounts.get(indexGet).addPolicyAct(policies.get(policies.size() - 1));
-							
-							
 							System.out.println("Policy bought!");
 						}
 						
 						else {
 							System.out.println("Policy cancelled!");
-							policies.remove(policies.size() - 1);
+							customerAccounts.get(indexGet).getPolicyAct().remove(customerAccounts.get(indexGet).getPolicyAct().size() - 1);
 							policyNumGenerator--;
 						}
 						
@@ -290,31 +292,21 @@ public class PASApp {
 					System.out.println("        Cancel Policy");
 					System.out.println("-------------------------------");
 					System.out.print("Input Policy Number: ");
-					int policy = input.nextInt();
+					int policyNum = input.nextInt();
 					
-
-					for(Policy p: policies){
-						if(p.getPolicyNum() == policy){
-							doesExist = true;
-							indexPol = policies.indexOf(p);
-							for(CustomerAccount c: customerAccounts){
-								for(Policy o: c.getPolicyAct()){
-									if(o.getPolicyNum() == policy){
-										indexCusPol = c.getPolicyAct().indexOf(o);
-										indexCus = customerAccounts.indexOf(c);
-									}
-								}
+					for(CustomerAccount c: customerAccounts){
+						for(Policy p: c.getPolicyAct()){
+							if(p.getPolicyNum() == policyNum){
+								doesExist = true;
+								indexPol = c.getPolicyAct().indexOf(p);
+								indexCus = customerAccounts.indexOf(c);
+								p.displayInfo();
+								break;
 							}
-							p.displayInfo();
-							break;
-						}
-
-						else{
-							doesExist = false;
 						}
 					}
-					
-					if(policies.get(indexPol).getStatus().equals("Expired")){
+				
+					if(customerAccounts.get(indexCus).getPolicyAct().get(indexPol).getStatus().equals("Expired")){
 						System.out.println("Policy is Expired!");
 						System.out.println("Going back to main menu");
 						clrscrn(3);
@@ -330,10 +322,8 @@ public class PASApp {
 							System.out.print("ex.'2022-09-18': ");
 							String expDateString = input.nextLine();
 							LocalDate expDate = LocalDate.parse(expDateString);
-							customerAccounts.get(indexCus).getPolicyAct().get(indexCusPol).setExpDate(expDate);;
-							customerAccounts.get(indexCus).getPolicyAct().get(indexCusPol).setStatus();
-							policies.get(indexPol).setExpDate(expDate);
-							policies.get(indexPol).setStatus();
+							customerAccounts.get(indexCus).getPolicyAct().get(indexPol).setExpDate(expDate);;
+							customerAccounts.get(indexCus).getPolicyAct().get(indexPol).setStatus();
 							System.out.println("Successfully edited expiration policy!"); 
 						}
 
@@ -419,8 +409,8 @@ public class PASApp {
 					System.out.println("        Search Policy");
 					System.out.println("-------------------------------");
 					System.out.print("Input policy number: ");
-					int policyNum = input.nextInt();
-					System.out.println(policyNum);
+					int policyNumSearch = input.nextInt();
+					System.out.println(policyNumSearch);
 					
 					break;
 					

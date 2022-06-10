@@ -73,7 +73,7 @@ public class Policy {
 		if(present.isAfter(effectDate) && present.isBefore(expDate)){
 			this.status = "Enforced";
 		}
-		else if(present.isBefore(effectDate)){
+		else if(present.isBefore(effectDate) && present.isBefore(expDate)){
 			this.status = "Scheduled";
 		}
 
