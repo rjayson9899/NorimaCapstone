@@ -3,7 +3,6 @@ import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.DateTimeException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -490,6 +489,7 @@ public class PASApp {
 	 * @return Vehicle instance
 	 */
 	private static Vehicle makeVehicle() {
+		int yearNow = LocalDate.now().getYear();
 		String make;
 		String model;
 		int year;
@@ -499,7 +499,15 @@ public class PASApp {
 		
 		make = getStringWord("Enter make: ");
 		model = getStringWord("Enter model: ");
-		year = getValidInt("Enter year: ");
+		
+		do {
+			year = getValidInt("Enter year: ");
+			if (year > yearNow) {
+				System.out.println("Car year cannot be further from current year (" + yearNow + ")");
+			}
+		} while (year > yearNow);
+		
+		
 		type = getStringWord("Enter type: ");
 		fuelType = getStringWord("Enter fuel type: ");
 		purchasePrice = getValidDouble("Enter purchase price: ");
@@ -529,9 +537,9 @@ public class PASApp {
 		String licenseNumber;
 		LocalDate birthDate, licenseDate;
 		
-		birthDate = getDate("birth");
+		birthDate = getDate("birth", true);
 		licenseNumber = getStringWord("Input driver's license number: ");
-		licenseDate = getDate("license issue");
+		licenseDate = getDate("license issue", true);
 		
 		return new PolicyHolder(custObj, birthDate, licenseNumber, licenseDate);
 	}
@@ -558,9 +566,9 @@ public class PASApp {
 		
 		firstName = getStringWord("Enter first name: ");
 		lastName = getStringWord("Enter last name: ");
-		birthDate = getDate("birth");
+		birthDate = getDate("birth", true);
 		licenseNumber = getStringWord("Input license number: ");
-		licenseDate = getDate("license issue");
+		licenseDate = getDate("license issue", true);
 		
 		return new PolicyHolder(firstName, lastName, birthDate, licenseNumber, licenseDate);
 	}
@@ -585,10 +593,17 @@ public class PASApp {
 	 */
 	private static Claim makeClaim(int uniqueId) {
 		LocalDate accidentDate;
+		LocalDate now = LocalDate.now();
 		String accidentAddress, accidentDescription, accidentDamage;
 		double repairCosts;
 		
-		accidentDate = getDate("accident");
+		do {
+			accidentDate = getDate("accident", true);
+			if (accidentDate.compareTo(now) > 0) {
+				System.out.println("Accident date must happen before " + now);
+			}
+		} while (accidentDate.compareTo(now) > 0);
+		
 		accidentAddress = getStringWord("Enter accident address: ");
 		accidentDescription = getStringWord("Enter accident description: ");
 		accidentDamage = getStringWord("Enter damage description: ");
@@ -605,85 +620,110 @@ public class PASApp {
 	 * 		(int)	month	-	Month of date to create, limited to 1 - 12
 	 * 		(int)	day		-	Day of date to create, limited to valid days of month inputed
 	 * 
-	 * Input validation via exception handling and conditionals is present for
-	 * each input. Input order follow year then month then finally day. Additionally,
-	 * day validity is determined by attempting to instantiate a LocalDate instance
-	 * using prior year and month input. The day is invalid if LocalDate throws an
-	 * exception. For each step in the input chain, invalid inputs will force the user
-	 * to input another value until a valid value is placed.
+	 * To verify if an input is a valid integer, getValidInt(message) method is used. 
+	 * For more information on functionality, refer below. Beyond this, verification
+	 * if the integer values falls within the scope of the method is done. Depending
+	 * on the value of the requirePast param, an additional check is done. 
 	 * 
-	 * The message prompt shown to the user is when asking for input is customized through 
+	 * For year, the method will check if the input is beyond the set limit of 1900.
+	 * If requiresPast is true, the program will additionally prevent inputs beyond the
+	 * current year.
+	 * 
+	 * For month, values 01 to 12 are the only valid values which present Jan - Dec. If
+	 * requiresPast is true, program will limit month selection from jan to current month
+	 * if the year set prior is equal to current year
+	 * 
+	 * For day, input is validated base on if a LocalDate instance can be generated
+	 * from input. If LocalDate.of(year, month, dayOfMonth) throws an exception, the 
+	 * program catches it and outputs that day is invalid. Additionally, if requirePast
+	 * is true, The generated LocalDate value is compared to current date. If the generated
+	 * date is greater than the current, the program will force the user to input another day
+	 * until the generated date is less than or equal to current date. 
+	 * 
+	 * The message prompt shown to the user when asking for input is customized through 
 	 * the String parameter "type."
 	 * 
 	 * i.e. type = "new", then output is "Enter new year: "
 	 * 
 	 * @param type - Description of date type, in string
+	 * @param requirePast - true if enforce dates must be past, false otherwise
 	 * @return LocalDate instance
 	 */
-	private static LocalDate getDate(String type) {
+	private static LocalDate getDate(String type, boolean requirePast) {
 		LocalDate date = LocalDate.now();
 		int month = 0;
 		int day = 0;
 		int year = 0;
 		int yearNow = LocalDate.now().getYear();
-		boolean isInvalid = true;
+		int monthNow = LocalDate.now().getMonthValue();
+		boolean isInvalid;
 		
+		// Get Year
+		isInvalid = true;
 		do {
-			try {
-				System.out.print("Enter " + type + " year: ");
-				year = in.nextInt();
-				// Debug
-				//System.out.println(year);
-				if (year < 1900 || year > yearNow) {
+			year = getValidInt("Enter " + type + " year: ");
+			// Debug
+			//System.out.println(year);
+			if (requirePast) {
+				if (year > yearNow || year < 1900) {
 					System.out.println("Only years between 1900 and " + yearNow + " are valid");
 				}
-			}
-			catch (InputMismatchException e) {
-				System.out.println("Invalid input");
-				year = -1;
-			}
-			finally {
-				in.nextLine();
-			}
-		} while (year < 1900 || year > yearNow);
-		
-		do {
-			try {
-				System.out.print("Enter " + type + " month: ");
-				month = in.nextInt();
-				// Debug
-				//System.out.println(month);
-				if (month > 12 || month < 1) {
-					System.out.println("Only values 1 - 12 are valid");
+				else {
+					isInvalid = false;
 				}
 			}
-			catch (InputMismatchException e) {
-				System.out.println("Invalid input");
+			else if (year < 1900) {
+				System.out.println("Year must be beyond 1900");
 			}
-			finally {
-				in.nextLine();
+			else {
+				isInvalid = false;
 			}
-		} while(month > 12 || month < 1);
+		} while (isInvalid);
 		
+		// Get Month
+		isInvalid = true;
+		do {
+			month = getValidInt("Enter " + type + " month (01-12): ");
+			// Debug
+			//System.out.println(month);
+			if (month > 12 || month < 1) {
+				System.out.println("Only values 1 - 12 are valid");
+			}
+			else if (requirePast) {
+				if ((year == yearNow) && (month > monthNow)) {
+					System.out.println("Month cannot go beyond " + monthNow + " for current year");
+				}
+				else {
+					isInvalid = false;
+				}
+ 			}
+			else {
+				isInvalid = false;
+			}
+		} while(isInvalid);
+		
+		//Get Day
+		isInvalid = true;
 		do {
 			try {
-				System.out.print("Enter " + type + " day: ");
-				day = in.nextInt();
+				day = getValidInt("Enter " + type + " day: ");
 				// Debug
 				//System.out.println(day);
 				date = LocalDate.of(year, month, day);
-				isInvalid = false;
-			}
-			catch (InputMismatchException e) {
-				System.out.println("Invalid input");
+				if (requirePast) {
+					if (date.compareTo(LocalDate.now()) > 0) {
+					System.out.println("Day cannot be beyond today (" + LocalDate.now() + ")");
+					}
+					else {
+						isInvalid = false;
+					}
+				} else {
+					isInvalid = false;
+				}
 			}
 			catch (DateTimeException e) {
 				System.out.println("Invalid day for month");
 			}
-			finally {
-				in.nextLine();
-			}
-			
 		} while (isInvalid);		
 		
 		return date;
