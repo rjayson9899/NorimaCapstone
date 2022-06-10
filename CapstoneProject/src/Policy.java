@@ -9,7 +9,6 @@ public class Policy {
 	private PolicyHolder policyHolder;
 	private ArrayList<Vehicle> vehicleList = new ArrayList<Vehicle>();
 	private double totalPremium;
-	private String policyStatus; //For Claims purposes and Cancel purposes
 	
 	public Policy(int policyNumber) {
 		this.policyNumber = policyNumber;
@@ -57,12 +56,6 @@ public class Policy {
 		this.expirationDatePolicy = effectiveDatePolicy.plusMonths(6);
 	}
 	
-	public void cancelPolicy() {
-		LocalDate dateToday;
-		
-		dateToday = LocalDate.now();
-		expirationDatePolicy = dateToday.minusYears(1);
-	}
 	
 	public void addVehicle(Vehicle vehicleObj) {
 		vehicleList.add(vehicleObj);
@@ -73,7 +66,7 @@ public class Policy {
 		double premium;
 		this.totalPremium = 0;
 		System.out.println("Create a Policy Quote\n");
-		
+		System.out.printf("%-20s \t%-20s \t%-20s\n", "Vehicle Make", "Vehicle Model", "Premium");
 		for (Vehicle vehicleObj : vehicleList) {
 			premium = RatingEngine.computePremium(vehicleObj.getVehiclePrice(), policyHolder.getLicensedYear(), vehicleObj.getVehicleYear());
 			vehicleObj.setVehiclePremium(premium);
@@ -86,12 +79,22 @@ public class Policy {
 		System.out.printf("Total Vehicle Premium: %.2f\n", totalPremium);
 	}
 
-	public String getPolicyStatus() {
-		return policyStatus;
+	
+	public void cancelPolicy() { //Changes the expiration date to a year before
+		if (!(isCancelled())) {
+			this.expirationDatePolicy = expirationDatePolicy.minusYears(1);
+		}
 	}
-
-	public void setPolicyStatus(String policyStatus) {
-		this.policyStatus = policyStatus;
+	
+	public boolean isCancelled() {
+		LocalDate dateToday;
+		
+		dateToday = LocalDate.now();
+		if (this.expirationDatePolicy.compareTo(dateToday) < 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 }

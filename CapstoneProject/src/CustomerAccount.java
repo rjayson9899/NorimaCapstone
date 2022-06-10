@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class CustomerAccount {
@@ -39,11 +40,7 @@ public class CustomerAccount {
 		}
 	}
 	
-	public void cancelAccountPolicy() {
-		
-	}
-
-	public Boolean getPolicy(int policyID) {
+	public boolean getPolicy(int policyID) {
 		for (Policy polObj : policyList) {
 			if (polObj.getPolicyNumber() == policyID) {
 				return true;
@@ -53,10 +50,18 @@ public class CustomerAccount {
 	}
 
 	public void displayCustomerPolicy(int policyID) {
+		String policyStatus;
+		
 		for (Policy polObj : policyList) {
 			if (polObj.getPolicyNumber() == policyID) {
-				System.out.printf("%06d \t\t\t%-20s \t%-20s \t%-20s \t%-20s\n", policyID, polObj.getEffectiveDatePolicy(),
-						polObj.getExpirationDatePolicy(), polObj.getName(), polObj.getTotalPremium());
+				if (polObj.getEffectiveDatePolicy().compareTo(polObj.getExpirationDatePolicy()) < 0) {
+					policyStatus = "Active";
+				} else {
+					policyStatus = "Cancelled/Expired";
+				}
+				
+				System.out.printf("%06d \t\t\t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", policyID, polObj.getEffectiveDatePolicy(),
+						polObj.getExpirationDatePolicy(), polObj.getName(), polObj.getTotalPremium(), policyStatus);
 			}
 		}
 	}
@@ -65,6 +70,28 @@ public class CustomerAccount {
 	public void addPolicy(Policy policyObj) {
 		this.policyList.add(policyObj);
 		this.policyHolderList.add(policyObj.getPolicyHolder());
+	}
+	
+	public boolean cancelAccountPolicy(int policyID) {
+		for (Policy polObj : policyList) {
+			if (polObj.getPolicyNumber() == policyID) {
+				if (polObj.isCancelled()) {
+					return false;
+				} else {
+					polObj.cancelPolicy();
+				}
+			}
+		}
+		return true;
+	}
+	
+	public boolean isPolicyCancelled(int policyID) {
+		for (Policy polObj : policyList) {
+			if (polObj.getPolicyNumber() == policyID) {
+				return polObj.isCancelled();
+			}
+		}
+		return false;
 	}
 
 	public void displayCustomerAccountInfo() {

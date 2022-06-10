@@ -22,7 +22,7 @@ public class PASApp {
 		int tempID = 0;
 		int year, month, day;
 		int policyIDInput;
-		
+
 		LocalDate effectiveDatePolicy;
 		LocalDate licensedIssueDate;
 
@@ -39,13 +39,14 @@ public class PASApp {
 
 		ArrayList<Integer> customerIDList = new ArrayList<Integer>();
 		ArrayList<CustomerAccount> customerList = new ArrayList<CustomerAccount>();
+		ArrayList<Claim> claimList = new ArrayList<Claim>();
 
 		Scanner input = new Scanner(System.in);
 
 		do {
 			mainMenu();
 			choice = input.nextInt();
-			input.nextLine(); //Flush
+			input.nextLine(); // Flush
 			switch (choice) {
 			case 1:
 				isMatch = false;
@@ -130,7 +131,7 @@ public class PASApp {
 					}
 
 					// Validation if Full
-					if (tempID >= 0) {
+					if (tempID <= Policy.POLICY_MAX) {
 
 						policy = new Policy(tempID);
 
@@ -223,14 +224,15 @@ public class PASApp {
 						} while (inputString.equalsIgnoreCase("y"));
 
 						// Issue a Policy and Create Quote (Premium)
-						System.out.printf("%-20s \t%-20s \t%-20s\n", "Vehicle Make", "Vehicle Model", "Premium");
 						policy.createPolicyQuote();
+
 						// Verification if get policy or not (If Yes Issue Policy Date)
 						System.out.print("Get the policy? [y] for yes: ");
 						inputString = input.nextLine();
 
 						if (inputString.equalsIgnoreCase("y")) {
 							// Create a Policy Date
+							// Add validations that the user cannot create Backlog Dates
 							System.out.println("\nCreate a Policy Date");
 							System.out.print("Enter year (yyyy): ");
 							year = input.nextInt();
@@ -250,7 +252,6 @@ public class PASApp {
 							// expirationDatePolicy = customDate;
 
 							// Create Status Validation Local Date
-							
 
 							// System.out.println("Policy Effective Date: " + effectiveDatePolicy);
 							// System.out.println("Policy Expiration Date: " + expirationDatePolicy);
@@ -266,26 +267,88 @@ public class PASApp {
 				}
 
 				break;
-			case 3: //Cancel a specific policy, Change the expiration date of a policy to an earlier date than specified
+			case 3: // Cancel a specific policy, Change the expiration date of a policy to an
+					// earlier date than specified
 				System.out.println("Cancel a Policy");
 				System.out.print("Input Policy Number: ");
 				policyIDInput = input.nextInt();
-				input.nextLine(); //Flush
+				input.nextLine(); // Flush
 				isMatch = false;
 
 				for (CustomerAccount custObj : customerList) {
 					if (custObj.getPolicy(policyIDInput)) {
-						
-						isMatch = true;
+						if (custObj.cancelAccountPolicy(policyIDInput)) {
+							System.out.printf("Policy Number %06d is cancelled.\n", policyIDInput);
+							isMatch = true;
+						}
 					}
 				}
-
 				if (!isMatch) {
 					System.out.println("Policy does not exist!");
 				}
-				
+
 				break;
 			case 4: // Claim Functionality
+				System.out.println("File a Claim");
+				System.out.print("Input Policy Number: ");
+				policyIDInput = input.nextInt();
+				input.nextLine(); // Flush
+				isMatch = false;
+
+				ArrayList<Integer> claimIDList = new ArrayList<Integer>();
+
+				// Validity if policy is not cancel/expired;
+				for (CustomerAccount custObj : customerList) {
+					if (custObj.getPolicy(policyIDInput)) {
+						if (custObj.isPolicyCancelled(policyIDInput)) {
+							System.out.println("Cannot Claim Policy is Expired/Cancelled");
+						} else {
+							isMatch = true;
+						}
+					}
+				}
+
+				if (isMatch) {
+					for (Claim claimObj : claimList) {
+						claimIDList.add(Integer.valueOf(claimObj.getClaimNumber()));
+					}
+
+					// if can claim generate unique claim ID
+					for (int i = 0; i < Claim.CLAIM_MAX; i++) {
+						if (claimIDList.contains(Integer.valueOf(i))) {
+							tempID = i;
+							break;
+						}
+						if (i == Claim.CLAIM_MAX) {
+							tempID = -1;
+						}
+					}
+					if (tempID >= 0) {
+						// Create a Claim
+						System.out.println("\nFiling an Accident Claim against a Policy");
+						System.out.print("Enter date of accident (yyyy-mm-dd): ");
+						String dateOfAccident = input.nextLine();
+						System.out.print("Enter the address of where the accident happened: ");
+						String addressOfAccident = input.nextLine();
+						System.out.print("Enter the description of the accident: ");
+						String descriptionOfAccident = input.nextLine();
+						System.out.print("Enter the description of damage to vehicle: ");
+						String descriptionOfDamage = input.nextLine();
+						System.out.print("Enter estimated cost of repairs: ");
+						double damageRepairCost = input.nextDouble();
+						input.nextLine(); // Flush
+
+						claimList.add(new Claim(tempID, dateOfAccident, addressOfAccident, descriptionOfAccident,
+								descriptionOfDamage, damageRepairCost));
+						System.out.println("Claim created succesfully!");
+						System.out.printf("Your claim number is: C%06d\n", tempID);
+					} else {
+						System.out.println("System is full of claims, cannot create a new claim!");
+					}
+				} else {
+					System.out.println("Cannot make a Claim, Policy not found!");
+				}
+
 				break;
 
 			case 5: // Search Account Functionality
@@ -294,17 +357,18 @@ public class PASApp {
 				System.out.println("\nSearch for an Account");
 				System.out.print("Search Account via name? [y] if yes: ");
 				inputString = input.nextLine();
-				
+
 				if (inputString.equalsIgnoreCase("y")) {
 					System.out.print("Input Customer's First Name: ");
 					firstName = input.nextLine();
 					System.out.print("Input Customer's Last Name: ");
 					lastName = input.nextLine();
 
+					System.out.printf("%-20s \t%-20s \t%-20s \t%-20s\n", "Account Number", "First Name", "Last Name",
+							"Address");
+
 					for (CustomerAccount custObj : customerList) {
 						if (custObj.getFirstName().equals(firstName) && custObj.getLastName().equals(lastName)) {
-							System.out.printf("%-20s \t%-20s \t%-20s \t%-20s\n", "Account Number", "First Name",
-									"Last Name", "Address");
 							custObj.displayCustomerAccountInfo();
 							isMatch = true;
 						}
@@ -314,16 +378,16 @@ public class PASApp {
 					int acctIDInput = input.nextInt();
 					input.nextLine(); // Flush
 
+					System.out.printf("%-20s \t%-20s \t%-20s \t%-20s\n", "Account Number", "First Name", "Last Name",
+							"Address");
 					for (CustomerAccount custObj : customerList) {
 						if (custObj.getAccountNumber() == acctIDInput) {
-							System.out.printf("%-20s \t%-20s \t%-20s \t%-20s\n", "Account Number", "First Name",
-									"Last Name", "Address");
 							custObj.displayCustomerAccountInfo();
 							isMatch = true;
 						}
 					}
 				}
-				
+
 				if (!isMatch) {
 					System.out.println("Account does not exist!");
 				}
@@ -336,10 +400,11 @@ public class PASApp {
 				input.nextLine(); // Flush
 				isMatch = false;
 
+				System.out.printf("%-20s \t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", "Policy Number", "Effective Date",
+						"Expiration Date", "Policy Holder Name", "Premium Cost", "Policy Status");
+
 				for (CustomerAccount custObj : customerList) {
 					if (custObj.getPolicy(policyIDInput)) {
-						System.out.printf("%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", "Policy Number", "Effective Date",
-								"Expiration Date", "Policy Holder Name", "Premium Cost");
 						custObj.displayCustomerPolicy(policyIDInput);
 						isMatch = true;
 					}
@@ -349,7 +414,26 @@ public class PASApp {
 					System.out.println("Policy does not exist!");
 				}
 				break;
-			case 7: //Search Claim Functionality
+			case 7: // Search Claim Functionality
+				System.out.println("Search for a Claim");
+				System.out.print("Input Claim Number: C");
+				int claimIDInput = input.nextInt();
+				input.nextLine();
+				isMatch = false;
+
+				System.out.printf("%-20s \t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", "Claim Number", "Accident Date",
+						"Accident Location", "Accident Description", "Vehicle Damage", "Repair Cost");
+
+				for (Claim claimObj : claimList) {
+					if (claimObj.getClaimNumber() == claimIDInput) {
+						claimObj.displayClaimDetails();
+						isMatch = true;
+					}
+				}
+
+				if (!isMatch) {
+					System.out.println("Claim does not exist!");
+				}
 				break;
 			case 8: // Exit
 				break;
@@ -363,10 +447,11 @@ public class PASApp {
 
 		// Debug Code
 		System.out.printf("%-20s \t%-20s \t%-20s \t%-20s\n", "Account Number", "First Name", "Last Name", "Address");
-		for (CustomerAccount custObj : customerList) {
+		for (
+
+		CustomerAccount custObj : customerList) {
 			custObj.displayCustomerAccountInfo();
 		}
-		
 
 	}
 
