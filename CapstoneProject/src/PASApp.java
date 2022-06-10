@@ -82,9 +82,9 @@ public class PASApp {
 					uniqueId = CustomerAccount.generateUniqueId(customerList);
 					
 					if (uniqueId >= 0) {
-						firstName = getStringNonEmpty("Input First Name: ");
-						lastName = getStringNonEmpty("Input Last Name: ");
-						address = getStringNonEmpty("Input Address: ");
+						firstName = getStringWord("Input First Name: ");
+						lastName = getStringWord("Input Last Name: ");
+						address = getStringWord("Input Address: ");
 						
 						foundHit = false;
 						
@@ -316,8 +316,8 @@ public class PASApp {
 				 * account will be printed. Otherwise, program will output "no match."
 				 */
 				case 5:
-					firstName = getStringNonEmpty("Input First Name: ");
-					lastName = getStringNonEmpty("Input Last Name: ");
+					firstName = getStringWord("Input First Name: ");
+					lastName = getStringWord("Input Last Name: ");
 					foundHit = false;
 					
 					
@@ -497,11 +497,11 @@ public class PASApp {
 		String fuelType;
 		double purchasePrice;
 		
-		make = getStringNonEmpty("Enter make: ");
-		model = getStringNonEmpty("Enter model: ");
+		make = getStringWord("Enter make: ");
+		model = getStringWord("Enter model: ");
 		year = getValidInt("Enter year: ");
-		type = getStringNonEmpty("Enter type: ");
-		fuelType = getStringNonEmpty("Enter fuel type: ");
+		type = getStringWord("Enter type: ");
+		fuelType = getStringWord("Enter fuel type: ");
 		purchasePrice = getValidDouble("Enter purchase price: ");
 		
 		return new Vehicle(make, model, year, type, fuelType, purchasePrice);
@@ -530,7 +530,7 @@ public class PASApp {
 		LocalDate birthDate, licenseDate;
 		
 		birthDate = getDate("birth");
-		licenseNumber = getStringNonEmpty("Input driver's license number: ");
+		licenseNumber = getStringWord("Input driver's license number: ");
 		licenseDate = getDate("license issue");
 		
 		return new PolicyHolder(custObj, birthDate, licenseNumber, licenseDate);
@@ -556,10 +556,10 @@ public class PASApp {
 		String licenseNumber, firstName, lastName;
 		LocalDate birthDate, licenseDate;
 		
-		firstName = getStringNonEmpty("Enter first name: ");
-		lastName = getStringNonEmpty("Enter last name: ");
+		firstName = getStringWord("Enter first name: ");
+		lastName = getStringWord("Enter last name: ");
 		birthDate = getDate("birth");
-		licenseNumber = getStringNonEmpty("Input license number: ");
+		licenseNumber = getStringWord("Input license number: ");
 		licenseDate = getDate("license issue");
 		
 		return new PolicyHolder(firstName, lastName, birthDate, licenseNumber, licenseDate);
@@ -589,9 +589,9 @@ public class PASApp {
 		double repairCosts;
 		
 		accidentDate = getDate("accident");
-		accidentAddress = getStringNonEmpty("Enter accident address: ");
-		accidentDescription = getStringNonEmpty("Enter accident description: ");
-		accidentDamage = getStringNonEmpty("Enter damage description: ");
+		accidentAddress = getStringWord("Enter accident address: ");
+		accidentDescription = getStringWord("Enter accident description: ");
+		accidentDamage = getStringWord("Enter damage description: ");
 		repairCosts = getValidDouble("Enter repair costs: ");
 		
 		return new Claim(uniqueId, accidentDate, accidentAddress, accidentDescription, accidentDamage, repairCosts);
@@ -690,8 +690,14 @@ public class PASApp {
 	}
 	
 	/**
-	 * Creates a string instance after verifying if input is not blank.
+	 * Creates a string instance after verifying if it meets the following requirements:
+	 * 		> Is not blank
+	 * 		> Does not consist of only numbers
+	 * 		> Only consists of alphanumeric values
+	 * 
 	 * Can display custom message requesting what type of input string is desired.
+	 * 
+	 * Inputed String will always be trimmed.
 	 * 
 	 * Input:
 	 * 		(String)	strIn	- String to be verified.
@@ -701,20 +707,34 @@ public class PASApp {
 	 * @param message - Custom message to display for every input attempt
 	 * @return String instance
 	 */
-	private static String getStringNonEmpty(String message) {
+	private static String getStringWord(String message) {
 		String strIn;
 		
 		do {
 			System.out.print(message);
 			strIn = in.nextLine();
+			
+			// Debug
+			//System.out.println(strIn);
+			
+			strIn = strIn.trim();
 			if (strIn.equals("")) {
 				System.out.println("Entry cannot be blank");
 			}
+			else if (strIn.matches("^[\\.\\-]*$")) {
+				System.out.println("Input cannot purely be \".\" and \"-\"");
+				strIn = "";
+			}
+			else if (strIn.matches("^[\\d\\.\\-]*$")) {
+				System.out.println("Input cannot purely be numbers");
+				strIn = "";
+			}
+			else if (!(strIn.matches("^[a-zA-Z0-9\\.\\- ]*$"))) {
+				System.out.println("Input cannot contain special characters");
+				strIn = "";
+			}
 		} while(strIn.equals(""));
-		
-		// Debug
-		//System.out.println(strIn);
-		
+
 		return strIn;
 	}
 	
@@ -733,26 +753,25 @@ public class PASApp {
 	 */
 	private static int getValidInt(String message) {
 		boolean isInvalid = true;
-		int getInt = 0;
+		String getIntString;
+		int parsedInt = 0;
 		
 		do {
 			System.out.print(message);
 			try {
-				getInt = in.nextInt();
+				getIntString = in.nextLine();
+				parsedInt = Integer.parseInt(getIntString);
 				isInvalid = false;
 			}
-			catch(InputMismatchException e) {
+			catch(NumberFormatException e) {
 				System.out.println("Input is not an integer");
-			}
-			finally {
-				in.nextLine();
 			}
 		} while (isInvalid);
 		
 		// Debug
-		//System.out.println(getInt);
+		//System.out.println(parsedInt);
 		
-		return getInt;
+		return parsedInt;
 	}
 	
 	/**
@@ -770,25 +789,24 @@ public class PASApp {
 	 */
 	private static double getValidDouble(String message) {
 		boolean isInvalid = true;
-		double getDouble = 0.0;
+		String getDoubleString;
+		double parsedDouble = 0.0;
 		
 		do {
 			System.out.print(message);
 			try {
-				getDouble = in.nextInt();
+				getDoubleString = in.nextLine();
+				parsedDouble = Double.parseDouble(getDoubleString);
 				isInvalid = false;
 			}
-			catch(InputMismatchException e) {
+			catch(NumberFormatException e) {
 				System.out.println("Input is not valid");
-			}
-			finally {
-				in.nextLine();
 			}
 		} while (isInvalid);
 		
 		// Debug
-		//System.out.println(getDouble);
+		//System.out.println(parsedDouble);
 		
-		return getDouble;
+		return parsedDouble;
 	}
 }
