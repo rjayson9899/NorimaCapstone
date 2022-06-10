@@ -180,7 +180,7 @@ public class Policy {
 	 * Class Method.
 	 * Generates a unique ID based on policies found in a CustomerAccount list param.
 	 * 
-	 * List is checked for a matching id from 0 to 999999. The first value found to
+	 * List is checked for a matching id from 1 to 999999. The first value found to
 	 * have no match will be returned as the unique ID. Otherwise, a -1 will be returned
 	 * signifying all IDs are in use.
 	 * 
@@ -196,7 +196,7 @@ public class Policy {
 			custObj.addPolicyIds(idList);
 		}
 		
-		for (int i = 0; i <= limit; i++) {
+		for (int i = 1; i <= limit; i++) {
 			if (!(idList.contains(Integer.valueOf(i)))) {
 				return i;
 			}
