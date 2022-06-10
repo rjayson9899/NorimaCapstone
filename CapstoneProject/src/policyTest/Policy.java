@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 
-public class Policy {
+public class Policy implements InterfaceApp {
 	private int policyNum;
 	private LocalDate effectDate;
 	private LocalDate expDate;
@@ -70,14 +70,14 @@ public class Policy {
 
 	public void setStatus() {
 		LocalDate present = LocalDate.now(); 
-		if(present.isAfter(effectDate) && present.isBefore(expDate)){
+		if((present.isAfter(effectDate) || present.equals(effectDate)) && present.isBefore(expDate)){
 			this.status = "Enforced";
 		}
 		else if(present.isBefore(effectDate) && present.isBefore(expDate)){
 			this.status = "Scheduled";
 		}
 
-		else if(present.isAfter(expDate)){
+		else if(present.isAfter(expDate) || present.isEqual(expDate)){
 			this.status = "Expired";
 		}
 	}
@@ -86,22 +86,6 @@ public class Policy {
 		this.status = status;
 	}
 	
-	public void displayInfo(){
-		System.out.println("-------------------------------");
-		System.out.println("       Policy Details: ");
-		System.out.println("-------------------------------");
-		System.out.println("Policy Number: " + policyNum);
-		System.out.println("Policy Holder: " + policyHolder.getFname() + " " 
-							+ policyHolder.getLname());
-		System.out.println("Status: " + status);
-		System.out.println("Effective Date: " +effectDate);
-		System.out.println("Expiration Date: " + expDate);
-		System.out.println("List of Vehicles: ");
-		for(Vehicle v: vehicles){
-			System.out.println(v.getMake() + " " + v.getModel());
-		}
-		System.out.println("Total cost of premium: " + cost);
-	}
 
 	public static boolean checkDate(LocalDate inputDate){
 		
@@ -117,6 +101,28 @@ public class Policy {
 		else{
 			return false;
 		}
+	}
+
+	@Override
+	public void getDetails() {
+		
+		System.out.println("-------------------------------");
+		System.out.println("       Policy Details: ");
+		System.out.println("-------------------------------");
+		System.out.println("Policy Number: " + policyNum);
+		System.out.println("Policy Holder: " + policyHolder.getFname() + " " 
+							+ policyHolder.getLname());
+		if(!status.isBlank()){
+			System.out.println("Status: " + status);
+		}	
+		System.out.println("Effective Date: " +effectDate);
+		System.out.println("Expiration Date: " + expDate);
+		System.out.println("List of Vehicles: ");
+		for(Vehicle v: vehicles){
+			System.out.println(v.getMake() + " " + v.getModel());
+		}
+		System.out.println("Total cost of premium: " + cost);
+		
 	}
 	
 	

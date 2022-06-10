@@ -1,6 +1,6 @@
 package policyTest;
 
-public class Vehicle {
+public class Vehicle implements InterfaceApp{
 
 	private String make;
 	private String model;
@@ -73,6 +73,41 @@ public class Vehicle {
 
 	public void setColor(String color) {
 		this.color = color;
+	}
+
+	@Override
+	public void getDetails() {
+		System.out.println("-------------------------------");
+		System.out.println("    Details of your Vehicle    ");
+		System.out.println("-------------------------------");
+		System.out.println("Make: " + getMake());
+		System.out.println("Model: " + getModel());
+		System.out.println("Year: " + getYear());
+		
+		if(getType() == 1) {
+			System.out.println("Type of vehicle: 4-door sedan");
+		}
+		
+		else if(getType() == 2) {
+			System.out.println("Type of vehicle: 2-door sports car, SUV, or truck");
+		}
+		
+		if(getFuel() == 1) {
+			System.out.println("Type of fuel: Diesel");
+		}
+		
+		else if(getFuel() == 2) {
+			System.out.println("Type of fuel: Electronic");
+		}
+		
+		else if (getFuel() == 3) {
+			System.out.println("Type of fuel: Petrol");
+		}
+		
+		System.out.println("Purchase price: " + price);
+		System.out.println("Color: " + color);
+		System.out.println("-------------------------------\n");
+		
 	}
 	
 	

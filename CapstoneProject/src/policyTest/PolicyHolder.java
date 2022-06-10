@@ -2,7 +2,7 @@ package policyTest;
 
 import java.time.LocalDate;
 
-public class PolicyHolder {
+public class PolicyHolder implements InterfaceApp {
 
 	private String fname;
 	private String lname;
@@ -50,6 +50,17 @@ public class PolicyHolder {
 
 	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	@Override
+	public void getDetails() {
+		System.out.println("-------------------------------");
+		System.out.println("       Policy Holder           ");
+		System.out.println("-------------------------------");
+		System.out.println("Name: " + fname + " " + lname);
+		System.out.println("Birth date: " + dateOfBirth);
+		System.out.println("License Number: " + license);
+		System.out.println("License Issued date: " + licenseIssueDate);
 	}
 
 	
