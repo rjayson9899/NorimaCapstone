@@ -133,7 +133,7 @@ public class Policy {
 		System.out.println("Effective date: " + effDate);
 		System.out.println("Expiration date: " + expDate);
 		System.out.println("Times claimed: " + claimCounter);
-		System.out.println("Policy Premium: ");
+		System.out.println("Policy Premium: " + policyPremium);
 		System.out.println("======================Policy holder=========================");
 		System.out.println("Full name: " + fName + " " + lName);
 		System.out.println("Birthday: " + bDay);

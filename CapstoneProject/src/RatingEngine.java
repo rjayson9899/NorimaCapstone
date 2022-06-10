@@ -11,13 +11,15 @@ public class RatingEngine {
 	private double premium;
 	private double vP;
 	private double vPF;
-	private double dLX;
+	private int dLX;
 	private String age;
+	private String driverDate;
 	private int carAge;
-	private LocalDate carA;
 	private int carYear;
+	private int dDate;
 	LocalDate date = LocalDate.now();
-	
+	LocalDate carA;
+	LocalDate dLic;
 	public RatingEngine() {
 		
 	}
@@ -26,13 +28,13 @@ public class RatingEngine {
 		this.vP = Double.parseDouble(VPrice);
 	}
 	
-	public String setCarAge(String age) {
+	public int setCarAge(String age) {
 		this.carYear = Integer.parseInt(age);
 		carA = date.minusYears(carYear);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
 		this.age = carA.format(formatter);
 		carAge = Integer.parseInt(this.age);
-		return this.age;
+		return this.carAge;
 	}
 	public void setVPF() {
 		
@@ -61,7 +63,12 @@ public class RatingEngine {
 	}
 	
 	public void setdLX(String dateLic) {
-		dateLic
+		driverDate = dateLic.substring(dateLic.lastIndexOf(" ") + 1);
+		this.dDate = Integer.parseInt(driverDate);
+		dLic = date.minusYears(dDate);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
+		driverDate = dLic.format(formatter);
+		dLX = Integer.parseInt(driverDate);
 	}
 	
 	public double calcP() {

@@ -14,7 +14,7 @@ public class Vehicle {
 	private String carModel;
 	private String carMake;
 	private String year;
-	private String age;
+	private int age;
 	private String dateLic;
 	private double premium;
 	
@@ -41,6 +41,7 @@ public class Vehicle {
 		System.out.println("Color: " + color);
 		System.out.println("Price (New): " + price);
 		System.out.println("Premium: " + premium);
+		System.out.println("Car age: " + age);
 		System.out.println("======================================================");
 	}
 	

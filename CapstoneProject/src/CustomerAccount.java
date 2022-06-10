@@ -54,7 +54,11 @@ public class CustomerAccount {
 		return this.address;
 	}
 	
+	public int getAccNumb() {
+		int accNum = Integer.parseInt(cusAccNum);
+		return accNum;
+	}
 	public String getAccNum() {
-		return this.cusAccNum;
+		return cusAccNum;
 	}
 }
