@@ -1,5 +1,8 @@
 /*
- * This is the customer object that 
+ * This is the customer object that holds the data for the 
+ * main account holder. 
+ * @author Macario N. Peralta V
+ * Date created: June 6 2022
  */
 package CapStone;
 
@@ -20,29 +23,23 @@ public class CustomerAccount {
 		this.address = address;
 		this.cusAccNum = accNum;	
 	}
-		
-	public void createAcc(String fName, String lName, String address, String accNum) {
-		this.fName = fName;
-		this.lName = lName;
-		this.address = address;
-		this.cusAccNum = accNum;
-		//add checker for account duplication		
-	}
 	
-	public void buyPolicy() {
-		
+	public void showPolicy() {
+		for(Policy poly : pol) {
+			poly.seeDetails();
+		}
 	}
 	
 	public void seeDetails() {
 		
-		System.out.println("================================");
+		System.out.println("==================Customer Account holder===================");
 		System.out.println("Account number: " + cusAccNum);
-		System.out.println("First Name: " + this.fName);
-		System.out.println("Last Name: " + this.lName);
+		System.out.println("Full name: " + this.fName + " " + this.lName);
 		System.out.println("Address: " + this.address);
-		System.out.println("Policies: ");
-		System.out.println("Policy holders: ");
-		System.out.println("================================");
+		for(Policy policy : pol) {
+			policy.checkStatus();
+			policy.seeDetails();
+		}
 	}
 	
 	public String getfName() {
@@ -60,8 +57,4 @@ public class CustomerAccount {
 	public String getAccNum() {
 		return this.cusAccNum;
 	}
-	
-	/*public void quotePol() {
-		pol.add(new Policy(fName, address, cusAccNum));
-	} */
 }

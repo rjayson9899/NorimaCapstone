@@ -1,31 +1,57 @@
+/*
+ * This is the vehicle object that holds the data of the 
+ * vehicles covered by the policy.
+ * @author Macario N. Peralta V
+ * Date created: June 6 2022
+ */	
 package CapStone;
 
 public class Vehicle {
-	private static int ID;
 	private String carType;
 	private String price;
-	private double premChar;
 	private String color;
 	private String fuelType;
 	private String carModel;
 	private String carMake;
 	private String year;
+	private String age;
+	private String dateLic;
+	private double premium;
 	
-	public Vehicle(String carMake, String carModel, String carYear, String carType, String carFuelT, String carColor) {
+	RatingEngine rEng = new RatingEngine();
+	
+	public Vehicle(String carMake, String carModel, String carYear, String carType, String carFuelT, String carColor, String price, String dateLic) {
 		this.carMake = carMake;
 		this.carModel = carModel;
 		this.year = carYear;
 		this.carType = carType;
 		this.fuelType = carFuelT;
 		this.color = carColor;
-	}
-	//see details
-	public void seeDeets() {
-		System.out.println(carMake+carModel+year+carType+fuelType+color);
+		this.price = price;
+		this.dateLic = dateLic;
+		sendDataToREng();
+		setPremium();
 	}
 	
-	public static void setID() {
-		
+	public void seeDetails() {
+		System.out.println("======================Vehicle=========================");
+		System.out.println("Car: " + year + " " + carMake + " " + carModel);
+		System.out.println("Car type: " + carType);
+		System.out.println("Fuel Type: " + fuelType);
+		System.out.println("Color: " + color);
+		System.out.println("Price (New): " + price);
+		System.out.println("Premium: " + premium);
+		System.out.println("======================================================");
+	}
+	
+	public void sendDataToREng() {
+		rEng.setVPrice(price);
+		age = rEng.setCarAge(year);
+		rEng.setVPF();
+		rEng.setdLX(dateLic);
+	}	
+	public void setPremium() {
+		premium = rEng.calcP();
 	}
 	
 	public void setType(String carType) {
@@ -34,9 +60,6 @@ public class Vehicle {
 	
 	public void setPrice(String Price) {
 		this.price = Price;
-	}
-	public void setpremChar() {
-		
 	}
 	
 	public void setFuelType(String fuelType) {
@@ -77,6 +100,9 @@ public class Vehicle {
 	
 	public String getColor() {
 		return color;
+	}
+	public double getPremium() {
+		return premium;
 	}
 
 }

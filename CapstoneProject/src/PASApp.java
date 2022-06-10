@@ -1,7 +1,7 @@
 /*
  * This is the main driver of the whole capstone project.
  * This program is able to create a customer account and a
- * accompanying policy that can be cancelled and claimed.
+ * accompanying policy that can  expire, be cancelled or claimed.
  * @author Macario N. Peralta V
  * Date created: June 6 2022
  */
@@ -27,15 +27,18 @@ public class PASApp {
 		int custAccNum = 0, numCar;
 		int policyNum = 0, polSear;
 		int clNum = 0;
-		int pLAH;
+		int polClNum = 0;
+		double totalPremium = 0;
 		String accNum, fName = null, lName = null, address = null;
 		String effDate = null, bDay = null, licNum = null, dateLic = null;
 		String carMake, carModel, carYear, carType, carPrice, carFuelType, carColor;
-		String accDate, addDate, depAcc, depDmgV, estRep;  
+		String accDate, addDate, depAcc, depDmgV, estRep;
+		boolean isWrongDate = false;
+		boolean isCancelled = true;
 		
 		Scanner userIn = new Scanner(System.in);
 		ArrayList<CustomerAccount> cust = new ArrayList<>();
-		Claim cl = new Claim();
+		ArrayList<Claim> claim = new ArrayList<>();	
 		
 		do {
 			//main menu
@@ -63,8 +66,10 @@ public class PASApp {
 			    		System.out.println("===================================");
 			    		System.out.println("Enter your first name: ");
 			    		fName = userIn.nextLine();
+			    		fName = fName.replaceAll("\\s", "");
 			    		System.out.println("Enter your last name: ");
 			    		lName = userIn.nextLine();
+			    		lName = lName.replaceAll("\\s", "");
 			    		System.out.println("Enter your address: ");
 			    		address = userIn.nextLine();
 			    		accNum = String.format("%04d", custAccNum);
@@ -73,7 +78,6 @@ public class PASApp {
 				    		System.out.println("===================================");
 				    		cust.add(new CustomerAccount(fName, lName, address, accNum));
 					    	custAccNum++;
-					    	userIn.nextLine();
 					    	clearScreen();
 			    		}
 			    		else {
@@ -86,7 +90,6 @@ public class PASApp {
 						    		System.out.println("===================================");
 						    		cust.add(new CustomerAccount(fName, lName, address, accNum));
 							    	custAccNum++;
-							    	userIn.nextLine();
 							    	clearScreen();
 					    	    }
 			    			}	
@@ -124,7 +127,6 @@ public class PASApp {
 						    		}
 						    		else { 
 							    		//policy holder details
-						    			userIn.nextLine();
 						    			System.out.println("===================================");
 							    		System.out.println("Enter the first name: ");
 							    		fName = userIn.nextLine();
@@ -166,36 +168,31 @@ public class PASApp {
 					    		System.out.println("Enter the color: ");
 					    		carColor = userIn.nextLine();
 					    		System.out.println("===================================");
-					    		cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).setCar(carMake, carModel, carYear, carType, carFuelType, carColor);
+					    		cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).setCar(carMake, carModel, carYear, carType, carFuelType, carColor, carPrice);
 					    		numCar--;
 				    	 	}
 				    		//quote policy
-				    		System.out.println("The policy will cost about: ");
+				    	 	totalPremium = cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).getTotalPremium();
+				    		System.out.println("The policy will cost about: " + totalPremium);
 				    		System.out.println("Would you like to buy the policy? (Y/N)");
 				    		choiceTwo = userIn.nextLine();
 				    		if(choiceTwo.equalsIgnoreCase("y")) {
-				    			userIn.nextLine();
-				    	    	System.out.println("Enter effective date: (ex. Jan 01 1991) ");
-					    		effDate = userIn.nextLine();
-					    		//String polyNum = String.format("%06d", policyNum);
-				    			//cust.get(cusAccTwo).pol.add(new Policy(polyNum));
-				    			//cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).setPolH(fName, lName, bDay, address, licNum, dateLic);
-				    			//cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).setCar(carMake, carModel, carYear, carType, carFuelType, carColor);
-				    			cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).setExpDate(effDate);
+				    			do {
+					    	    	System.out.println("Enter effective date: (ex. Jan 01 1991) ");
+						    		effDate = userIn.nextLine();	
+					    			isWrongDate = cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).verifyEffDate(effDate);
+
+				    			}while(isWrongDate == true); 
 				    			System.out.println("Policy created. ");
 				    			System.out.println("Your policy number is: " + polyNum);
 				    			policyNum++;
-				    			//cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).polyHol.seetDeets();
-				    			//cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).car.get(cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).car.size()-1).seeDeets();
+				    			
 				    		}
 				    		else {
-
-				    			System.out.println("Policy cancelled. ");
-				    			cust.get(cusAccTwo).pol.remove(policyNum);
-				    			//System.out.println(cust.get(cusAccTwo).pol.get(0));
+				    			System.out.println("Policy is cancelled. ");
+				    			cust.get(cusAccTwo).pol.remove(policyNum);				    			
 				    		}
-				    	}	
-			    	
+				    	}				    	
 			    	break;
 			    	
 			    case 3:
@@ -223,30 +220,30 @@ public class PASApp {
 			    		polSear = userIn.nextInt();
 			    		for(CustomerAccount cus : cust) {
 				    	    if (polSear == cus.pol.get(polSear).getPolNum()) {
-				    	      cus.pol.get(polSear).cancelPol();
+				    	    	if(isCancelled == cus.pol.get(polSear).checkStatus()) {
+				    	    		System.out.println("Sorry, this policy has already been cancelled/expired. ");
+				    	    	}
+				    	    	else {
+				    	    		cus.pol.get(polSear).setClaimCounter(++polClNum);
+					    	    	userIn.nextLine();
+					    	    	System.out.println("Enter the date of accident: ");
+						    		accDate = userIn.nextLine();
+						    		System.out.println("Enter the address of the accident: ");
+						    		addDate = userIn.nextLine();
+						    		System.out.println("Description of the accident: ");
+						    		depAcc = userIn.nextLine();
+						    		System.out.println("Description of the damage to vehicle: ");
+						    		depDmgV = userIn.nextLine();
+						    		System.out.println("Estimated cost of repairs: ");
+						    		estRep = userIn.nextLine();
+						    		claim.add(new Claim(accDate, addDate, depAcc, depDmgV,estRep,clNum));
+						    		System.out.println("Policy is claimed. ");
+						    		clNum++;
+				    	    	}
 				    	    }
 				    	    else {
 				    	    	System.out.println("No policy exist. ");
 				    	    }
-			    		}
-			    		if (polSear != 0) {
-				    		System.out.println("Enter the date of accident: ");
-				    		accDate = userIn.nextLine();
-				    		cl.setDateAcc(accDate);
-				    		System.out.println("Enter the address of the accident: ");
-				    		addDate = userIn.nextLine();
-				    		cl.setDesAcc(addDate);
-				    		System.out.println("Description of the accident: ");
-				    		depAcc = userIn.nextLine();
-				    		cl.setDesAcc(depAcc);
-				    		System.out.println("Description of the damage to vehicle: ");
-				    		depDmgV = userIn.nextLine();
-				    		cl.setDesDmgV(depDmgV);
-				    		System.out.println("Estimated cost of repairs: ");
-				    		estRep = userIn.nextLine();
-				    		cl.setCost(estRep);
-				    		System.out.println("Policy is claimed. ");
-				    		
 			    		}
 			    	}
 			    	break;
@@ -261,8 +258,8 @@ public class PASApp {
 			    	lName = userIn.nextLine();
 			    	clearScreen();
 			    	for(CustomerAccount cus : cust) {
-			    	    if (cus.getfName().equals(fName) && cus.getlName().equals(lName)) {
-			    	       cus.seeDetails();
+			    	    if (cus.getfName().equals(fName) && cus.getlName().equals(lName)) {	 
+			    	    	cus.seeDetails();
 			    	    }
 			    	    else {
 			    	    	System.out.println("Cant find.");
@@ -291,14 +288,14 @@ public class PASApp {
 			    	clearScreen();
 			    	System.out.println("Enter the claim number: ");
 			    	clNum = userIn.nextInt();
-			    	for(CustomerAccount cus : cust) {
-			    	    if (clNum == 0) {
-			    	        
+			    	for(Claim cl : claim) {
+			    	   if (clNum == cl.getClaimNum()) {
+			    	        cl.seeDetails();
 			    	    }
 			    	    else {
-			    	    	System.out.println("No claim exist. ");
-			    	    }
-			    	}
+			    	   	System.out.println("No claim exist. ");
+			    	   }
+			    }
 			    	break;
 			}
 		}

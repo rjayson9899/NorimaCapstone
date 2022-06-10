@@ -1,23 +1,40 @@
-
+/*
+ * 
+ */
 package CapStone;
 
-public class ratingEngine {
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+public class RatingEngine {
 
 	private double premium;
 	private double vP;
 	private double vPF;
 	private double dLX;
+	private String age;
 	private int carAge;
+	private LocalDate carA;
+	private int carYear;
+	LocalDate date = LocalDate.now();
 	
-	public ratingEngine() {
+	public RatingEngine() {
 		
 	}
 	
-	public void setVPrice() {
-		System.out.println("Enter the vehicle price: ");
+	public void setVPrice(String VPrice) {
+		this.vP = Double.parseDouble(VPrice);
 	}
 	
-	public void setVPF(int carYear) {
+	public String setCarAge(String age) {
+		this.carYear = Integer.parseInt(age);
+		carA = date.minusYears(carYear);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
+		this.age = carA.format(formatter);
+		carAge = Integer.parseInt(this.age);
+		return this.age;
+	}
+	public void setVPF() {
 		
 		if(carAge < 1) {
 			vPF = 1;
@@ -43,8 +60,13 @@ public class ratingEngine {
 		
 	}
 	
-	public void calcP() {
+	public void setdLX(String dateLic) {
+		dateLic
+	}
+	
+	public double calcP() {
 		premium = (vP * vPF) + ((vP/100)/dLX);
+		return premium;
 	}
 	
 	

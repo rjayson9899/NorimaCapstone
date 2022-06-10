@@ -16,10 +16,6 @@ public class PolicyHolder {
 		this.dLicense = dL;
 		this.dateLic = dateLic;
 	}
-	
-	public void seetDeets() {
-		System.out.println(fName+lName+bDay+address+dLicense+dateLic);
-	}
 
 	public void setfName(String fName) {
 		this.fName = fName;
