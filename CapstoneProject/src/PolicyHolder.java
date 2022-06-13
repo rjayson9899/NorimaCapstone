@@ -3,12 +3,12 @@ import java.time.LocalDate;
 public class PolicyHolder {
 	private String firstName;
 	private String lastName;
-	private String birthDate;
+	private LocalDate birthDate;
 	private String driversLicenseNumber;
 	private LocalDate driversLicenseIssued;
 	private String address;
 	
-	public PolicyHolder(String firstName, String lastName, String birthDate, String address, String driversLicenseNumber, LocalDate driversLicenseIssued) {
+	public PolicyHolder(String firstName, String lastName, LocalDate birthDate, String address, String driversLicenseNumber, LocalDate driversLicenseIssued) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.birthDate = birthDate;
@@ -17,7 +17,7 @@ public class PolicyHolder {
 		this.driversLicenseIssued = driversLicenseIssued;
 	}
 	
-	public PolicyHolder (CustomerAccount custObj, String birthDate, String driversLicenseNumber, LocalDate driversLicensedIssued) {
+	public PolicyHolder (CustomerAccount custObj, LocalDate birthDate, String driversLicenseNumber, LocalDate driversLicensedIssued) {
 		this.firstName = custObj.getFirstName();
 		this.lastName = custObj.getLastName();
 		this.address = custObj.getCustomerAddress();
@@ -46,7 +46,7 @@ public class PolicyHolder {
 		return driversLicenseIssued.getYear();
 	}
 
-	public String getBirthDate() {
+	public LocalDate getBirthDate() {
 		return birthDate;
 	}
 
@@ -66,8 +66,5 @@ public class PolicyHolder {
 		
 		return str;
 	}
-	
-
-
 	
 }

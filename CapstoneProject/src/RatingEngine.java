@@ -37,8 +37,4 @@ public class RatingEngine {
 		return premium;
 	}
 	
-
-		
-		
-		
 }

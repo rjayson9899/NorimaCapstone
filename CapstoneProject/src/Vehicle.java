@@ -61,5 +61,6 @@ public class Vehicle {
 		str += "Vehicle Color: " + vehicleColor;
 		return str;
 	}
+	
 }
 
