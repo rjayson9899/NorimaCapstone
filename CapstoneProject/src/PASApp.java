@@ -20,8 +20,9 @@ import java.util.Scanner;
  */
 
 public class PASApp {
-	static File filePath = new File("src/test.txt");
-	private static Scanner in = new Scanner(System.in);;
+	private static File filePath = new File("src/test.txt");
+	private static Scanner in = new Scanner(System.in);
+	private static boolean byFile = false;
 	
 	public static void main(String[] args) {
 		ArrayList<CustomerAccount> customerList = new ArrayList<CustomerAccount>();
@@ -42,9 +43,11 @@ public class PASApp {
 		if (strIn.equalsIgnoreCase("y")) {
 			try {
 				in = new Scanner(filePath);
+				byFile = true;
 			}
 			catch (FileNotFoundException e) {
 				e.printStackTrace();
+				return;
 			}
 		}
 		// ====================================================================================================
@@ -160,7 +163,7 @@ public class PASApp {
 				case 2:
 					uniqueId = Policy.generateUniqueId(customerList);
 					if (uniqueId >= 0) {
-						inputId = getValidInt("Input Account Number to create Policy in: ");
+						inputId = getValidBoundedInt("Input Account Number to create Policy in: ", 4, true);
 						foundHit = false;
 						currentAccount = null;
 						
@@ -175,8 +178,10 @@ public class PASApp {
 						if (foundHit) {
 							tempPolicy = new Policy(uniqueId);
 							
-							System.out.println("Set Current account as holder? [y for yes]: ");
+							System.out.print("Set Current account as holder? [y for yes]: ");
 							strIn = in.nextLine();
+							// Debug
+							if (byFile) System.out.println(strIn);
 							if (strIn.equalsIgnoreCase("y")) {
 								tempPolicy.setPolicyHolder(makeHolder(currentAccount));
 							}
@@ -188,11 +193,15 @@ public class PASApp {
 								tempPolicy.addVehicle(makeVehicle());
 								System.out.print("Input y to add another vehicle, else press enter to continue: ");
 								strIn = in.nextLine();
+								// Debug
+								if (byFile) System.out.println(strIn);
 							} while (strIn.equalsIgnoreCase("y"));
 							
 							tempPolicy.generateQuote();
 							System.out.print("Will you get this policy? [y for yes]: ");
 							strIn = in.nextLine();
+							// Debug
+							if (byFile) System.out.println(strIn);
 							
 							if (strIn.equalsIgnoreCase("y")) {
 								effectiveDate = LocalDate.now();
@@ -226,7 +235,7 @@ public class PASApp {
 				 * 		(int)	inputID - The ID of the Policy to cancel
 				 */
 				case 3:
-					inputId = getValidInt("Input Policy Number to cancel: ");
+					inputId = getValidBoundedInt("Input Policy Number to cancel: ", 6, true);
 					foundHit = false;
 					
 					for (CustomerAccount custObj: customerList) {
@@ -266,7 +275,7 @@ public class PASApp {
 				 * 		> makeClaim();
 				 */
 				case 4:
-					inputId = getValidInt("Input Policy Number to file claim: ");
+					inputId = getValidBoundedInt("Input Policy Number to file claim: ", 6, true);
 					foundHit = false;
 					isExpired = false;
 					currentAccount = null;
@@ -344,7 +353,7 @@ public class PASApp {
 				 * printed. Otherwise, program will output "no match."
 				 */
 				case 6:
-					inputId = getValidInt("Input Policy Number to find: ");
+					inputId = getValidBoundedInt("Input Policy Number to find: ", 6, true);
 					foundHit = false;
 					
 					for (CustomerAccount custObj: customerList) {
@@ -378,8 +387,8 @@ public class PASApp {
 						System.out.print("Input Claim Number to find: ");
 						strIn = in.nextLine();
 						// Debug
-						//System.out.println(strIn);
-						if ((strIn.length() != 7) && (strIn.charAt(0) != 'C')) {
+						if (byFile) System.out.println(strIn);
+						if ((strIn.length() != 7) || (strIn.charAt(0) != 'C')) {
 							System.out.println("Invalid input. Follow the format Cxxxxxx where x is a value between 0 - 9.");
 						}
 						else {
@@ -391,7 +400,7 @@ public class PASApp {
 								strIn = "";
 							}
 						}
-					} while((strIn.length() != 7) && (strIn.charAt(0) != 'C'));
+					} while((strIn.length() != 7) || (strIn.charAt(0) != 'C'));
 					
 					
 					foundHit = false;
@@ -482,9 +491,9 @@ public class PASApp {
 	 * 		(double)	purchase price	- Price the vehicle was purchased
 	 * 
 	 * Uses input validator methods. See following for documentation
-	 * 		> getStringNonEmpty(message)
-	 * 		> getValidInt(message)
-	 * 		> getValidDouble(message)
+	 * 		> getStringNonEmpty()
+	 * 		> getValidInt()
+	 * 		> getValidDouble()
 	 * 
 	 * @return Vehicle instance
 	 */
@@ -510,7 +519,7 @@ public class PASApp {
 		
 		type = getStringWord("Enter type: ");
 		fuelType = getStringWord("Enter fuel type: ");
-		purchasePrice = getValidDouble("Enter purchase price: ");
+		purchasePrice = getMoneyInput("Enter purchase price: ");
 		
 		return new Vehicle(make, model, year, type, fuelType, purchasePrice);
 	}
@@ -522,13 +531,13 @@ public class PASApp {
 	 * object passed as parameter.
 	 * 
 	 * Inputs:
-	 * 		(LocalDate)	birth date		- Date of birth of customer, ref. to getDate(message) method.
+	 * 		(LocalDate)	birth date		- Date of birth of customer, refer to getDate(message) method.
 	 * 		(String)	license number	- License number of customer
 	 * 		(LocalDate)	license date	- Date customer license was issued
 	 * 
 	 * Uses input validator methods. See following for documentation
-	 * 		> getDate(message)
-	 * 		> getStringNonEmpty(message)
+	 * 		> getDate()
+	 * 		> getStringNonEmpty()
 	 * 
 	 * @param custObj - CustomerAccount instance where name is taken
 	 * @return PolicyHolder instance
@@ -537,9 +546,9 @@ public class PASApp {
 		String licenseNumber;
 		LocalDate birthDate, licenseDate;
 		
-		birthDate = getDate("birth", true);
+		birthDate = getDateRequirePast("birth");
 		licenseNumber = getStringWord("Input driver's license number: ");
-		licenseDate = getDate("license issue", true);
+		licenseDate = getDateRequirePast("license issue");
 		
 		return new PolicyHolder(custObj, birthDate, licenseNumber, licenseDate);
 	}
@@ -550,13 +559,13 @@ public class PASApp {
 	 * Inputs:
 	 * 		(String)	first name		- Get first name of custom policy holder
 	 * 		(String)	first name		- Get last name of custom policy holder
-	 * 		(LocalDate)	birth date		- Date of birth of policy holder to be set, ref. to getDate(message) method.
+	 * 		(LocalDate)	birth date		- Date of birth of policy holder to be set, refer to getDate() method.
 	 * 		(String)	license number	- License number of customer
-	 * 		(LocalDate)	license date	- Date policy holder license was issued, ref. to getDate(message) method.
+	 * 		(LocalDate)	license date	- Date policy holder license was issued, refer to getDate() method.
 	 * 
 	 * Uses input validator methods. See following for documentation
-	 * 		> getDate(message)
-	 * 		> getStringNonEmpty(message)
+	 * 		> getDate()
+	 * 		> getStringNonEmpty()
 	 * 
 	 * @return PolicyHolder instance
 	 */
@@ -566,9 +575,9 @@ public class PASApp {
 		
 		firstName = getStringWord("Enter first name: ");
 		lastName = getStringWord("Enter last name: ");
-		birthDate = getDate("birth", true);
+		birthDate = getDateRequirePast("birth");
 		licenseNumber = getStringWord("Input license number: ");
-		licenseDate = getDate("license issue", true);
+		licenseDate = getDateRequirePast("license issue");
 		
 		return new PolicyHolder(firstName, lastName, birthDate, licenseNumber, licenseDate);
 	}
@@ -577,37 +586,30 @@ public class PASApp {
 	 * Gets inputs from user and creates a Claim instance
 	 * 
 	 * Inputs:
-	 * 		(LocalDate)	accident date			- Date accident took place, ref. to getDate(message) method.
+	 * 		(LocalDate)	accident date			- Date accident took place, refer to getDate() method.
 	 * 		(String)	accident address		- location of accident
 	 * 		(String)	accident description	- description of how accident occurred
 	 * 		(String)	accident damage			- description of damage
 	 * 		(Double)	repair costs			- Repair costs of damaged vehicle
 	 * 		
 	 * Uses input validator methods. See following for documentation
-	 * 		> getDate(message)
-	 * 		> getStringNonEmpty(message)
-	 * 		> getValidDouble(message)
+	 * 		> getDate()
+	 * 		> getStringNonEmpty()
+	 * 		> getValidDouble()
 	 * 
 	 * @param uniqueId - ID of claim to be instantiated
 	 * @return Claim instance
 	 */
 	private static Claim makeClaim(int uniqueId) {
 		LocalDate accidentDate;
-		LocalDate now = LocalDate.now();
 		String accidentAddress, accidentDescription, accidentDamage;
 		double repairCosts;
 		
-		do {
-			accidentDate = getDate("accident", true);
-			if (accidentDate.compareTo(now) > 0) {
-				System.out.println("Accident date must happen before " + now);
-			}
-		} while (accidentDate.compareTo(now) > 0);
-		
+		accidentDate = getDateRequirePast("accident");
 		accidentAddress = getStringWord("Enter accident address: ");
 		accidentDescription = getStringWord("Enter accident description: ");
 		accidentDamage = getStringWord("Enter damage description: ");
-		repairCosts = getValidDouble("Enter repair costs: ");
+		repairCosts = getMoneyInput("Enter repair costs: ");
 		
 		return new Claim(uniqueId, accidentDate, accidentAddress, accidentDescription, accidentDamage, repairCosts);
 	}
@@ -620,106 +622,62 @@ public class PASApp {
 	 * 		(int)	month	-	Month of date to create, limited to 1 - 12
 	 * 		(int)	day		-	Day of date to create, limited to valid days of month inputed
 	 * 
-	 * To verify if an input is a valid integer, getValidInt(message) method is used. 
-	 * For more information on functionality, refer below. Beyond this, verification
-	 * if the integer values falls within the scope of the method is done. Depending
-	 * on the value of the requirePast param, an additional check is done. 
+	 * All inputs for each date component makes use getValidBoundedInt() method. 
+	 * This ensures that each input has a limited amount of digits when inputting.
+	 * Description of how input length is limited will be described further down below. 
+	 * For more information on getValidBoundedInt() method functionality, refer to 
+	 * respective documentation.
 	 * 
-	 * For year, the method will check if the input is beyond the set limit of 1900.
-	 * If requiresPast is true, the program will additionally prevent inputs beyond the
-	 * current year.
+	 * The year method is limited to a minimum year of 1900. All inputs for year require
+	 * an input that is absolutely 4 digits in length.
 	 * 
-	 * For month, values 01 to 12 are the only valid values which present Jan - Dec. If
-	 * requiresPast is true, program will limit month selection from jan to current month
-	 * if the year set prior is equal to current year
+	 * For month, values 01 to 12 are the only valid values which present Jan - Dec.
+	 * Input requires only a maximum of 2 digits.
 	 * 
-	 * For day, input is validated base on if a LocalDate instance can be generated
-	 * from input. If LocalDate.of(year, month, dayOfMonth) throws an exception, the 
-	 * program catches it and outputs that day is invalid. Additionally, if requirePast
-	 * is true, The generated LocalDate value is compared to current date. If the generated
-	 * date is greater than the current, the program will force the user to input another day
-	 * until the generated date is less than or equal to current date. 
+	 * The day component can have a maximum of 2 digits input length. Input is validated base on 
+	 * if a LocalDate instance can be generated from input. If LocalDate.of(year, month, dayOfMonth) 
+	 * throws an exception, the program catches it and forces the user to input another.
 	 * 
 	 * The message prompt shown to the user when asking for input is customized through 
 	 * the String parameter "type."
-	 * 
-	 * i.e. type = "new", then output is "Enter new year: "
+	 * i.e. if type = "new", then output is "Enter new year: "
 	 * 
 	 * @param type - Description of date type, in string
-	 * @param requirePast - true if enforce dates must be past, false otherwise
-	 * @return LocalDate instance
+	 * @return LocalDate - with defined values
 	 */
-	private static LocalDate getDate(String type, boolean requirePast) {
+	private static LocalDate getDate(String type) {
 		LocalDate date = LocalDate.now();
 		int month = 0;
 		int day = 0;
 		int year = 0;
-		int yearNow = LocalDate.now().getYear();
-		int monthNow = LocalDate.now().getMonthValue();
 		boolean isInvalid;
 		
 		// Get Year
-		isInvalid = true;
 		do {
-			year = getValidInt("Enter " + type + " year: ");
-			// Debug
-			//System.out.println(year);
-			if (requirePast) {
-				if (year > yearNow || year < 1900) {
-					System.out.println("Only years between 1900 and " + yearNow + " are valid");
-				}
-				else {
-					isInvalid = false;
-				}
-			}
-			else if (year < 1900) {
+			year = getValidBoundedInt("Enter " + type + " year: ", 4, true);
+			if (year < 1900) {
 				System.out.println("Year must be beyond 1900");
 			}
 			else {
 				isInvalid = false;
 			}
-		} while (isInvalid);
+		} while (year < 1900);
 		
 		// Get Month
-		isInvalid = true;
 		do {
-			month = getValidInt("Enter " + type + " month (01-12): ");
-			// Debug
-			//System.out.println(month);
+			month = getValidBoundedInt("Enter " + type + " month (01-12): ", 2, false);
 			if (month > 12 || month < 1) {
 				System.out.println("Only values 1 - 12 are valid");
 			}
-			else if (requirePast) {
-				if ((year == yearNow) && (month > monthNow)) {
-					System.out.println("Month cannot go beyond " + monthNow + " for current year");
-				}
-				else {
-					isInvalid = false;
-				}
- 			}
-			else {
-				isInvalid = false;
-			}
-		} while(isInvalid);
+		} while(month > 12 || month < 1);
 		
 		//Get Day
 		isInvalid = true;
 		do {
 			try {
-				day = getValidInt("Enter " + type + " day: ");
-				// Debug
-				//System.out.println(day);
+				day = getValidBoundedInt("Enter " + type + " day: ", 2, false);
 				date = LocalDate.of(year, month, day);
-				if (requirePast) {
-					if (date.compareTo(LocalDate.now()) > 0) {
-					System.out.println("Day cannot be beyond today (" + LocalDate.now() + ")");
-					}
-					else {
-						isInvalid = false;
-					}
-				} else {
-					isInvalid = false;
-				}
+				isInvalid = false;
 			}
 			catch (DateTimeException e) {
 				System.out.println("Invalid day for month");
@@ -730,19 +688,45 @@ public class PASApp {
 	}
 	
 	/**
+	 * Returns a LocalDate instance of a date from the past with current date inclusive.
+	 * 
+	 * Makes use of getDate() method for generating a date. The output of this method
+	 * will be checked against an instance of the current date. If the date is greater
+	 * than the current date, the program will require the user to input a new date.
+	 * 
+	 * @param type
+	 * @return LocalDate - date from the past
+	 */
+	private static LocalDate getDateRequirePast(String type) {
+		LocalDate nowDate = LocalDate.now();
+		LocalDate newDate;
+		
+		do {
+			newDate = getDate(type);
+			if (newDate.compareTo(nowDate) > 0) {
+				System.out.println("Date cannot be after " + nowDate);
+			}
+		} while (newDate.compareTo(nowDate) > 0);
+		
+		return newDate;
+	}
+	
+	/**
 	 * Creates a string instance after verifying if it meets the following requirements:
 	 * 		> Is not blank
-	 * 		> Does not consist of only numbers
-	 * 		> Only consists of alphanumeric values
+	 * 		> Does not consist of only whitespace
+	 * 		> Does not consist of only numbers with ".", "-", and "," characters
+	 * 		> Does not consist of only ".", "-", and "," characters
+	 * 		> Must consist of alphabetic values. May contain digits, whitespace, ".", "-", and "," characters.
+	 * 
+	 * Inputed String will always be trimmed before processing.
 	 * 
 	 * Can display custom message requesting what type of input string is desired.
-	 * 
-	 * Inputed String will always be trimmed.
 	 * 
 	 * Input:
 	 * 		(String)	strIn	- String to be verified.
 	 * 
-	 * Program will ask for a new input if a blank string is inputed.
+	 * Program will ask for a new input if a blank string or a string that only is inputed.
 	 * 
 	 * @param message - Custom message to display for every input attempt
 	 * @return String instance
@@ -755,21 +739,21 @@ public class PASApp {
 			strIn = in.nextLine();
 			
 			// Debug
-			//System.out.println(strIn);
+			if (byFile) System.out.println(strIn);
 			
 			strIn = strIn.trim();
 			if (strIn.equals("")) {
 				System.out.println("Entry cannot be blank");
 			}
-			else if (strIn.matches("^[\\.\\-]*$")) {
-				System.out.println("Input cannot purely be \".\" and \"-\"");
+			else if (strIn.matches("^[,\\.\\- ]*$")) {
+				System.out.println("Input cannot purely be \".\", \"-\", and \",\"");
 				strIn = "";
 			}
-			else if (strIn.matches("^[\\d\\.\\-]*$")) {
+			else if (strIn.matches("^[,\\d\\.\\- ]*$")) {
 				System.out.println("Input cannot purely be numbers");
 				strIn = "";
 			}
-			else if (!(strIn.matches("^[a-zA-Z0-9\\.\\- ]*$"))) {
+			else if (!(strIn.matches("^[a-zA-Z0-9,\\.\\- ]*$"))) {
 				System.out.println("Input cannot contain special characters");
 				strIn = "";
 			}
@@ -788,65 +772,162 @@ public class PASApp {
 	 * Verification is done via exception handling. Invalid inputs involve values
 	 * that will trigger a InputMismatchException whenever Scanner.nextInt() is called
 	 * 
-	 * @param message
+	 * @param message - Custom message to display for every input attempt
 	 * @return int - validated integer
 	 */
 	private static int getValidInt(String message) {
 		boolean isInvalid = true;
-		String getIntString;
+		String getIntString = "";
 		int parsedInt = 0;
 		
 		do {
 			System.out.print(message);
 			try {
 				getIntString = in.nextLine();
+				getIntString = getIntString.trim();
+				// Debug
+				if (byFile) System.out.println(getIntString);
 				parsedInt = Integer.parseInt(getIntString);
 				isInvalid = false;
 			}
 			catch(NumberFormatException e) {
-				System.out.println("Input is not an integer");
+				if (getIntString.equals("")) {
+					System.out.println("Input cannot be blank");
+				}
+				else {
+					System.out.println("Input is not valid");
+				}
 			}
 		} while (isInvalid);
-		
-		// Debug
-		//System.out.println(parsedInt);
 		
 		return parsedInt;
 	}
 	
 	/**
-	 * Return inputed double after verifying if input is valid.
+	 * Return double value that is valid for currency.
 	 * Can display custom message requesting what type of input is desired.
 	 * 
 	 * Input:
 	 * 		(double)	getInt	- integer to be verified.
 	 * 
-	 * Verification is done via exception handling. Invalid inputs involve values
-	 * that will trigger a InputMismatchException whenever Scanner.nextDouble() is called
+	 * For an input to be valid, it must meet the following criteria:
+	 * 		> Input is a double
+	 * 		> Input only has 2 digits for decimal portion
+	 * 		> May or may not have commas
+	 * 			>> If it has commas, input must be formatted properly i.e. 1,234,567.89
 	 * 
-	 * @param message
+	 * The program will trim and remove all commas in inputs before processing.
+	 * 
+	 * Verification is done via exception handling and Regular Expressions.
+	 * 
+	 * Regular Expressions used:
+	 * 		> Check if input is a valid double, no commas - "^[\d]*(\.[\d]*){0,1}$"
+	 * 		> Check if input has 2 or less decimal values, no commas - "^[\d]*(\.[\d]{0,2}){0,1}$"
+	 * 		> Check if input is valid double, properly formatted with commas - "^[\d]{0,3}(,[\d]{3})*\.[\d]*$"
+	 * 		> Check if input is valid double with more than 2 decimal values, 
+	 * 				properly formatted with commas - "^[\d]{0,3}(,[\d]{3})*\.[\d]{2}[\d]+$"
+	 * 
+	 * @param message - Custom message to display for every input attempt
 	 * @return double - validated double
 	 */
-	private static double getValidDouble(String message) {
+	private static double getMoneyInput(String message) {
 		boolean isInvalid = true;
-		String getDoubleString;
+		String getDoubleString = "";
 		double parsedDouble = 0.0;
 		
 		do {
 			System.out.print(message);
 			try {
 				getDoubleString = in.nextLine();
-				parsedDouble = Double.parseDouble(getDoubleString);
-				isInvalid = false;
+				getDoubleString = getDoubleString.trim();
+				// Debug
+				if (byFile) System.out.println(getDoubleString);
+				
+				if (getDoubleString.matches("^[\\d]*(\\.[\\d]*){0,1}$")) {
+					if (getDoubleString.matches("^[\\d]*(\\.[\\d]{0,2}){0,1}$")) {
+						parsedDouble = Double.parseDouble(getDoubleString);
+						isInvalid = false;
+					}
+					else {
+						System.out.println("Decimals must be limited to 2 digits");
+					}
+				}
+				else {
+					if (getDoubleString.equals("")) {
+						System.out.println("Input cannot be blank");
+					}
+					else if (!(getDoubleString.matches("^[\\d]{0,3}(,[\\d]{3})*\\.[\\d]*$"))) {
+						System.out.println("Invalid input! Ensure input is purely numbers or has proper commas (i.e. 1234567.89 or 1,234,567.89)");
+					}
+					else if (getDoubleString.matches("^[\\d]{0,3}(,[\\d]{3})*\\.[\\d]{2}[\\d]+$")) {
+						System.out.println("Decimals must be limited to 2 digits");
+					}
+					else {
+						getDoubleString = getDoubleString.replaceAll(",", "");
+						parsedDouble = Double.parseDouble(getDoubleString);
+						isInvalid = false;
+					}
+				}
+				
 			}
 			catch(NumberFormatException e) {
-				System.out.println("Input is not valid");
+				if (getDoubleString.equals("")) {
+					System.out.println("Input cannot be blank");
+				}
+				else {
+					System.out.println("Input is not valid");
+				}
 			}
 		} while (isInvalid);
 		
-		// Debug
-		//System.out.println(parsedDouble);
-		
 		return parsedDouble;
+	}
+	
+	/**
+	 * Returns inputed int value after verification
+	 * 
+	 * Has the same behavior as getValidInt() but with input length limitations.
+	 * Length limit is set based on value of limit param. 
+	 * 
+	 * @param message - Custom message to display for every input attempt
+	 * @param limit - Maximum length input string can be
+	 * @param requireLimitAsMinimum - Enforces maximum limit as minimum if true
+	 * @return
+	 */
+	private static int getValidBoundedInt(String message, int limit, boolean requireLimitAsMinimum) {
+		boolean isInvalid = true;
+		String getIntString = "";
+		int parsedInt = 0;
+		
+		do {
+			System.out.print(message);
+			try {
+				getIntString = in.nextLine();
+				getIntString = getIntString.trim();
+				// Debug
+				if (byFile) System.out.println(getIntString);
+				parsedInt = Integer.parseInt(getIntString);
+				
+				if (!(requireLimitAsMinimum) && (getIntString.length() > limit)) {
+					System.out.println("Input can only have maximum of " + limit + " digits");
+				}
+				else if (requireLimitAsMinimum && getIntString.length() != limit) {
+					System.out.println("Input must be " + limit + " digits long");
+				}
+				else {
+					isInvalid = false;
+				}
+			}
+			catch(NumberFormatException e) {
+				if (getIntString.equals("")) {
+					System.out.println("Input cannot be blank");
+				}
+				else {
+					System.out.println("Input is not valid");
+				}
+			}
+		} while (isInvalid);
+		
+		return parsedInt;
 	}
 }
