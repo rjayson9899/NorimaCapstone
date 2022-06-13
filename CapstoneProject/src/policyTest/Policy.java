@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 
 public class Policy implements InterfaceApp {
-	private int policyNum;
+	private String policyNum;
 	private LocalDate effectDate;
 	private LocalDate expDate;
 	private PolicyHolder policyHolder;
@@ -19,10 +19,10 @@ public class Policy implements InterfaceApp {
 		this.policyHolder = policyHolder;
 	}
 	
-	public int getPolicyNum() {
+	public String getPolicyNum() {
 		return policyNum;
 	}
-	public void setPolicyNum(int policyNum) {
+	public void setPolicyNum(String policyNum) {
 		this.policyNum = policyNum;
 	}
 	public LocalDate getEffectDate() {
@@ -61,7 +61,14 @@ public class Policy implements InterfaceApp {
 
 	
 	public void generateId(int count) {
-		this.policyNum = count + 1;
+		int accountNumInt = count + 1;
+		policyNum = Integer.toString(accountNumInt);
+		StringBuilder sb = new StringBuilder();
+		for(int x = 0; x < 5; x++){
+			sb.append('0');
+		}
+		sb.append(policyNum);
+		policyNum = sb.toString();
 	}
 
 	public String getStatus() {
@@ -120,8 +127,9 @@ public class Policy implements InterfaceApp {
 		System.out.println("List of Vehicles: ");
 		for(Vehicle v: vehicles){
 			System.out.println(v.getMake() + " " + v.getModel());
+			this.cost += RatingEngine.rateCalOnly(v.getYear(), v.getPrice(), v.getYearLicense());
 		}
-		System.out.println("Total cost of premium: " + cost);
+		System.out.println("Total cost of premium: $" + this.cost);
 		
 	}
 	

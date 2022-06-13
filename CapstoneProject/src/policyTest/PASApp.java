@@ -68,8 +68,8 @@ public class PASApp {
 						customerAccounts.get(customerAccounts.size() - 1).generateId(accountNumGenerator);
 						accountNumGenerator++;
 						System.out.println("Created account!");
-						System.out.println("Your account number is: " + customerAccounts
-						.get(customerAccounts.size() - 1).getAccountNum());
+						System.out.println("Your account number is: " + customerAccounts.get(customerAccounts.size() - 1).getAccountNum());
+						
 						pressAnyKeyToContinue();
 					}	
 
@@ -77,6 +77,7 @@ public class PASApp {
 					
 				case 2: // Quote/Buy policy
 					clrscrn(1);
+					input.nextLine();
 					//initializing local variables
 					int indexGet = 0;
 					boolean wrongDate = true;
@@ -90,10 +91,10 @@ public class PASApp {
 					System.out.println("        Quoting policy");
 					System.out.println("-------------------------------");
 					System.out.print("Input account number: ");
-					int accNum = input.nextInt();
+					String accNum = input.nextLine();
 					
 					for(CustomerAccount x: customerAccounts) { //for each loop to get index of the account number , checks if account exist
-						if(x.getAccountNum() == accNum) {
+						if(x.getAccountNum().equals(accNum)) {
 							System.out.println("Account exist!");
 							indexGet = customerAccounts.indexOf(x);
 							accExist = true;
@@ -105,7 +106,6 @@ public class PASApp {
 						System.out.println("\n-------------------------------");
 						System.out.println("    Policy Holder Details");
 						System.out.println("-------------------------------");
-						input.nextLine();
 						do{
 							System.out.println("Input effective date(yyyy-mm-dd): ");
 							System.out.print("ex.'2022-09-18': ");
@@ -115,15 +115,16 @@ public class PASApp {
 						}while(!wrongDate);
 
 						expiredDate= effectDate.plusMonths(6);
-						System.out.println(expiredDate);
+						System.out.println("Set expired date to: " + expiredDate);
 						//Add checker if the one who creates policy is the account holder or different person
 						String fnamePol = "", lnamePol = "";
 						System.out.print("Is the account owner also the policy holder? (y/n) ");
 						Character decision = input.nextLine().charAt(0);
+						System.out.println(decision);
 						
 						if(decision.equals('y') || decision.equals('Y')) { //condition if the account owner is also the policy holder
 							for(CustomerAccount c: customerAccounts) {
-								if(accNum == c.getAccountNum()) {
+								if(c.getAccountNum().equals(accNum)) {
 									fnamePol = c.getFname();
 									lnamePol = c.getLname();
 									System.out.println("Set the first name to: " + fnamePol);
@@ -229,7 +230,8 @@ public class PASApp {
 						
 						if(decision.equals('y') || decision.equals('Y')) {
 							customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).setStatus();
-							System.out.println("Policy bought!");
+							System.out.println("Policy bought! Your policy number is: " + 
+							customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).getPolicyNum());
 							pressAnyKeyToContinue();
 						}
 						
@@ -249,6 +251,7 @@ public class PASApp {
 					
 				case 3:
 					clrscrn(1);
+					input.nextLine();
 					int indexPol = 0, indexCus = 0;
 					Character confirm;
 					accExist = false;
@@ -257,11 +260,11 @@ public class PASApp {
 					System.out.println("        Cancel Policy");
 					System.out.println("-------------------------------");
 					System.out.print("Input Policy Number: ");
-					int policyNum = input.nextInt();
+					String policyNum = input.nextLine();
 					
 					for(CustomerAccount c: customerAccounts){
 						for(Policy p: c.getPolicyAct()){
-							if(p.getPolicyNum() == policyNum){
+							if(p.getPolicyNum().equals(policyNum)){
 								indexPol = c.getPolicyAct().indexOf(p);
 								indexCus = customerAccounts.indexOf(c);
 								accExist = true;
@@ -282,7 +285,7 @@ public class PASApp {
 						}
 	
 						else{
-							input.nextLine();
+							
 							System.out.println("Would you like to cancel this policy? (y/n)");
 							confirm = input.nextLine().charAt(0);
 	
@@ -307,17 +310,17 @@ public class PASApp {
 					
 				case 4:
 					clrscrn(1);
-					
+					input.nextLine();
 
 					System.out.println("\n-------------------------------");
 					System.out.println("     File Accident Claim");
 					System.out.println("-------------------------------");
 					System.out.print("Input Policy Number: ");
-					int policy1 = input.nextInt();
+					String policy1 = input.nextLine();
 
 					for(CustomerAccount c: customerAccounts){
 						for(Policy p: c.getPolicyAct()){
-							if(p.getPolicyNum() == policy1){
+							if(p.getPolicyNum().equals(policy1)){
 								indexPol = c.getPolicyAct().indexOf(p);
 								indexCus = customerAccounts.indexOf(c);
 								accExist = true;
@@ -332,7 +335,6 @@ public class PASApp {
 
 					else{
 						clrscrn(1);
-						input.nextLine();
 						System.out.println("\n-------------------------------");
 						System.out.println("Claim Details");
 						System.out.println("-------------------------------");
@@ -349,11 +351,14 @@ public class PASApp {
 						System.out.print("Estimated cost of repairs: ");
 						double estCost = input.nextDouble();
 						
-						claims.add(new Claim(claimNumGenerator, accidentDate, accidentAdd, descriptionAccident,
+						claims.add(new Claim( accidentDate, accidentAdd, descriptionAccident,
 									descriptionDamage,estCost));
+						claims.get(claims.size()-1).generateId(claimNumGenerator);
 						
+						claimNumGenerator++;
 						
-						System.out.println("Successfully Claimed policy!");
+						System.out.println("Successfully filed a claim!");
+						System.out.println("Your claim number is: " + claims.get(claims.size()-1).getClaimNum());
 						pressAnyKeyToContinue();
 					}
 					//Add condition if policy exist
@@ -393,11 +398,12 @@ public class PASApp {
 					}
 					
 					else if(search == 2) {
+						input.nextLine();
 						System.out.print("Input account number: ");
-						int accountNum = input.nextInt();
+						String accountNum = input.nextLine();
 
 						for(CustomerAccount c: customerAccounts){
-							if(c.getAccountNum() == accountNum){
+							if(c.getAccountNum().equals(accountNum)){
 								c.getDetails();
 								accExist = true;
 								pressAnyKeyToContinue();
@@ -416,16 +422,17 @@ public class PASApp {
 					
 					
 				case 6:
+					input.nextLine();
 					clrscrn(1);
 					accExist = false;
 					System.out.println("\n-------------------------------");
 					System.out.println("        Search Policy");
 					System.out.println("-------------------------------");
 					System.out.print("Input policy number: ");
-					int policyNumSearch = input.nextInt();
+					String policyNumSearch = input.nextLine();
 					for(CustomerAccount c: customerAccounts){
 						for(Policy p: c.getPolicyAct()){
-							if(p.getPolicyNum() == policyNumSearch){
+							if(p.getPolicyNum().equals(policyNumSearch)){
 								accExist = true;
 								p.getDetails();
 								pressAnyKeyToContinue();
@@ -441,15 +448,16 @@ public class PASApp {
 					
 				case 7:
 					clrscrn(1);
+					input.nextLine();
 					accExist = false;
 					System.out.println("\n-------------------------------");
 					System.out.println("        Search Claim");
 					System.out.println("-------------------------------");
 					System.out.print("Input claim number: ");
-					int claimNum = input.nextInt();
+					String claimNum = input.nextLine();
 					
 					for(Claim c: claims){
-						if(c.getClaimNum() == claimNum){
+						if(c.getClaimNum().equals(claimNum)){
 							accExist = true;
 							c.getDetails();
 							pressAnyKeyToContinue();

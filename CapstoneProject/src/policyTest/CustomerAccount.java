@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class CustomerAccount implements InterfaceApp{
 
-	private int accountNum;
+	private String accountNum;
 	private String fname;
 	private String lname;
 	private String address;
@@ -18,15 +18,23 @@ public class CustomerAccount implements InterfaceApp{
 	}
 	
 	public void generateId(int count) {
-		this.accountNum = count + 1;
+		int accountNumInt = count + 1;
+		accountNum = Integer.toString(accountNumInt);
+		StringBuilder sb = new StringBuilder();
+		for(int x = 0; x < 3; x++){
+			sb.append('0');
+		}
+		sb.append(accountNum);
+		accountNum = sb.toString();
+		
 		//input code for id generation
 	}
 
-	public int getAccountNum() {
+	public String getAccountNum() {
 		return accountNum;
 	}
 
-	public void setAccountNum(int accountNum) {
+	public void setAccountNum(String accountNum) {
 		this.accountNum = accountNum;
 	}
 
@@ -86,7 +94,7 @@ public class CustomerAccount implements InterfaceApp{
 			System.out.println("Policies: ");
 			System.out.format("%-5s %-15s %-15s \n", "No.","Policy Number", "Status");
 			for(Policy p: policyAct){
-				System.out.format("%-5d %-15d %-15s \n", count, p.getPolicyNum(),p.getStatus());
+				System.out.format("%-5d %-15s %-15s \n", count, p.getPolicyNum(),p.getStatus());
 			}
 			System.out.println("Policy Holders: ");
 			for(PolicyHolder ph: policyHolders){

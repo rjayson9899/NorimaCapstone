@@ -75,6 +75,8 @@ public class Vehicle implements InterfaceApp{
 		this.color = color;
 	}
 
+	
+
 	@Override
 	public void getDetails() {
 		System.out.println("-------------------------------");
@@ -111,4 +113,19 @@ public class Vehicle implements InterfaceApp{
 	}
 	
 	
+
+    /**
+     * @return int return the yearLicense
+     */
+    public int getYearLicense() {
+        return yearLicense;
+    }
+
+    /**
+     * @param yearLicense the yearLicense to set
+     */
+    public void setYearLicense(int yearLicense) {
+        this.yearLicense = yearLicense;
+    }
+
 }

@@ -5,16 +5,16 @@ import java.time.LocalDate;
 
 public class Claim implements InterfaceApp{
 
-	private int claimNum;
+	private String claimNum;
 	private LocalDate accidentDate;
 	private String address;
 	private String descriptionAcc;
 	private String descriptionDam;
 	private double cost;
 	
-	public Claim(int claimNum, LocalDate accidentDate, String address, String descriptionAcc,
+	public Claim( LocalDate accidentDate, String address, String descriptionAcc,
 					String descriptionDam, double cost) {
-		this.claimNum = claimNum + 1;
+		
 		this.accidentDate = accidentDate;
 		this.address = address;
 		this.descriptionAcc = descriptionAcc;
@@ -22,10 +22,10 @@ public class Claim implements InterfaceApp{
 		this.cost = cost;
 	}
 	
-	public int getClaimNum() {
+	public String getClaimNum() {
 		return claimNum;
 	}
-	public void setClaimNum(int claimNum) {
+	public void setClaimNum(String claimNum) {
 		this.claimNum = claimNum;
 	}
 	public LocalDate getAccidentDate() {
@@ -71,7 +71,24 @@ public class Claim implements InterfaceApp{
 		System.out.println("description of damage: \n" + descriptionDam);
 		System.out.println("Estimated cost of damage: $" + cost);
 	}
-	
+
+	public void generateId(int count) {
+		int accountNumInt = count + 1;
+		claimNum = Integer.toString(accountNumInt);
+		StringBuilder sb = new StringBuilder();
+		for(int x = 0; x < 5; x++){
+			if(x == 0){
+				sb.append('C');
+			}
+			else{
+				sb.append('0');
+			}
+		}
+		sb.append(claimNum);
+		claimNum = sb.toString();
+		
+		//input code for id generation
+	}
 	
 	
 }
