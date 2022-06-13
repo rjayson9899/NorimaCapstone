@@ -12,7 +12,6 @@ public class PASApp {
 		Scanner input = new Scanner(System.in);
 		ArrayList<CustomerAccount> customerAccounts = new ArrayList<>();
 		ArrayList<Claim> claims = new ArrayList<>();
-		LocalDate dateToday = LocalDate.now();
 		boolean accExist = false;
 		int choice = 0;
 		int accountNumGenerator = 0;
@@ -21,26 +20,16 @@ public class PASApp {
 		
 		do {
 			//main menu user interface
-			clrscrn(1);
-			System.out.println("-------------------------------");
-			System.out.println("          PAS System           ");
-			System.out.println("-------------------------------");
-			System.out.println("[1] Create Customer Account");
-			System.out.println("[2] Get quote and Buy Policy");
-			System.out.println("[3] Cancel Policy");
-			System.out.println("[4] File Accident Claim");
-			System.out.println("[5] Search Customer Account");
-			System.out.println("[6] Search Policy");
-			System.out.println("[7] Search Claim");
-			System.out.println("[8] Exit");
-			System.out.println("-------------------------------");
-			System.out.print("Input number of choice: ");
-			choice = input.nextInt();
+			clrscrn(0, false);
+			choice = checkerInt(input, "-------------------------------\n          PAS System           \n-------------------------------\n"+ 
+								"[1] Create Customer Account\n[2] Get quote and Buy Policy\n[3] Cancel Policy\n" + 
+								"[4] File Accident Claim\n[5] Search Customer Account\n[6] Search Policy\n[7] Search Claim\n" +
+								"[8] Exit\n-------------------------------\nInput number of choice: ");
 			
 			switch(choice) {
 			
 				case 1: //Creating Account
-					clrscrn(1);
+					clrscrn(1, true);
 					input.nextLine();
 					accExist = false;
 					System.out.println("\n-------------------------------");
@@ -59,6 +48,7 @@ public class PASApp {
 								&& y.getAddress().equalsIgnoreCase(address)) {
 							System.out.println("Account already exist!");
 							accExist = true;
+							clrscrn(1, false);
 							break;
 						}
 					}
@@ -76,7 +66,7 @@ public class PASApp {
 					break;
 					
 				case 2: // Quote/Buy policy
-					clrscrn(1);
+					clrscrn(1, true);
 					input.nextLine();
 					//initializing local variables
 					int indexGet = 0;
@@ -102,15 +92,12 @@ public class PASApp {
 					}
 					//Policy Holder Details
 					if(accExist) { 
-						clrscrn(1);
+						clrscrn(1, true);
 						System.out.println("\n-------------------------------");
 						System.out.println("    Policy Holder Details");
 						System.out.println("-------------------------------");
 						do{
-							System.out.println("Input effective date(yyyy-mm-dd): ");
-							System.out.print("ex.'2022-09-18': ");
-							String date = input.nextLine();
-							effectDate = LocalDate.parse(date);
+							effectDate = checkerDate(input, "Input effective date(yyyy-mm-dd):\nex.'2022-09-18': ");
 							wrongDate = Policy.checkDate(effectDate);
 						}while(!wrongDate);
 
@@ -141,16 +128,10 @@ public class PASApp {
 							lnamePol = input.nextLine();	
 						}
 						
-						System.out.println("Input birth date(yyyy-mm-dd): ");
-						System.out.print("ex.'2022-09-18': ");
-						String birthDateString = input.nextLine();
-						LocalDate birthDate = LocalDate.parse(birthDateString);
+						LocalDate birthDate = checkerDate(input,"Input birth date(yyyy-mm-dd):\nex.'2022-09-18': ");
 						System.out.print("Input license number: ");
 						String license = input.nextLine();
-						System.out.println("Input license date issued(yyyy-mm-dd): ");
-						System.out.print("ex.'2022-09-18': ");
-						String licenseDateString = input.nextLine();
-						LocalDate licenseDate = LocalDate.parse(licenseDateString);
+						LocalDate licenseDate = checkerDate(input, "Input license date issued(yyyy-mm-dd):\n ex.'2022-09-18': " );
 						int licenseYear =licenseDate.getYear() ;
 
 						customerAccounts.get(indexGet).addPolicyAct(new Policy(effectDate, 
@@ -163,12 +144,11 @@ public class PASApp {
 						policyNumGenerator++;
 						
 						//Vehicle Details
-						System.out.print("How many vehicles for this policy? : ");
-						int numVehicle = input.nextInt();
+						int numVehicle = checkerInt(input, "How many vehicles for this policy? : ");
 						input.nextLine();
 						
 						while(numVehicle > 0) {
-							clrscrn(1);
+							clrscrn(1, true);
 							System.out.println("\n-------------------------------");
 							System.out.println("       Vehicle Details");
 							System.out.println("-------------------------------");
@@ -176,26 +156,22 @@ public class PASApp {
 							make = input.nextLine();
 							System.out.print("Model: ");
 							model = input.nextLine();
-							System.out.print("Year: ");
-							year = input.nextInt();
+							year = checkerInt(input, "Year: ");
 							
 							System.out.println("Choose which type your vehicle is: ");
 							System.out.println("[1] 4-door sedan");
 							System.out.println("[2] 2-door sports car, SUV, or truck");
 							System.out.println("-------------------------------");
-							System.out.print("Your type of vehicle: ");
-							type = input.nextInt();
+							type = checkerInt(input, "Your type of vehicle: ");
 							
 							System.out.println("Choose which type of fuel: ");
 							System.out.println("[1] Diesel");
 							System.out.println("[2] Electric");
 							System.out.println("[3] Petrol");
 							System.out.println("-------------------------------");
-							System.out.print("Your type of fuel: ");
-							fuel = input.nextInt();
+							fuel = checkerInt(input, "Your type of fuel: " );
 							
-							System.out.print("Purchase price: ");
-							price = input.nextDouble();
+							price = checkerDouble(input, "Purchase price: ");
 							System.out.print("Color: ");
 							input.nextLine();
 							color = input.nextLine();
@@ -206,7 +182,7 @@ public class PASApp {
 							
 							numVehicle--;
 						}
-						clrscrn(1);
+						clrscrn(1, true);
 						customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1)
 												.getDetails();
 						
@@ -250,7 +226,7 @@ public class PASApp {
 					break;
 					
 				case 3:
-					clrscrn(1);
+					clrscrn(1,true);
 					input.nextLine();
 					int indexPol = 0, indexCus = 0;
 					Character confirm;
@@ -276,6 +252,7 @@ public class PASApp {
 					
 					if(!accExist){
 						System.out.println("Policy does not exist!");
+						clrscrn(1, false);
 					}
 
 					else{
@@ -290,10 +267,7 @@ public class PASApp {
 							confirm = input.nextLine().charAt(0);
 	
 							if(confirm.equals('y') || confirm.equals('Y')){
-								System.out.println("Input new expiration date(yyyy-mm-dd): ");
-								System.out.print("ex.'2022-09-18': ");
-								String expDateString = input.nextLine();
-								LocalDate expDate = LocalDate.parse(expDateString);
+								LocalDate expDate = checkerDate(input, "Input new expiration date(yyyy-mm-dd):\nex.'2022-09-18': ");
 								customerAccounts.get(indexCus).getPolicyAct().get(indexPol).setExpDate(expDate);;
 								customerAccounts.get(indexCus).getPolicyAct().get(indexPol).setStatus();
 								System.out.println("Successfully edited expiration policy!"); 
@@ -302,6 +276,7 @@ public class PASApp {
 	
 							else{
 								System.out.println("Going back to main menu");
+								clrscrn(1, false);
 							}
 						}
 					}
@@ -309,8 +284,9 @@ public class PASApp {
 					break;
 					
 				case 4:
-					clrscrn(1);
+					clrscrn(1,true);
 					input.nextLine();
+					String status = "";
 
 					System.out.println("\n-------------------------------");
 					System.out.println("     File Accident Claim");
@@ -323,6 +299,7 @@ public class PASApp {
 							if(p.getPolicyNum().equals(policy1)){
 								indexPol = c.getPolicyAct().indexOf(p);
 								indexCus = customerAccounts.indexOf(c);
+								status = p.getStatus();
 								accExist = true;
 								break;
 							}
@@ -334,50 +311,47 @@ public class PASApp {
 					}
 
 					else{
-						clrscrn(1);
-						System.out.println("\n-------------------------------");
-						System.out.println("Claim Details");
-						System.out.println("-------------------------------");
-						System.out.println("Input accident date(yyyy-mm-dd): ");
-						System.out.print("ex.'2022-09-18': ");
-						String accidentDateString = input.nextLine();
-						LocalDate accidentDate = LocalDate.parse(accidentDateString);
-						System.out.print("Address of where the accident happened: ");
-						String accidentAdd = input.nextLine();
-						System.out.print("Description of the accident: ");
-						String descriptionAccident = input.nextLine();
-						System.out.print("Description of damage to vehicle: ");
-						String descriptionDamage = input.nextLine();
-						System.out.print("Estimated cost of repairs: ");
-						double estCost = input.nextDouble();
-						
-						claims.add(new Claim( accidentDate, accidentAdd, descriptionAccident,
-									descriptionDamage,estCost));
-						claims.get(claims.size()-1).generateId(claimNumGenerator);
-						
-						claimNumGenerator++;
-						
-						System.out.println("Successfully filed a claim!");
-						System.out.println("Your claim number is: " + claims.get(claims.size()-1).getClaimNum());
-						pressAnyKeyToContinue();
+
+						if(status.equals("Scheduled") || status.equals("Expired")){
+							System.out.println("Policy expired or not yet enforced");
+						}
+						else{
+							clrscrn(1, true);
+
+							System.out.println("\n-------------------------------");
+							System.out.println("        Claim Details");
+							System.out.println("-------------------------------");
+							LocalDate accidentDate = checkerDate(input, "Input accident date(yyyy-mm-dd):\nex.'2022-09-18': ");
+							System.out.print("Address of where the accident happened: ");
+							String accidentAdd = input.nextLine();
+							System.out.print("Description of the accident: ");
+							String descriptionAccident = input.nextLine();
+							System.out.print("Description of damage to vehicle: ");
+							String descriptionDamage = input.nextLine();
+							double estCost = checkerDouble(input, "Estimated cost of repairs: " );
+							
+							claims.add(new Claim( accidentDate, accidentAdd, descriptionAccident,
+										descriptionDamage,estCost));
+							claims.get(claims.size()-1).generateId(claimNumGenerator);
+							
+							
+							claimNumGenerator++;
+							
+							System.out.println("Successfully filed a claim!");
+							System.out.println("Your claim number is: " + claims.get(claims.size()-1).getClaimNum());
+							pressAnyKeyToContinue();
+						}
 					}
-					//Add condition if policy exist
 				
 					break;
 					
 					
 				case 5:
-					clrscrn(1);
+					clrscrn(1,true);
 					accExist = false;
-					System.out.println("\n-------------------------------");
-					System.out.println("       Search Customer");
-					System.out.println("-------------------------------");
-					System.out.println("How would you like to search for customer?");
-					System.out.println("[1] Using first and last name");
-					System.out.println("[2] Using account number");
-					System.out.println("-------------------------------");
-					System.out.print("Input number of choice: ");
-					int search = input.nextInt();
+
+					int search = checkerInt(input, "\n-------------------------------\n       Search Customer\n-------------------------------\n" + 
+											"[1] Using first and last name\n[2] Using account number\n-------------------------------\nInput number of choice: ");
 					
 					if(search == 1) {
 						input.nextLine();
@@ -393,6 +367,10 @@ public class PASApp {
 								pressAnyKeyToContinue();
 								break;
 							}
+						}
+						if(!accExist){
+							System.out.println("No customer found!");
+							clrscrn(1, false);
 						}
 						
 					}
@@ -423,7 +401,7 @@ public class PASApp {
 					
 				case 6:
 					input.nextLine();
-					clrscrn(1);
+					clrscrn(1,true);
 					accExist = false;
 					System.out.println("\n-------------------------------");
 					System.out.println("        Search Policy");
@@ -441,13 +419,14 @@ public class PASApp {
 						}
 						if(!accExist){
 							System.out.println("No policy exist!");
+							clrscrn(1, false);
 						}
 					}
 					
 					break;
 					
 				case 7:
-					clrscrn(1);
+					clrscrn(1,true);
 					input.nextLine();
 					accExist = false;
 					System.out.println("\n-------------------------------");
@@ -467,12 +446,14 @@ public class PASApp {
 
 					if(!accExist){
 						System.out.println("No claim exist!");
+						clrscrn(1, false);
 					}
 
 					break;
 				
 				default:
-					clrscrn(1);
+					System.out.println("Wrong input!");
+					clrscrn(1,false);
 					
 				
 			}
@@ -482,8 +463,10 @@ public class PASApp {
 		input.close();
 	}
 	
-	private static void clrscrn(int timer) {
-		System.out.println("Processing...");
+	private static void clrscrn(int timer, boolean showMessage) {
+		if(showMessage){
+			System.out.println("Processing...");
+		}
 		try {
 			TimeUnit.SECONDS.sleep(timer);
 			System.out.print("\033[H\033[2J");  
@@ -494,8 +477,7 @@ public class PASApp {
 		}	
 	}
 
-	private static void pressAnyKeyToContinue()
- { 
+	private static void pressAnyKeyToContinue(){ 
         System.out.println("Press Enter key to continue...");
         try
         {
@@ -503,8 +485,59 @@ public class PASApp {
         }  
         catch(Exception e)
         {}  
- }
+ 	}
+
+	 private static int checkerInt(Scanner inpt, String msg) {
+		
+		System.out.print(msg);
+		while(!inpt.hasNextInt()) {
+			System.out.println("wrong input!");
+			inpt.next();
+			clrscrn(1, false);
+			System.out.println(msg);
+		}
+		int output = inpt.nextInt();
+		
+		return output;
+	}
+
+	private static LocalDate checkerDate(Scanner inpt, String msg) {
+		LocalDate dateInput = LocalDate.now();
+		boolean isFinished = false;
+
+		do{
+			
+			System.out.print(msg);
+			try{	
+				String date = inpt.nextLine();
+				dateInput = LocalDate.parse(date);
+				isFinished = true;
+			}
+			catch(Exception e){
+				System.out.println("Wrong input for date, follow the format");
+				clrscrn(1,false);
+				
+			}
+		}while(!isFinished);
+
+		return dateInput;
+	}
+
+	private static double checkerDouble(Scanner inpt, String msg) {
+
+		System.out.print(msg);
+		while(!inpt.hasNextDouble()) {
+			System.out.println("wrong input!");
+			inpt.next();
+			clrscrn(1,false);
+			System.out.print(msg);
+		}
+		double output = inpt.nextDouble();
+		
+		return output;
+	}
 	
+
 	
 	
 }

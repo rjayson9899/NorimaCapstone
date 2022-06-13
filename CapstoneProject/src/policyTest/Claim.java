@@ -89,6 +89,19 @@ public class Claim implements InterfaceApp{
 		
 		//input code for id generation
 	}
+
+	public static boolean verifyDate(LocalDate effDate, LocalDate expDate){
+		LocalDate dateNow = LocalDate.now();
+		if(dateNow.isBefore(effDate) || dateNow.isAfter(expDate)){
+			return false;
+		}
+
+		else{
+			return true;
+		}
+
+	
+	}
 	
 	
 }
