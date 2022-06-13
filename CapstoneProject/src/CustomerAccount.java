@@ -7,7 +7,6 @@ public class CustomerAccount {
 	private String lastName;
 	private String customerAddress;
 	public static final int CUSTOMER_MAX = 9999;
-
 	private ArrayList<Policy> policyList = new ArrayList<Policy>();
 	private ArrayList<PolicyHolder> policyHolderList = new ArrayList<PolicyHolder>();
 
@@ -50,22 +49,26 @@ public class CustomerAccount {
 	}
 
 	public void displayCustomerPolicy(int policyID) {
-		String policyStatus;
+		String policyStatus = "";
+		LocalDate dateNow = LocalDate.now();
+		
+		System.out.printf("%-20s \t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", "Policy Number", "Effective Date",
+				"Expiration Date", "Policy Holder Name", "Premium Cost", "Policy Status");
 		
 		for (Policy polObj : policyList) {
 			if (polObj.getPolicyNumber() == policyID) {
-				if (polObj.getEffectiveDatePolicy().compareTo(polObj.getExpirationDatePolicy()) < 0) {
-					policyStatus = "Active";
-				} else {
+				if (polObj.getEffectiveDatePolicy().compareTo(dateNow) > 0) {
+					policyStatus = "Scheduled";
+				} else if (polObj.getEffectiveDatePolicy().compareTo(dateNow) > 0 || polObj.getExpirationDatePolicy().compareTo(dateNow) < 0){
 					policyStatus = "Cancelled/Expired";
+				} else {
+					policyStatus = "Active";
 				}
-				
 				System.out.printf("%06d \t\t\t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", policyID, polObj.getEffectiveDatePolicy(),
 						polObj.getExpirationDatePolicy(), polObj.getName(), polObj.getTotalPremium(), policyStatus);
 			}
 		}
 	}
-	
 
 	public void addPolicy(Policy policyObj) {
 		this.policyList.add(policyObj);
@@ -95,10 +98,18 @@ public class CustomerAccount {
 	}
 
 	public void displayCustomerAccountInfo() {
+		System.out.printf("%-20s \t%-20s \t%-20s \t%-20s\n", "Account Number", "First Name", "Last Name",
+				"Address");
 		System.out.printf("%04d \t\t\t%-20s \t%-20s \t%-20s\n", this.accountNumber, this.firstName, this.lastName,
 				this.customerAddress);
 	}
 	
+	//Debug method to display all created policies
+	public void displayPolicyInfo() {
+		for (Policy polObj : policyList) {
+			System.out.printf("%06d \t\t\t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", polObj.getPolicyNumber(), polObj.getEffectiveDatePolicy(),
+					polObj.getExpirationDatePolicy(), polObj.getName(), polObj.getTotalPremium());
+		}
+	}
 	
-
 }
