@@ -18,8 +18,8 @@ public class CustomerAccount {
 	ArrayList<PolicyHolder> polHold = new ArrayList<>();
 	
 	public CustomerAccount(String fName, String lName, String address, String accNum) {
-		this.fName = fName;
-		this.lName = lName;
+		this.fName = fName.substring(0, 1).toUpperCase() + fName.substring(1);
+		this.lName = lName.substring(0, 1).toUpperCase() + lName.substring(1);
 		this.address = address;
 		this.cusAccNum = accNum;	
 	}

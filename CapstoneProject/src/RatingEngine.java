@@ -24,12 +24,12 @@ public class RatingEngine {
 		
 	}
 	
-	public void setVPrice(String VPrice) {
-		this.vP = Double.parseDouble(VPrice);
+	public void setVPrice(double VPrice) {
+		this.vP = VPrice;
 	}
 	
-	public int setCarAge(String age) {
-		this.carYear = Integer.parseInt(age);
+	public int setCarAge(int age) {
+		this.carYear = age;
 		carA = date.minusYears(carYear);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
 		this.age = carA.format(formatter);

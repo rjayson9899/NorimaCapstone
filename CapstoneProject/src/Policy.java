@@ -40,19 +40,11 @@ public class Policy {
 	public Policy(String polNum) {
 		this.polNum = polNum;
 	}
-	
-	 public Policy(String fName, String lName, String bDay, String address, String dL, String dateLic) {
-		this.fName = fName;
-		this.lName = lName;
-		this.bDay = bDay;
-		this.address = address;
-		this.dLicense = dL;
-	} 
 	 
 	 public boolean verifyEffDate(String srtDate) {
 		 effDate = srtDate.substring(0, 1).toUpperCase() + srtDate.substring(1);
 		 stDate = LocalDate.parse(effDate, DateTimeFormatter.ofPattern("LLL dd yyyy"));
-
+	
 		 if (stDate.isBefore(dateNow)) {
 			 System.out.println("The effective date should be starting today. ");
 			 isEffDate =  true;
@@ -91,7 +83,7 @@ public class Policy {
 		this.polyHol = new PolicyHolder(fName, lName, bDay, address, dL, dateLic);
 	}
 	
-	public void setCar(String carMake, String carModel, String carYear, String carType, String carFuelT, String carColor, String price) {
+	public void setCar(String carMake, String carModel, int carYear, String carType, String carFuelT, String carColor, double price) {
 		car.add(new Vehicle(carMake, carModel, carYear, carType, carFuelT, carColor, price, dateLic));
 	}
 	

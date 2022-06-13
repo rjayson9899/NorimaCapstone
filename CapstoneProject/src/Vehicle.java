@@ -8,27 +8,28 @@ package CapStone;
 
 public class Vehicle {
 	private String carType;
-	private String price;
+	private double price;
 	private String color;
 	private String fuelType;
 	private String carModel;
 	private String carMake;
-	private String year;
+	private int year;
 	private int age;
 	private String dateLic;
 	private double premium;
 	
 	RatingEngine rEng = new RatingEngine();
 	
-	public Vehicle(String carMake, String carModel, String carYear, String carType, String carFuelT, String carColor, String price, String dateLic) {
-		this.carMake = carMake;
-		this.carModel = carModel;
+	public Vehicle(String carMake, String carModel, int carYear, String carType, String carFuelT, String carColor, double price, String dateLic) {
+		
+		this.carMake = carMake.substring(0, 1).toUpperCase() + carMake.substring(1);
+		this.carModel = carModel.substring(0, 1).toUpperCase() + carModel.substring(1);
 		this.year = carYear;
-		this.carType = carType;
-		this.fuelType = carFuelT;
-		this.color = carColor;
+		this.carType = carType.substring(0, 1).toUpperCase() + carType.substring(1);
+		this.fuelType = carFuelT.substring(0, 1).toUpperCase() + carFuelT.substring(1);
+		this.color = carColor.substring(0, 1).toUpperCase() + carColor.substring(1);
 		this.price = price;
-		this.dateLic = dateLic;
+		this.dateLic = dateLic.substring(0, 1).toUpperCase() + dateLic.substring(1);
 		sendDataToREng();
 		setPremium();
 	}
@@ -59,7 +60,7 @@ public class Vehicle {
 		this.carType = carType;
 	}
 	
-	public void setPrice(String Price) {
+	public void setPrice(double Price) {
 		this.price = Price;
 	}
 	
@@ -79,11 +80,11 @@ public class Vehicle {
 		this.carMake = carMake;
 	}
 	
-	public void setYear(String year) {
+	public void setYear(int year) {
 		this.year = year;
 	}
 	
-	public String getYear() {
+	public int getYear() {
 		return year;
 	}
 	
