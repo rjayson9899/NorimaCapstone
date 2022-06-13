@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.DateTimeException;
 import java.util.ArrayList;
@@ -811,21 +812,11 @@ public class PASApp {
 	 * 		(double)	getInt	- integer to be verified.
 	 * 
 	 * For an input to be valid, it must meet the following criteria:
-	 * 		> Input is a double
+	 * 		> Input can be parsed to double
 	 * 		> Input only has 2 digits for decimal portion
-	 * 		> May or may not have commas
-	 * 			>> If it has commas, input must be formatted properly i.e. 1,234,567.89
+	 * 		> Is not negative in value
 	 * 
-	 * The program will trim and remove all commas in inputs before processing.
-	 * 
-	 * Verification is done via exception handling and Regular Expressions.
-	 * 
-	 * Regular Expressions used:
-	 * 		> Check if input is a valid double, no commas - "^[\d]*(\.[\d]*){0,1}$"
-	 * 		> Check if input has 2 or less decimal values, no commas - "^[\d]*(\.[\d]{0,2}){0,1}$"
-	 * 		> Check if input is valid double, properly formatted with commas - "^[\d]{0,3}(,[\d]{3})*\.[\d]*$"
-	 * 		> Check if input is valid double with more than 2 decimal values, 
-	 * 				properly formatted with commas - "^[\d]{0,3}(,[\d]{3})*\.[\d]{2}[\d]+$"
+	 * Verification is done via exception handling and BigDecimal.scale()
 	 * 
 	 * @param message - Custom message to display for every input attempt
 	 * @return double - validated double
@@ -837,47 +828,34 @@ public class PASApp {
 		
 		do {
 			System.out.print(message);
+			
 			try {
 				getDoubleString = in.nextLine();
 				getDoubleString = getDoubleString.trim();
 				// Debug
 				if (byFile) System.out.println(getDoubleString);
 				
-				if (getDoubleString.matches("^[\\d]*(\\.[\\d]*){0,1}$")) {
-					if (getDoubleString.matches("^[\\d]*(\\.[\\d]{0,2}){0,1}$")) {
-						parsedDouble = Double.parseDouble(getDoubleString);
-						isInvalid = false;
-					}
-					else {
-						System.out.println("Decimals must be limited to 2 digits");
-					}
+				parsedDouble = Double.parseDouble(getDoubleString);
+				
+				if (BigDecimal.valueOf(parsedDouble).scale() > 2) {
+					System.out.println("Input must only have 2 digits in decimal place");
+				}
+				else if (parsedDouble < 0) {
+					System.out.println("Input cannot be negative");
 				}
 				else {
-					if (getDoubleString.equals("")) {
-						System.out.println("Input cannot be blank");
-					}
-					else if (!(getDoubleString.matches("^[\\d]{0,3}(,[\\d]{3})*\\.[\\d]*$"))) {
-						System.out.println("Invalid input! Ensure input is purely numbers or has proper commas (i.e. 1234567.89 or 1,234,567.89)");
-					}
-					else if (getDoubleString.matches("^[\\d]{0,3}(,[\\d]{3})*\\.[\\d]{2}[\\d]+$")) {
-						System.out.println("Decimals must be limited to 2 digits");
-					}
-					else {
-						getDoubleString = getDoubleString.replaceAll(",", "");
-						parsedDouble = Double.parseDouble(getDoubleString);
-						isInvalid = false;
-					}
+					isInvalid = false;
 				}
-				
 			}
-			catch(NumberFormatException e) {
+			catch (NumberFormatException e) {
 				if (getDoubleString.equals("")) {
 					System.out.println("Input cannot be blank");
 				}
 				else {
-					System.out.println("Input is not valid");
+					System.out.println("Invalid input! Input must consist of purely numbers");
 				}
 			}
+			
 		} while (isInvalid);
 		
 		return parsedDouble;
