@@ -891,10 +891,14 @@ public class PASApp {
 	 * @param requireLimitAsMinimum - Enforces maximum limit as minimum if true
 	 * @return int - validated integer
 	 */
-	private static int getValidBoundedInt(String message, int limit, boolean requireLimitAsMinimum) {
+	private static int getValidBoundedInt(String message, int limit, boolean requireLimitAsMinimum) throws IllegalArgumentException {
 		boolean isInvalid = true;
 		String getIntString = "";
 		int parsedInt = 0;
+		
+		if (limit <= 0) {
+			throw new IllegalArgumentException("Limit cannot less than or equal to 0");
+		}
 		
 		do {
 			System.out.print(message);
