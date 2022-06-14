@@ -76,13 +76,9 @@ public class Claim implements InterfaceApp{
 		int accountNumInt = count + 1;
 		claimNum = Integer.toString(accountNumInt);
 		StringBuilder sb = new StringBuilder();
-		for(int x = 0; x < 5; x++){
-			if(x == 0){
-				sb.append('C');
-			}
-			else{
-				sb.append('0');
-			}
+		sb.append('C');
+		for(int x = 0; x < 5 - claimNum.length(); x++){
+				sb.append('0');	
 		}
 		sb.append(claimNum);
 		claimNum = sb.toString();

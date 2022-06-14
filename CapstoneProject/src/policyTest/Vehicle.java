@@ -1,5 +1,8 @@
 package policyTest;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class Vehicle implements InterfaceApp{
 
 	private String make;
@@ -79,6 +82,8 @@ public class Vehicle implements InterfaceApp{
 
 	@Override
 	public void getDetails() {
+		Locale locale = new Locale("en", "US");      
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 		System.out.println("-------------------------------");
 		System.out.println("    Details of your Vehicle    ");
 		System.out.println("-------------------------------");
@@ -106,7 +111,7 @@ public class Vehicle implements InterfaceApp{
 			System.out.println("Type of fuel: Petrol");
 		}
 		
-		System.out.println("Purchase price: " + price);
+		System.out.println("Purchase price: " + currencyFormatter.format(price));
 		System.out.println("Color: " + color);
 		System.out.println("-------------------------------\n");
 		

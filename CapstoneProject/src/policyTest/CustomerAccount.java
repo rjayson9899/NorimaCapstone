@@ -21,7 +21,7 @@ public class CustomerAccount implements InterfaceApp{
 		int accountNumInt = count + 1;
 		accountNum = Integer.toString(accountNumInt);
 		StringBuilder sb = new StringBuilder();
-		for(int x = 0; x < 3; x++){
+		for(int x = 0; x < 4 - accountNum.length(); x++){
 			sb.append('0');
 		}
 		sb.append(accountNum);
@@ -81,6 +81,7 @@ public class CustomerAccount implements InterfaceApp{
 	@Override
 	public void getDetails(){
 		int count = 1;
+		
 		
 		System.out.println("-------------------------------");
 		System.out.println("       Account Details: ");

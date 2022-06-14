@@ -1,7 +1,9 @@
 package policyTest;
 
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 public class Policy implements InterfaceApp {
@@ -64,7 +66,7 @@ public class Policy implements InterfaceApp {
 		int accountNumInt = count + 1;
 		policyNum = Integer.toString(accountNumInt);
 		StringBuilder sb = new StringBuilder();
-		for(int x = 0; x < 5; x++){
+		for(int x = 0; x < 6 - policyNum.length(); x++){
 			sb.append('0');
 		}
 		sb.append(policyNum);
@@ -112,6 +114,8 @@ public class Policy implements InterfaceApp {
 
 	@Override
 	public void getDetails() {
+		Locale locale = new Locale("en", "US");      
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 		
 		System.out.println("-------------------------------");
 		System.out.println("       Policy Details: ");
@@ -129,7 +133,7 @@ public class Policy implements InterfaceApp {
 			System.out.println(v.getMake() + " " + v.getModel());
 			this.cost += RatingEngine.rateCalOnly(v.getYear(), v.getPrice(), v.getYearLicense());
 		}
-		System.out.println("Total cost of premium: $" + this.cost);
+		System.out.println("Total cost of premium: " + currencyFormatter.format(cost));
 		
 	}
 	

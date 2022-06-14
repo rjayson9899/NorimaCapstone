@@ -1,10 +1,14 @@
 package policyTest;
 
 import java.util.Calendar;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class RatingEngine {
-	
+		static Locale locale = new Locale("en", "US");      
+		static NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 	public static double rate(int yearCar, double vp, int yearLicense) {
+		
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 		int ageCar = currentYear - yearCar;
 		int ageLicense = currentYear - yearLicense;
@@ -14,7 +18,7 @@ public class RatingEngine {
 		double vpf , premium;
 
 		if(ageCar < 1) {
-			vpf = 0.001;
+			vpf = 0.01;
 		}
 		else if(ageCar < 3) {
 			vpf = 0.008;
@@ -41,10 +45,10 @@ public class RatingEngine {
 		
 		premium = (vpf * vp) + ((vp/100)/ageLicense);
 		
-		System.out.println("Premium: " + "$" + (vpf * vp));
-		System.out.println("Additional expense: " +"$"  + ((vp/100)/ageLicense));
+		System.out.println("Premium: " + currencyFormatter.format((vpf * vp)));
+		System.out.println("Additional expense: "  + currencyFormatter.format(((vp/100)/ageLicense)));
 		System.out.println("-------------------------------");
-		System.out.println("Total Premium for this vehicle: " + "$"  + premium);
+		System.out.println("Total: "  + currencyFormatter.format(premium));
 		System.out.println("-------------------------------");
 
 		return premium;
