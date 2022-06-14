@@ -1,115 +1,81 @@
+/**
+ * Java Course 4 Module 3, Norima Java Developer Capstone Project
+ * Claim Class File 
+ *@author Edmark
+ *@Description: This capstone project is a simple Automobile Insurance Policy and Claims Administration System (PAS) 
+ *				that manages customer automobile insurance policies and accident claims for an insurance company. 
+ *				The program was made by using Object Oriented Programming Principles.
+ *Created date: June 6, 2022
+ *Modified date: June 14, 2022
+ *@Modified by:
+ *
+ */
 import java.time.LocalDate;
-import java.util.ArrayList;
 
-public class CustomerAccount {
-	private int accountNumber;
-	private String firstName;
-	private String lastName;
-	private String customerAddress;
-	public static final int CUSTOMER_MAX = 9999;
-	private ArrayList<Policy> policyList = new ArrayList<Policy>();
-	private ArrayList<PolicyHolder> policyHolderList = new ArrayList<PolicyHolder>();
-
-	public CustomerAccount(int accountNumber, String firstName, String lastName, String customerAddress) {
-		this.accountNumber = accountNumber;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.customerAddress = customerAddress;
-	}
-
-	public int getAccountNumber() {
-		return accountNumber;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public String getCustomerAddress() {
-		return customerAddress;
-	}
-
-	public void addPolicyIDs(ArrayList<Integer> policyIDList) {
-		for (Policy polObj : policyList) {
-			policyIDList.add(Integer.valueOf(polObj.getPolicyNumber()));
-		}
+public class Claim {
+	
+	private int claimNumber;
+	public static final int CLAIM_MAX = 999999;
+	private LocalDate dateOfAccident;
+	private String addressOfAccident;
+	private String descriptionOfAccident;
+	private String descriptionOfDamage;
+	private double damageRepairCost;
+	
+	public Claim(int claimNumber, LocalDate dateOfAccident, String addressOfAccident, String descriptionOfAccident,
+			String descriptionOfDamage, double damageRepairCost) {
+		this.claimNumber = claimNumber;
+		this.dateOfAccident = dateOfAccident;
+		this.addressOfAccident = addressOfAccident;
+		this.descriptionOfAccident = descriptionOfAccident;
+		this.descriptionOfDamage = descriptionOfDamage;
+		this.damageRepairCost = damageRepairCost;
 	}
 	
-	public boolean getPolicy(int policyID) {
-		for (Policy polObj : policyList) {
-			if (polObj.getPolicyNumber() == policyID) {
-				return true;
-			}
-		}
-		return false;
+	public int getClaimNumber() {
+		return claimNumber;
 	}
-
-	public void displayCustomerPolicy(int policyID) {
-		String policyStatus = "";
-		LocalDate dateNow = LocalDate.now();
+	public void setClaimNumber(int claimNumber) {
+		this.claimNumber = claimNumber;
+	}
+	public LocalDate getDateOfAccident() {
+		return dateOfAccident;
+	}
+	public void setDateOfAccident(LocalDate dateOfAccident) {
+		this.dateOfAccident = dateOfAccident;
+	}
+	public String getAddressOfAccident() {
+		return addressOfAccident;
+	}
+	public void setAddressOfAccident(String addressOfAccident) {
+		this.addressOfAccident = addressOfAccident;
+	}
+	public String getDescriptionOfAccident() {
+		return descriptionOfAccident;
+	}
+	public void setDescriptionOfAccident(String descriptionOfAccident) {
+		this.descriptionOfAccident = descriptionOfAccident;
+	}
+	public String getDescriptionOfDamage() {
+		return descriptionOfDamage;
+	}
+	public void setDescriptionOfDamage(String descriptionOfDamage) {
+		this.descriptionOfDamage = descriptionOfDamage;
+	}
+	public double getDamageRepairCost() {
+		return damageRepairCost;
+	}
+	public void setDamageRepairCost(double damageRepairCost) {
+		this.damageRepairCost = damageRepairCost;
+	}
+	
+	public void displayClaimDetails() {
+		String claimNumber = "C" + String.format("%06d", this.claimNumber);
 		
-		System.out.printf("%-20s \t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", "Policy Number", "Effective Date",
-				"Expiration Date", "Policy Holder Name", "Premium Cost", "Policy Status");
-		
-		for (Policy polObj : policyList) {
-			if (polObj.getPolicyNumber() == policyID) {
-				if (polObj.getEffectiveDatePolicy().compareTo(dateNow) > 0) {
-					policyStatus = "Scheduled";
-				} else if (polObj.getEffectiveDatePolicy().compareTo(dateNow) > 0 || polObj.getExpirationDatePolicy().compareTo(dateNow) < 0){
-					policyStatus = "Cancelled/Expired";
-				} else {
-					policyStatus = "Active";
-				}
-				System.out.printf("%06d \t\t\t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", policyID, polObj.getEffectiveDatePolicy(),
-						polObj.getExpirationDatePolicy(), polObj.getName(), polObj.getTotalPremium(), policyStatus);
-			}
-		}
-	}
-
-	public void addPolicy(Policy policyObj) {
-		this.policyList.add(policyObj);
-		this.policyHolderList.add(policyObj.getPolicyHolder());
-	}
-	
-	public boolean cancelAccountPolicy(int policyID) {
-		for (Policy polObj : policyList) {
-			if (polObj.getPolicyNumber() == policyID) {
-				if (polObj.isCancelled()) {
-					return false;
-				} else {
-					polObj.cancelPolicy();
-				}
-			}
-		}
-		return true;
-	}
-	
-	public boolean isPolicyCancelled(int policyID) {
-		for (Policy polObj : policyList) {
-			if (polObj.getPolicyNumber() == policyID) {
-				return polObj.isCancelled();
-			}
-		}
-		return false;
-	}
-
-	public void displayCustomerAccountInfo() {
-		System.out.printf("%-20s \t%-20s \t%-20s \t%-20s\n", "Account Number", "First Name", "Last Name",
-				"Address");
-		System.out.printf("%04d \t\t\t%-20s \t%-20s \t%-20s\n", this.accountNumber, this.firstName, this.lastName,
-				this.customerAddress);
-	}
-	
-	//Debug method to display all created policies
-	public void displayPolicyInfo() {
-		for (Policy polObj : policyList) {
-			System.out.printf("%06d \t\t\t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", polObj.getPolicyNumber(), polObj.getEffectiveDatePolicy(),
-					polObj.getExpirationDatePolicy(), polObj.getName(), polObj.getTotalPremium());
-		}
+		System.out.printf("%-20s \t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", "Claim Number", "Accident Date",
+				"Accident Location", "Accident Description", "Vehicle Damage", "Repair Cost");
+		System.out.printf("%-20s \t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", claimNumber, this.dateOfAccident, this.addressOfAccident,
+				this.descriptionOfAccident, this.descriptionOfDamage, this.damageRepairCost);
 	}
 	
 }

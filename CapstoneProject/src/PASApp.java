@@ -1,3 +1,15 @@
+/**
+ * Java Course 4 Module 3, Norima Java Developer Capstone Project
+ * Main Driver File
+ *@author Edmark
+ *@Description: This capstone project is a simple Automobile Insurance Policy and Claims Administration System (PAS) 
+ *				that manages customer automobile insurance policies and accident claims for an insurance company. 
+ *				The program was made by using Object Oriented Programming Principles.
+ *Created date: June 6, 2022
+ *Modified date: June 14, 2022
+ *@Modified by:
+ *
+ */
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -73,8 +85,8 @@ public class PASApp {
 				if (tempID <= CustomerAccount.CUSTOMER_MAX) {
 					// Create a Customer Account
 					System.out.println("\nCreating a Customer Account");
-					firstName = getStringInput("Enter First Name: ");
-					lastName = getStringInput("Enter Last Name: ");
+					firstName = getStringCharInput("Enter First Name: ");
+					lastName = getStringCharInput("Enter Last Name: ");
 					customerAddress = getStringInput("Enter Address: ");
 
 					for (CustomerAccount custObj : customerList) {
@@ -150,8 +162,8 @@ public class PASApp {
 							policy.setPolicyHolder(policyHolderObj);
 						} else {
 							System.out.println("Create a Policy Holder");
-							firstName = getStringInput("Enter first name: ");
-							lastName = getStringInput("Enter last name: ");
+							firstName = getStringCharInput("Enter first name: ");
+							lastName = getStringCharInput("Enter last name: ");
 							System.out.println("Enter birth date (yyyy-mm-dd) ");
 							birthDate = getDateInput();
 							customerAddress = getStringInput("Enter address: ");
@@ -166,13 +178,13 @@ public class PASApp {
 						// Create a Vehicle
 						do {
 							System.out.println("Create a Vehicle");
-							vehicleMake = getStringInput("Input Car Make (Brand): ");
+							vehicleMake = getStringCharInput("Input Car Make (Brand): ");
 							vehicleModel = getStringInput("Input Car Model: ");
 							vehicleYear = getIntegerInput("Input Car Year: ");
 							vehicleType = getStringInput("Input Car Type: ");
-							vehicleFuel = getStringInput("Input Fuel Type: ");
+							vehicleFuel = getStringCharInput("Input Fuel Type: ");
 							vehiclePrice = getDoubleInput("Input Vehicle Purchase Price: ");
-							vehicleColor = getStringInput("Input Vehicle Color: ");
+							vehicleColor = getStringCharInput("Input Vehicle Color: ");
 
 							vehicleObj = new Vehicle(vehicleMake, vehicleModel, vehicleYear, vehicleType, vehicleFuel,
 									vehiclePrice, vehicleColor);
@@ -190,7 +202,6 @@ public class PASApp {
 
 						if (inputString.equalsIgnoreCase("y")) {
 							// Create a Policy Date
-							// Add validations that the user cannot create Backlog Dates
 							System.out.println("\nCreate a Policy Date");
 							customDate = getDateInput();
 							effectiveDatePolicy = customDate;
@@ -279,8 +290,8 @@ public class PASApp {
 					} else {
 						System.out.println("System is full of claims, cannot create a new claim!");
 					}
-				} 
-				
+				}
+
 				if (!isMatch) {
 					System.out.println("Policy does not exist!");
 				}
@@ -294,10 +305,8 @@ public class PASApp {
 				inputString = getStringInput("Search Account via name? [y] if yes: ");
 
 				if (inputString.equalsIgnoreCase("y")) {
-					System.out.print("Input Customer's First Name: ");
-					firstName = input.nextLine();
-					System.out.print("Input Customer's Last Name: ");
-					lastName = input.nextLine();
+					firstName = getStringCharInput("Input Customer's First Name: ");
+					lastName = getStringCharInput("Input Customer's Last Name: ");
 
 					for (CustomerAccount custObj : customerList) {
 						if (custObj.getFirstName().equals(firstName) && custObj.getLastName().equals(lastName)) {
@@ -366,6 +375,7 @@ public class PASApp {
 		} while (choice != 8);
 	}
 
+	// Helper methods for input validations
 	private static String getStringInput(String displayMessage) {
 		String[] special = { "\'", "\"", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "+", "{", "}", "|", "[", "]",
 				"\\", ":", ";", "<", ">", "/", "?", "`", "~", "_", "=" };
@@ -378,7 +388,7 @@ public class PASApp {
 				inputString = inputString.trim();
 
 				Double.parseDouble(inputString);
-				System.out.println("Input cannot be a number only");
+				System.out.println("Input cannot be a number only!");
 				inputString = "";
 			} catch (NumberFormatException e) {
 				if (inputString.equals("")) {
@@ -387,6 +397,38 @@ public class PASApp {
 					for (int i = 0; i < special.length; i++) {
 						if (inputString.contains(special[i])) {
 							System.out.println("Input cannot contain any special characters!");
+							inputString = "";
+							break;
+						}
+					}
+				}
+			}
+		} while (inputString.equals(""));
+		return inputString;
+	}
+
+	private static String getStringCharInput(String displayMessage) {
+		String[] special = { "\'", "\"", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "+", "{", "}", "|", "[", "]",
+				".", ",", "\\", ":", ";", "<", ">", "/", "?", "`", "~", "_", "=", "0", "1", "2", "3", "4", "5", "6",
+				"7", "8", "9" };
+		String inputString = "";
+
+		do {
+			try {
+				System.out.print(displayMessage);
+				inputString = input.nextLine();
+				inputString = inputString.trim();
+
+				Double.parseDouble(inputString);
+				System.out.println("Input cannot contain a number!");
+				inputString = "";
+			} catch (NumberFormatException e) {
+				if (inputString.equals("")) {
+					System.out.println("Invalid input, cannot be blank!");
+				} else {
+					for (int i = 0; i < special.length; i++) {
+						if (inputString.contains(special[i])) {
+							System.out.println("Input cannot contain any special characters or numbers!");
 							inputString = "";
 							break;
 						}

@@ -1,3 +1,15 @@
+/**
+ * Java Course 4 Module 3, Norima Java Developer Capstone Project
+ * CustomerAccount Class File
+ *@author Edmark
+ *@Description: This capstone project is a simple Automobile Insurance Policy and Claims Administration System (PAS) 
+ *				that manages customer automobile insurance policies and accident claims for an insurance company. 
+ *				The program was made by using Object Oriented Programming Principles.
+ *Created date: June 6, 2022
+ *Modified date: June 14, 2022
+ *@Modified by:
+ *
+ */
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -52,11 +64,14 @@ public class CustomerAccount {
 		String policyStatus = "";
 		LocalDate dateNow = LocalDate.now();
 		
+		
 		System.out.printf("%-20s \t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", "Policy Number", "Effective Date",
 				"Expiration Date", "Policy Holder Name", "Premium Cost", "Policy Status");
 		
 		for (Policy polObj : policyList) {
 			if (polObj.getPolicyNumber() == policyID) {
+				String totalPremium = String.format("%.2f", polObj.getTotalPremium());
+				
 				if (polObj.getEffectiveDatePolicy().compareTo(dateNow) > 0) {
 					policyStatus = "Scheduled";
 				} else if (polObj.getEffectiveDatePolicy().compareTo(dateNow) > 0 || polObj.getExpirationDatePolicy().compareTo(dateNow) < 0){
@@ -65,7 +80,7 @@ public class CustomerAccount {
 					policyStatus = "Active";
 				}
 				System.out.printf("%06d \t\t\t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", policyID, polObj.getEffectiveDatePolicy(),
-						polObj.getExpirationDatePolicy(), polObj.getName(), polObj.getTotalPremium(), policyStatus);
+						polObj.getExpirationDatePolicy(), polObj.getName(), totalPremium, policyStatus);
 			}
 		}
 	}

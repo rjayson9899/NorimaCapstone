@@ -1,3 +1,15 @@
+/**
+ * Java Course 4 Module 3, Norima Java Developer Capstone Project
+ * Vehicle Class File
+ *@author Edmark
+ *@Description: This capstone project is a simple Automobile Insurance Policy and Claims Administration System (PAS) 
+ *				that manages customer automobile insurance policies and accident claims for an insurance company. 
+ *				The program was made by using Object Oriented Programming Principles.
+ *Created date: June 6, 2022
+ *Modified date: June 14, 2022
+ *@Modified by:
+ *
+ */
 public class Vehicle {
 	private String vehicleMake;
 	private String vehicleModel;
