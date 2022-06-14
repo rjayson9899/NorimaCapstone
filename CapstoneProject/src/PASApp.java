@@ -19,7 +19,9 @@ public class PASApp {
 	private static Scanner input = new Scanner(System.in);
 
 	private static void mainMenu() {
-		System.out.println("\nAutomobile Insurance Policy and Claims Administration System");
+		System.out.println("==================================================================");
+		System.out.println("   Automobile Insurance Policy and Claims Administration System   ");
+		System.out.println("==================================================================");
 		System.out.println("[1] Create an Account");
 		System.out.println("[2] Get Policy Quote and Buy");
 		System.out.println("[3] Cancel Policy");
@@ -28,6 +30,7 @@ public class PASApp {
 		System.out.println("[6] Search Policy");
 		System.out.println("[7] Search Claim");
 		System.out.println("[8] Exit");
+		System.out.println("==================================================================");
 	}
 
 	public static void main(String[] args) {
@@ -84,7 +87,9 @@ public class PASApp {
 				// Validation if full
 				if (tempID <= CustomerAccount.CUSTOMER_MAX) {
 					// Create a Customer Account
-					System.out.println("\nCreating a Customer Account");
+					System.out.println("===============================");
+					System.out.println("  Creating a Customer Account  ");
+					System.out.println("===============================");
 					firstName = getStringCharInput("Enter First Name: ");
 					lastName = getStringCharInput("Enter Last Name: ");
 					customerAddress = getStringInput("Enter Address: ");
@@ -150,7 +155,9 @@ public class PASApp {
 						// Validation if Customer is Policy Holder
 						inputString = getStringInput("Input [y] if Account Holder is same as Policy Holder: ");
 						if (inputString.equalsIgnoreCase("y")) {
-							System.out.println("Account Holder is the same as Policy Holder");
+							System.out.println("===============================================");
+							System.out.println("  Account Holder is the same as Policy Holder  ");
+							System.out.println("===============================================");
 							System.out.println("Enter birth date (yyyy-mm-dd)");
 							birthDate = getDateInput();
 							driversLicenseNumber = getStringInput("Enter drivers License Number: ");
@@ -161,7 +168,9 @@ public class PASApp {
 									licensedIssueDate);
 							policy.setPolicyHolder(policyHolderObj);
 						} else {
-							System.out.println("Create a Policy Holder");
+							System.out.println("==========================");
+							System.out.println("  Create a Policy Holder  ");
+							System.out.println("==========================");
 							firstName = getStringCharInput("Enter first name: ");
 							lastName = getStringCharInput("Enter last name: ");
 							System.out.println("Enter birth date (yyyy-mm-dd) ");
@@ -177,7 +186,9 @@ public class PASApp {
 						}
 						// Create a Vehicle
 						do {
-							System.out.println("Create a Vehicle");
+							System.out.println("====================");
+							System.out.println("  Create a Vehicle  ");
+							System.out.println("====================");
 							vehicleMake = getStringCharInput("Input Car Make (Brand): ");
 							vehicleModel = getStringInput("Input Car Model: ");
 							vehicleYear = getIntegerInput("Input Car Year: ");
@@ -202,7 +213,9 @@ public class PASApp {
 
 						if (inputString.equalsIgnoreCase("y")) {
 							// Create a Policy Date
-							System.out.println("\nCreate a Policy Date");
+							System.out.println("========================");
+							System.out.println("  Create a Policy Date  ");
+							System.out.println("========================");
 							customDate = getDateInput();
 							effectiveDatePolicy = customDate;
 							policy.setEffectiveDatePolicy(effectiveDatePolicy);
@@ -222,7 +235,9 @@ public class PASApp {
 				break;
 			case 3: // Cancel a specific policy, Change the expiration date of a policy to an
 					// earlier date than specified
-				System.out.println("Cancel a Policy");
+				System.out.println("===================");
+				System.out.println("  Cancel a Policy  ");
+				System.out.println("===================");
 				policyIDInput = getIntegerInput("Input Policy Number: ");
 				isMatch = false;
 
@@ -240,7 +255,9 @@ public class PASApp {
 
 				break;
 			case 4: // Claim Functionality
-				System.out.println("File a Claim");
+				System.out.println("================");
+				System.out.println("  File a Claim  ");
+				System.out.println("================");
 				policyIDInput = getIntegerInput("Input Policy Number: ");
 				isMatch = false;
 
@@ -274,7 +291,9 @@ public class PASApp {
 					}
 					if (tempID >= 0) {
 						// Create a Claim
-						System.out.println("\nFiling an Accident Claim against a Policy");
+						System.out.println("=============================================");
+						System.out.println("  Filing an Accident Claim against a Policy  ");
+						System.out.println("=============================================");
 						System.out.println("Enter date of accident (yyyy-mm-dd)");
 						dateOfAccident = getDateInput();
 						addressOfAccident = getStringInput("Enter the address of where the accident happened: ");
@@ -300,8 +319,9 @@ public class PASApp {
 
 			case 5: // Search Account Functionality
 				isMatch = false;
-
-				System.out.println("\nSearch for an Account");
+				System.out.println("=========================");
+				System.out.println("  Search for an Account  ");
+				System.out.println("=========================");
 				inputString = getStringInput("Search Account via name? [y] if yes: ");
 
 				if (inputString.equalsIgnoreCase("y")) {
@@ -332,7 +352,9 @@ public class PASApp {
 				break;
 
 			case 6: // Search Policy Functionality
-				System.out.println("\nSearch for a Policy");
+				System.out.println("=======================");
+				System.out.println("  Search for a Policy  ");
+				System.out.println("=======================");
 				policyIDInput = getIntegerInput("Input Policy Number: ");
 				isMatch = false;
 
@@ -349,7 +371,9 @@ public class PASApp {
 				break;
 
 			case 7: // Search Claim Functionality
-				System.out.println("Search for a Claim");
+				System.out.println("======================");
+				System.out.println("  Search for a Claim  ");
+				System.out.println("======================");
 				claimIDInput = getIntegerInput("Input Claim Number: C");
 				isMatch = false;
 
