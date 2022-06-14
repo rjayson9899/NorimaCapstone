@@ -85,10 +85,12 @@ public class PASApp {
 					uniqueId = CustomerAccount.generateUniqueId(customerList);
 					
 					if (uniqueId >= 0) {
+						System.out.println("\nInput customer details");
+						System.out.println("==================================");
 						firstName = getStringWord("Input First Name: ");
 						lastName = getStringWord("Input Last Name: ");
 						address = getStringWord("Input Address: ");
-						
+						System.out.println("==================================\n");
 						foundHit = false;
 						
 						for (CustomerAccount custObj: customerList) {
@@ -507,6 +509,8 @@ public class PASApp {
 		String fuelType;
 		double purchasePrice;
 		
+		System.out.println("\nInput vehicle details");
+		System.out.println("==================================");
 		make = getStringWord("Enter make: ");
 		model = getStringWord("Enter model: ");
 		
@@ -521,6 +525,7 @@ public class PASApp {
 		type = getStringWord("Enter type: ");
 		fuelType = getStringWord("Enter fuel type: ");
 		purchasePrice = getMoneyInput("Enter purchase price: ");
+		System.out.println("==================================\n");
 		
 		return new Vehicle(make, model, year, type, fuelType, purchasePrice);
 	}
@@ -547,9 +552,12 @@ public class PASApp {
 		String licenseNumber;
 		LocalDate birthDate, licenseDate;
 		
+		System.out.println("\nInput additional Policy Holder details");
+		System.out.println("==================================");
 		birthDate = getDateRequirePast("birth");
 		licenseNumber = getStringWord("Input driver's license number: ");
 		licenseDate = getDateRequirePast("license issue");
+		System.out.println("==================================\n");
 		
 		return new PolicyHolder(custObj, birthDate, licenseNumber, licenseDate);
 	}
@@ -574,11 +582,14 @@ public class PASApp {
 		String licenseNumber, firstName, lastName;
 		LocalDate birthDate, licenseDate;
 		
+		System.out.println("\nInput Policy Holder details");
+		System.out.println("==================================");
 		firstName = getStringWord("Enter first name: ");
 		lastName = getStringWord("Enter last name: ");
 		birthDate = getDateRequirePast("birth");
 		licenseNumber = getStringWord("Input license number: ");
 		licenseDate = getDateRequirePast("license issue");
+		System.out.println("==================================\n");
 		
 		return new PolicyHolder(firstName, lastName, birthDate, licenseNumber, licenseDate);
 	}
@@ -606,11 +617,14 @@ public class PASApp {
 		String accidentAddress, accidentDescription, accidentDamage;
 		double repairCosts;
 		
+		System.out.println("\nInput claim details");
+		System.out.println("==================================");
 		accidentDate = getDateRequirePast("accident");
 		accidentAddress = getStringWord("Enter accident address: ");
 		accidentDescription = getStringWord("Enter accident description: ");
 		accidentDamage = getStringWord("Enter damage description: ");
 		repairCosts = getMoneyInput("Enter repair costs: ");
+		System.out.println("==================================\n");
 		
 		return new Claim(uniqueId, accidentDate, accidentAddress, accidentDescription, accidentDamage, repairCosts);
 	}
@@ -621,7 +635,7 @@ public class PASApp {
 	 * Inputs:
 	 * 		(int)	year	-	Year of date to create, limited to 1900 to present year
 	 * 		(int)	month	-	Month of date to create, limited to 1 - 12
-	 * 		(int)	day		-	Day of date to create, limited to valid days of month inputed
+	 * 		(int)	day		-	Day of date to create, limited to valid days of month and year inputed
 	 * 
 	 * All inputs for each date component makes use getValidBoundedInt() method. 
 	 * This ensures that each input has a limited amount of digits when inputting.
@@ -683,7 +697,7 @@ public class PASApp {
 			catch (DateTimeException e) {
 				System.out.println("Invalid day for month");
 			}
-		} while (isInvalid);		
+		} while (isInvalid);
 		
 		return date;
 	}
@@ -695,7 +709,7 @@ public class PASApp {
 	 * will be checked against an instance of the current date. If the date is greater
 	 * than the current date, the program will require the user to input a new date.
 	 * 
-	 * @param type
+	 * @param type - description of date to print, refer to getDate() for how this will be used
 	 * @return LocalDate - date from the past
 	 */
 	private static LocalDate getDateRequirePast(String type) {
@@ -713,7 +727,7 @@ public class PASApp {
 	}
 	
 	/**
-	 * Creates a string instance after verifying if it meets the following requirements:
+	 * Returns a String instance after verifying if it meets the following requirements:
 	 * 		> Is not blank
 	 * 		> Does not consist of only whitespace
 	 * 		> Does not consist of only numbers with ".", "-", and "," characters
@@ -722,7 +736,7 @@ public class PASApp {
 	 * 
 	 * Inputed String will always be trimmed before processing.
 	 * 
-	 * Can display custom message requesting what type of input string is desired.
+	 * Can display custom message that repeats for every input attempt.
 	 * 
 	 * Input:
 	 * 		(String)	strIn	- String to be verified.
@@ -765,13 +779,13 @@ public class PASApp {
 	
 	/**
 	 * Return inputed integer after verifying if input is valid.
-	 * Can display custom message requesting what type of input is desired.
+	 * Can display custom message that repeats for every input attempt.
 	 * 
 	 * Input:
-	 * 		(int)	getInt	- integer to be verified.
+	 * 		(String)	getIntString	- Input to be verified.
 	 * 
 	 * Verification is done via exception handling. Invalid inputs involve values
-	 * that will trigger a InputMismatchException whenever Scanner.nextInt() is called
+	 * that cannot be normally parsed by Integer.parseInt()
 	 * 
 	 * @param message - Custom message to display for every input attempt
 	 * @return int - validated integer
@@ -806,10 +820,10 @@ public class PASApp {
 	
 	/**
 	 * Return double value that is valid for currency.
-	 * Can display custom message requesting what type of input is desired.
+	 * Can display custom message that repeats for every input attempt.
 	 * 
 	 * Input:
-	 * 		(double)	getInt	- integer to be verified.
+	 * 		(String)	getDoubleString	- Input to be verified.
 	 * 
 	 * For an input to be valid, it must meet the following criteria:
 	 * 		> Input can be parsed to double
@@ -862,15 +876,20 @@ public class PASApp {
 	}
 	
 	/**
-	 * Returns inputed int value after verification
+	 * Returns inputed int value after verification.
+	 * Can display custom message that repeats for every input attempt.
 	 * 
 	 * Has the same behavior as getValidInt() but with input length limitations.
-	 * Length limit is set based on value of limit param. 
+	 * Length limit is set based on value of limit param.
+	 * 
+	 * If the requireLimitAsMinimum param is true, the minimum length will be 
+	 * the same as the value set in limit. Otherwise, program will allow inputs
+	 * with length less than or equal to the value of limit param.
 	 * 
 	 * @param message - Custom message to display for every input attempt
 	 * @param limit - Maximum length input string can be
 	 * @param requireLimitAsMinimum - Enforces maximum limit as minimum if true
-	 * @return
+	 * @return int - validated integer
 	 */
 	private static int getValidBoundedInt(String message, int limit, boolean requireLimitAsMinimum) {
 		boolean isInvalid = true;
