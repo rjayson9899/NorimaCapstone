@@ -39,25 +39,25 @@ public class RatingEngine {
 	public void setVPF() {
 		
 		if(carAge < 1) {
-			vPF = 1;
+			vPF = 0.01;
 		}
 		else if (carAge >= 1 && carAge < 3) {
-			vPF = 0.8;
+			vPF = 0.008;
 		}
 		else if (carAge >= 3 && carAge < 5) {
-			vPF = 0.7;
+			vPF = 0.007;
 		}
 		else if (carAge >= 5 && carAge < 10) {
-			vPF = 0.6;
+			vPF = 0.006;
 		}
 		else if (carAge >= 10 && carAge < 15) {
-			vPF = 0.4;
+			vPF = 0.004;
 		}
 		else if (carAge >= 15 && carAge < 20) {
-			vPF = 0.2;
+			vPF = 0.002;
 		}
 		else if (carAge >= 20 && carAge < 40) {
-			vPF = 0.1;
+			vPF = 0.001;
 		}
 		
 	}

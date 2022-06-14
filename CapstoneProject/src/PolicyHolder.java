@@ -1,3 +1,10 @@
+/*
+ * This is the main driver of the whole capstone project.
+ * This program is able to create a customer account and a
+ * accompanying policy that can  expire, be cancelled or claimed.
+ * @author Macario N. Peralta V
+ * Date created: June 6 2022
+ */
 package CapStone;
 
 public class PolicyHolder {

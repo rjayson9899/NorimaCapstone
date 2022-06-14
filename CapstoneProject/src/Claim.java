@@ -1,3 +1,10 @@
+/*
+ * This is the main driver of the whole capstone project.
+ * This program is able to create a customer account and a
+ * accompanying policy that can  expire, be cancelled or claimed.
+ * @author Macario N. Peralta V
+ * Date created: June 6 2022
+ */
 package CapStone;
 
 public class Claim {
@@ -8,10 +15,10 @@ public class Claim {
     private String addOfAcc;
     private String desAcc;
     private String desDmgV;
-    private String cost;
+    private double cost;
     private boolean claimed;
     
-    public Claim(String dateOfAcc, String addOfAcc, String desAcc, String desDmgV, String cost, int clNum) {
+    public Claim(String dateOfAcc, String addOfAcc, String desAcc, String desDmgV, double cost, int clNum) {
     	this.dateOfAcc = dateOfAcc;
     	this.addOfAcc = addOfAcc;
     	this.desAcc = desAcc;
