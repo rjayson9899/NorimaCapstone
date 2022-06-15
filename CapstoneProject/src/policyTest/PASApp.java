@@ -339,7 +339,6 @@ public class PASApp {
 					
 				case 4:
 					clrscrn(1,true);
-					//input.nextLine();
 					String status = "";
 					accExist = false;
 
@@ -359,8 +358,6 @@ public class PASApp {
 						for(CustomerAccount c: customerAccounts){
 							for(Policy p: c.getPolicyAct()){
 								if(p.getPolicyNum().equals(policy1)){ //checks if the policy exist and gets its index
-									System.out.println(p.getPolicyNum());
-									clrscrn(10, false);
 									indexPol = c.getPolicyAct().indexOf(p);
 									indexCus = customerAccounts.indexOf(c);
 									status = p.getStatus();
@@ -379,6 +376,8 @@ public class PASApp {
 
 							if(status.equals("Scheduled") || status.equals("Expired")){ // checks if the policy can be claimed
 								System.out.println("Policy expired or not yet enforced");
+								System.out.println("Returning to main menu...");
+								clrscrn(2, false);
 							}
 							else{
 								clrscrn(1, true);
