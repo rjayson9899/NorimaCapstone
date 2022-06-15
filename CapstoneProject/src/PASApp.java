@@ -559,6 +559,10 @@ public class PASApp {
 				inputString = input.nextLine();
 				inputString = inputString.trim();
 				parsedDouble = Double.parseDouble(inputString);
+				if (parsedDouble <= 0) {
+					System.out.println("Input cannot be negative or equal to 0");
+					inputString = "";
+				}
 			} catch (NumberFormatException e) {
 				if (inputString.equals("")) {
 					System.out.println("Invalid input, cannot be blank!");
