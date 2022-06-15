@@ -1,5 +1,3 @@
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.DateTimeException;
@@ -21,9 +19,7 @@ import java.util.Scanner;
  */
 
 public class PASApp {
-	private static File filePath = new File("src/test.txt");
 	private static Scanner in = new Scanner(System.in);
-	private static boolean byFile = false;
 	
 	public static void main(String[] args) {
 		ArrayList<CustomerAccount> customerList = new ArrayList<CustomerAccount>();
@@ -35,23 +31,6 @@ public class PASApp {
 		String firstName, lastName, address, strIn;
 		int choice, uniqueId, inputId;
 		boolean foundHit, isExpired;
-		
-		// Debug Function: Enable testing program via inputs from a file
-		// ====================================================================================================
-		System.out.print("Test by file? [y for yes]: ");
-		strIn = in.nextLine();
-		
-		if (strIn.equalsIgnoreCase("y")) {
-			try {
-				in = new Scanner(filePath);
-				byFile = true;
-			}
-			catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return;
-			}
-		}
-		// ====================================================================================================
 		
 		do {
 			printMenu();
@@ -157,8 +136,15 @@ public class PASApp {
 				 * documentation on Policy instance method generateQuote(). A prompt will ask the user
 				 * if they wish to get the policy. An input of "Y", regardless of case, will register the 
 				 * Policy into the account. Any other inputs, will result in the disposal of the generated
-				 * Policy so far. In the event that the user accepts the policy, the effective date is
-				 * immediately set to the current system date.
+				 * Policy so far. 
+				 * 
+				 * When the user accepts to buy the policy, a choice is presented if the user wants the
+				 * program to automatically configure the effective date as the current date. an input of
+				 * "Y", regardless of case, will make is so the program will automatically set the
+				 * effective date. Any other inputs will result in the program calling the getDate()
+				 * command to get a date. The input must generate a date between the range of today
+				 * to 5 years from now. Dates beyond this range will make the program force the user to
+				 * input another.
 				 * 
 				 * Inputs for the above process:
 				 * 		(String)	choice	- input if to accept quoted policy
@@ -183,8 +169,6 @@ public class PASApp {
 							
 							System.out.print("Set Current account as holder? [y for yes]: ");
 							strIn = in.nextLine();
-							// Debug
-							if (byFile) System.out.println(strIn);
 							if (strIn.equalsIgnoreCase("y")) {
 								tempPolicy.setPolicyHolder(makeHolder(currentAccount));
 							}
@@ -196,23 +180,15 @@ public class PASApp {
 								tempPolicy.addVehicle(makeVehicle());
 								System.out.print("Input y to add another vehicle, else press enter to continue: ");
 								strIn = in.nextLine();
-								// Debug
-								if (byFile) System.out.println(strIn);
 							} while (strIn.equalsIgnoreCase("y"));
 							
 							tempPolicy.generateQuote();
 							System.out.print("Will you get this policy? [y for yes]: ");
 							strIn = in.nextLine();
 							
-							// Debug
-							if (byFile) System.out.println(strIn);
-							
 							if (strIn.equalsIgnoreCase("y")) {
 								System.out.print("\nSet policy to be effective immediately? [y for yes]: ");
 								strIn = in.nextLine();
-								
-								// Debug
-								if (byFile) System.out.println(strIn);
 								
 								if (strIn.equalsIgnoreCase("y")) {
 									effectiveDate = LocalDate.now();
@@ -409,8 +385,7 @@ public class PASApp {
 					do {
 						System.out.print("Input Claim Number to find: ");
 						strIn = in.nextLine();
-						// Debug
-						if (byFile) System.out.println(strIn);
+						
 						if ((strIn.length() != 7) || (strIn.charAt(0) != 'C')) {
 							System.out.println("\nInvalid input. Follow the format Cxxxxxx where x is a value between 0 - 9.\n");
 						}
@@ -454,32 +429,6 @@ public class PASApp {
 			}
 			
 		} while (choice != 8);
-		
-		//DEBUG
-		// ===========================================================================================
-		System.out.println("Data dump");
-		CustomerAccount.printCustomerAccountHeader();
-		for (CustomerAccount cstObj: customerList) {
-			cstObj.printCustomerAccountDetails();
-		}
-		CustomerAccount.printPolicyHeader();
-		for (CustomerAccount cstObj: customerList) {
-			cstObj.printPolicies();
-		}
-		CustomerAccount.printVehicleHeader();
-		for(CustomerAccount cstObj: customerList) {
-			cstObj.printVehicles();
-		}
-		CustomerAccount.printPolicyHolderHeader();
-		for(CustomerAccount cstObj: customerList) {
-			cstObj.printPolicyHolders();
-		}
-		Claim.printClaimHeader();
-		for (Claim clmObj: claimList) {
-			clmObj.printClaimDetails();
-		}
-		// ===========================================================================================
-		
 	}
 	
 	/**
@@ -773,9 +722,6 @@ public class PASApp {
 			System.out.print(message);
 			strIn = in.nextLine();
 			
-			// Debug
-			if (byFile) System.out.println(strIn);
-			
 			strIn = strIn.trim();
 			if (strIn.equals("")) {
 				System.out.println("\nEntry cannot be blank\n");
@@ -820,8 +766,7 @@ public class PASApp {
 			try {
 				getIntString = in.nextLine();
 				getIntString = getIntString.trim();
-				// Debug
-				if (byFile) System.out.println(getIntString);
+
 				parsedInt = Integer.parseInt(getIntString);
 				isInvalid = false;
 			}
@@ -866,8 +811,6 @@ public class PASApp {
 			try {
 				getDoubleString = in.nextLine();
 				getDoubleString = getDoubleString.trim();
-				// Debug
-				if (byFile) System.out.println(getDoubleString);
 				
 				parsedDouble = Double.parseDouble(getDoubleString);
 				
@@ -925,10 +868,7 @@ public class PASApp {
 			try {
 				getIntString = in.nextLine();
 				getIntString = getIntString.trim();
-				// Debug
-				if (byFile) System.out.println(getIntString);
-				parsedInt = Integer.parseInt(getIntString);
-				
+
 				if (!(requireLimitAsMinimum) && (getIntString.length() > limit)) {
 					System.out.println("\nInput can only have maximum of " + limit + " digits\n");
 				}
