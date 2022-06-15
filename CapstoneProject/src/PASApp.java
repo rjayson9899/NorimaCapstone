@@ -820,6 +820,9 @@ public class PASApp {
 				else if (parsedDouble < 0) {
 					System.out.println("\nInput cannot be negative\n");
 				}
+				else if (parsedDouble == 0) {
+					System.out.println("\nInput cannot be 0\n");
+				}
 				else {
 					isInvalid = false;
 				}
