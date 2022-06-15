@@ -118,7 +118,7 @@ public class PASApp {
 
 				// Validation if Customer ID already exists
 				isMatch = false;
-				customerIDInput = getIntegerInput("Input Customer ID number: ");
+				customerIDInput = getIntegerInput("Input Customer ID number: ", 4);
 
 				for (CustomerAccount account : customerList) {
 					if (customerIDInput == account.getAccountNumber()) {
@@ -238,7 +238,7 @@ public class PASApp {
 				System.out.println("===================");
 				System.out.println("  Cancel a Policy  ");
 				System.out.println("===================");
-				policyIDInput = getIntegerInput("Input Policy Number: ");
+				policyIDInput = getIntegerInput("Input Policy Number: ", 6);
 				isMatch = false;
 
 				for (CustomerAccount custObj : customerList) {
@@ -258,7 +258,7 @@ public class PASApp {
 				System.out.println("================");
 				System.out.println("  File a Claim  ");
 				System.out.println("================");
-				policyIDInput = getIntegerInput("Input Policy Number: ");
+				policyIDInput = getIntegerInput("Input Policy Number: ", 6);
 				isMatch = false;
 
 				ArrayList<Integer> claimIDList = new ArrayList<Integer>();
@@ -335,7 +335,7 @@ public class PASApp {
 						}
 					}
 				} else {
-					customerIDInput = getIntegerInput("Input Account Number: ");
+					customerIDInput = getIntegerInput("Input Account Number: ", 4);
 
 					for (CustomerAccount custObj : customerList) {
 						if (custObj.getAccountNumber() == customerIDInput) {
@@ -355,7 +355,7 @@ public class PASApp {
 				System.out.println("=======================");
 				System.out.println("  Search for a Policy  ");
 				System.out.println("=======================");
-				policyIDInput = getIntegerInput("Input Policy Number: ");
+				policyIDInput = getIntegerInput("Input Policy Number: ", 6);
 				isMatch = false;
 
 				for (CustomerAccount custObj : customerList) {
@@ -374,7 +374,7 @@ public class PASApp {
 				System.out.println("======================");
 				System.out.println("  Search for a Claim  ");
 				System.out.println("======================");
-				claimIDInput = getIntegerInput("Input Claim Number: C");
+				claimIDInput = getIntegerInput("Input Claim Number: C", 6);
 				isMatch = false;
 
 				for (Claim claimObj : claimList) {
@@ -473,6 +473,32 @@ public class PASApp {
 				inputString = input.nextLine();
 				inputString = inputString.trim();
 				parsedInt = Integer.parseInt(inputString);
+			} catch (NumberFormatException e) {
+				if (inputString.equals("")) {
+					System.out.println("Invalid input, cannot be blank!");
+				} else {
+					System.out.println("Invalid input!");
+					inputString = "";
+				}
+			}
+		} while (inputString.equals(""));
+		return parsedInt;
+	}
+	
+	private static int getIntegerInput(String displayMessage, int maximumCharacter) {
+		String inputString = "";
+		int parsedInt = 0;
+
+		do {
+			try {
+				System.out.print(displayMessage);
+				inputString = input.nextLine();
+				inputString = inputString.trim();
+				parsedInt = Integer.parseInt(inputString);
+				if (inputString.length() != maximumCharacter) {
+					System.out.println("Input must consists of " + maximumCharacter + " digits");
+					inputString = "";
+				} 
 			} catch (NumberFormatException e) {
 				if (inputString.equals("")) {
 					System.out.println("Invalid input, cannot be blank!");
