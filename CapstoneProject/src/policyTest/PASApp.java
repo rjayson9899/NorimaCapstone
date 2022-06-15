@@ -13,13 +13,13 @@ import java.util.Locale;
 public class PASApp {
 
 	public static void main(String[] args)  {
-		//initializations for global variables
+		//initializations for global variables used to every case
 		Scanner input = new Scanner(System.in);
 		ArrayList<CustomerAccount> customerAccounts = new ArrayList<>();
 		ArrayList<Claim> claims = new ArrayList<>();
 		boolean accExist = false;
-		int choice = 0;
-		int accountNumGenerator = 0;
+		int choice = 0; 
+		int accountNumGenerator = 0; 
 		int policyNumGenerator = 0;
 		int claimNumGenerator = 0;
 		
@@ -43,23 +43,22 @@ public class PASApp {
 			
 				case 1: //Creating Account
 					clrscrn(1, true);
-					if(accountNumGenerator > 9998){
+
+					if(accountNumGenerator > 9998){ //checker if the number of accounts exceed the amount needed
 						System.out.println("No more room for a new account.");
 						System.out.println("Returning to main menu.");
 						clrscrn(1, false);
 					}
 					else{
-						//input.nextLine();
+						
 						accExist = false;
 						System.out.println("\n-------------------------------");
 						System.out.println("       Creating account");
 						System.out.println("-------------------------------");
-						//System.out.print("First Name: ");
+						//inputs for creating account
 						String fname = checkerString(input, "First Name: ", true);
-						//System.out.print("Last Name: ");
 						String lname = checkerString(input, "Last Name: ", true);
-						//System.out.print("Address: ");
-						String address = checkerString(input, "Address: ", false);;
+						String address = checkerString(input, "Address: ", false);
 					
 						
 						for(CustomerAccount y: customerAccounts) { //for each loop to check if an account already exist
@@ -68,12 +67,11 @@ public class PASApp {
 								System.out.println("Account already exist!");
 								accExist = true;
 								clrscrn(1, false);
-								//input.nextLine();
 								break;
 							}
 						}
 						
-						if(!accExist) {
+						if(!accExist) { //occurs if account does not exist
 							customerAccounts.add(new CustomerAccount(fname, lname, address));
 							customerAccounts.get(customerAccounts.size() - 1).generateId(accountNumGenerator);
 							accountNumGenerator++;
@@ -87,7 +85,6 @@ public class PASApp {
 					
 				case 2: // Quote/Buy policy
 					clrscrn(1, true);
-					//input.nextLine();
 					//initializing local variables
 					int indexGet = 0;
 					boolean wrongDate = true;
@@ -97,14 +94,14 @@ public class PASApp {
 					double price = 0, total = 0;
 					LocalDate effectDate, expiredDate;
 
-					if(policyNumGenerator > 99998){
+					if(policyNumGenerator > 99998){ //checks if the maximum number of policies is achieved
 						System.out.println("No more room for a new policy.");
 						System.out.println("Returning to main.");
 						clrscrn(1, false);
 					}
 
 					else{
-
+						
 						System.out.println("\n-------------------------------");
 						System.out.println("        Quoting policy");
 						System.out.println("-------------------------------");
@@ -131,7 +128,6 @@ public class PASApp {
 
 							expiredDate= effectDate.plusMonths(6);
 							System.out.println("Set expired date to: " + expiredDate);
-							//Add checker if the one who creates policy is the account holder or different person
 							String fnamePol = "", lnamePol = "";
 							System.out.print("Is the account owner also the policy holder? (y/n) ");
 							Character decision = input.nextLine().charAt(0);
@@ -149,9 +145,7 @@ public class PASApp {
 							}
 								
 							else {
-								//System.out.print("First Name: ");
 								fnamePol = checkerString(input, "First Name: ", true);
-								//System.out.print("Last Name: ");
 								lnamePol = checkerString(input, "Last Name: ", true);	
 							}
 							
@@ -161,6 +155,7 @@ public class PASApp {
 							LocalDate licenseDate = checkerDate(input, "Input license date issued(yyyy-mm-dd):\n ex.'2022-09-18': ", true);
 							int licenseYear =licenseDate.getYear() ;
 
+							//initial creation for the policy
 							customerAccounts.get(indexGet).addPolicyAct(new Policy(effectDate, 
 																			new PolicyHolder(fnamePol, lnamePol, birthDate, license, licenseDate)));
 							customerAccounts.get(indexGet).addPolicyHolders();
@@ -176,18 +171,16 @@ public class PASApp {
 							boolean checkInp = false;
 							String typeString = "", fuelString = "";
 							
-							while(numVehicle > 0) {
+							while(numVehicle > 0) { //Adding vehicle details
 								clrscrn(1, true);
 								System.out.println("\n-------------------------------");
 								System.out.println("       Vehicle Details");
 								System.out.println("-------------------------------");
-								//System.out.print("Make: ");
 								make = checkerString(input, "Make: ", false);
-								//System.out.print("Model: ");
 								model = checkerString(input, "Model: ", false);
 								year = checkerInt(input, "Year: ", true, false);
 								input.nextLine();
-								do{
+								do{ //do while loop to check for the input of type
 									type = checkerInt(input, " Choose which type your vehicle is: \n[1] 4-door sedan\n" + 
 																"[2] 2-door sports car, SUV, or truck\n-------------------------------\nYour type of vehicle: ", false, false);
 									if(type == 1 || type == 2){
@@ -206,7 +199,7 @@ public class PASApp {
 								}while(!checkInp);
 
 								checkInp = false;
-								do{
+								do{ //do while loop to check for the input of fuel
 									fuel = checkerInt(input, "Choose which type of fuel: \n[1] Diesel\n"+
 														"[2] Electric\n[3] Petrol\n-------------------------------\nYour type of fuel: ", false, false);
 									if(fuel == 1 || fuel == 2 || fuel == 3){
@@ -226,7 +219,6 @@ public class PASApp {
 									}
 								}while(!(checkInp));
 								
-								//input.nextLine();
 								price = checkerDouble(input, "Purchase price: ");
 								System.out.print("Color: ");
 								input.nextLine();
@@ -242,7 +234,7 @@ public class PASApp {
 							customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1)
 													.getDetails();
 							
-
+							//initial adding of vehicle
 							for(Vehicle v: customerAccounts.get(indexGet).getPolicyAct()
 											.get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).getVehicles()) {
 								v.getDetails();
@@ -260,7 +252,7 @@ public class PASApp {
 							System.out.println("Would you like to buy the policy? (y/n)");
 							decision = input.nextLine().charAt(0);
 							
-							if(decision.equals('y') || decision.equals('Y')) {
+							if(decision.equals('y') || decision.equals('Y')) { // finilizing the policy when bought
 								customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).setStatus();
 								System.out.println("Policy bought! Your policy number is: " + 
 								customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).getPolicyNum());
@@ -268,16 +260,10 @@ public class PASApp {
 							}
 							
 							else {
-								System.out.println("Policy cancelled!\nReturning to main menu...");
+								System.out.println("Policy cancelled!\nReturning to main menu..."); //remove the policy from the arraylist
 								customerAccounts.get(indexGet).getPolicyAct().remove(customerAccounts.get(indexGet).getPolicyAct().size() - 1);
 								policyNumGenerator--;
-								//System.out.println(customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).getPolicyNum());
 
-								for(CustomerAccount c: customerAccounts){
-									for(Policy p: c.getPolicyAct()){
-										System.out.println(p.getPolicyNum());
-									}
-								}
 								clrscrn(1, false);
 							}
 
@@ -296,7 +282,6 @@ public class PASApp {
 					
 				case 3:
 					clrscrn(1,true);
-					//input.nextLine();
 					int indexPol = 0, indexCus = 0;
 					Character confirm;
 					accExist = false;
@@ -319,14 +304,14 @@ public class PASApp {
 						}
 					}
 					
-					if(!accExist){
+					if(!accExist){ //checks if account exist
 						System.out.println("Policy does not exist!");
 						clrscrn(1, false);
 					}
 
-					else{
+					else{ 
 						if(customerAccounts.get(indexCus).getPolicyAct().get(indexPol).getStatus().equals("Expired")){
-							System.out.println("Policy is Expired!");
+							System.out.println("Policy is Expired!"); //checks if a policy is already expired
 							pressAnyKeyToContinue(input);
 						}
 	
@@ -373,7 +358,7 @@ public class PASApp {
 
 						for(CustomerAccount c: customerAccounts){
 							for(Policy p: c.getPolicyAct()){
-								if(p.getPolicyNum().equals(policy1)){
+								if(p.getPolicyNum().equals(policy1)){ //checks if the policy exist and gets its index
 									System.out.println(p.getPolicyNum());
 									clrscrn(10, false);
 									indexPol = c.getPolicyAct().indexOf(p);
@@ -392,7 +377,7 @@ public class PASApp {
 
 						else{
 
-							if(status.equals("Scheduled") || status.equals("Expired")){
+							if(status.equals("Scheduled") || status.equals("Expired")){ // checks if the policy can be claimed
 								System.out.println("Policy expired or not yet enforced");
 							}
 							else{
@@ -410,6 +395,7 @@ public class PASApp {
 								String descriptionDamage = input.nextLine();
 								double estCost = checkerDouble(input, "Estimated cost of repairs: " );
 								
+								//adding the claim to the claim arraylist
 								claims.add(new Claim( accidentDate, accidentAdd, descriptionAccident,
 											descriptionDamage,estCost));
 								claims.get(claims.size()-1).generateId(claimNumGenerator);
@@ -437,13 +423,12 @@ public class PASApp {
 											"[1] Using first and last name\n[2] Using account number\n-------------------------------\nInput number of choice: ", false, false);
 					
 					if(search == 1) {
-						//input.nextLine();
 						System.out.print("Input first name: ");
 						String fNameSearch = input.nextLine();
 						System.out.print("Input last name: ");
 						String lNameSearch = input.nextLine();
 
-						for(CustomerAccount c: customerAccounts){
+						for(CustomerAccount c: customerAccounts){ //loop that finds the desired account
 							if(c.getFname().equalsIgnoreCase(fNameSearch) && c.getLname().equalsIgnoreCase(lNameSearch)){
 								c.getDetails();
 								accExist = true;
@@ -463,7 +448,7 @@ public class PASApp {
 						System.out.print("Input account number: ");
 						String accountNum = input.nextLine();
 
-						for(CustomerAccount c: customerAccounts){
+						for(CustomerAccount c: customerAccounts){ //loop that finds the inputted account number
 							if(c.getAccountNum().equals(accountNum)){
 								c.getDetails();
 								accExist = true;
@@ -493,7 +478,7 @@ public class PASApp {
 					System.out.print("Input policy number: ");
 					String policyNumSearch = input.nextLine();
 					for(CustomerAccount c: customerAccounts){
-						for(Policy p: c.getPolicyAct()){
+						for(Policy p: c.getPolicyAct()){ // loop that finds the policy
 							if(p.getPolicyNum().equals(policyNumSearch)){
 								accExist = true;
 								p.getDetails();
@@ -512,7 +497,6 @@ public class PASApp {
 					
 				case 7:
 					clrscrn(1,true);
-					//input.nextLine();
 					accExist = false;
 					System.out.println("\n-------------------------------");
 					System.out.println("        Search Claim");
@@ -559,7 +543,7 @@ public class PASApp {
 		input.close();
 	}
 	
-	private static void clrscrn(int timer, boolean showMessage) {
+	private static void clrscrn(int timer, boolean showMessage) { //for clearing screen
 		if(showMessage){
 			System.out.println("Processing...");
 		}
@@ -573,7 +557,7 @@ public class PASApp {
 		}	
 	}
 
-	private static void pressAnyKeyToContinue(Scanner input){ 
+	private static void pressAnyKeyToContinue(Scanner input){  //press any key to continue function
         System.out.println("Press Enter key to continue...");
 		
         try
@@ -584,7 +568,7 @@ public class PASApp {
         {}  
  	}
 
-	 private static int checkerInt(Scanner inpt, String msg, boolean isYear, boolean isCar) {
+	 private static int checkerInt(Scanner inpt, String msg, boolean isYear, boolean isCar) { //integer input validator
 		int output = 0;
 
 		if(isYear){
@@ -653,7 +637,7 @@ public class PASApp {
 		return output;
 	}
 
-	private static LocalDate checkerDate(Scanner inpt, String msg, boolean isFuture) {
+	private static LocalDate checkerDate(Scanner inpt, String msg, boolean isFuture) { //date input validator
 		LocalDate dateInput = LocalDate.now();
 		boolean isFinished = false;
 
@@ -702,7 +686,7 @@ public class PASApp {
 		
 	}
 
-	private static double checkerDouble(Scanner inpt, String msg) {
+	private static double checkerDouble(Scanner inpt, String msg) { //double input validator
 		double output;
 		System.out.print(msg);
 		while(!inpt.hasNextDouble()) {
@@ -726,7 +710,7 @@ public class PASApp {
 	}
 	
 
-	private static String checkerString(Scanner inpt, String msg, boolean check){
+	private static String checkerString(Scanner inpt, String msg, boolean check){ //string special character validator
 		String regex1 = "[A-Z a-z\\.,]+";
 		String regex2 = "[A-Z a-z\\.,0-9]+";
 		String output = "";
