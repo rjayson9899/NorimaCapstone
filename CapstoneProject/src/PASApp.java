@@ -10,7 +10,9 @@ package CapStone;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class PASApp {
@@ -35,8 +37,10 @@ public class PASApp {
 	}
    
    private static String dateVerifier(String message) {
+	   String dateFormat = "LLL dd uuuu";
 	   String input = null;
-	   LocalDate date;
+	   LocalDate date = null;
+	   LocalDate eDate = LocalDate.now();
 	   do {
 		   try {
 			   isWrongDate = false;
@@ -44,14 +48,15 @@ public class PASApp {
 			   input = userIn.nextLine();
 			   input.trim();
 			   input = input.substring(0, 1).toUpperCase() + input.substring(1);
-			   date = LocalDate.parse(input, DateTimeFormatter.ofPattern("LLL dd yyyy"));
+			   date = LocalDate.parse(input, DateTimeFormatter.ofPattern(dateFormat, Locale.US).withResolverStyle(ResolverStyle.STRICT));
+			            
 		   }
-		   catch(DateTimeParseException e) {
+		   catch(DateTimeParseException | StringIndexOutOfBoundsException | IllegalArgumentException  e) {
 				System.out.println("Please enter a valid input.");
 				isWrongDate = true;
 			}
 	   }
-	   while(isWrongDate == true);
+	   while(isWrongDate == true || eDate.isBefore(date));
 	   return input;
    }
    
@@ -66,7 +71,7 @@ public class PASApp {
 				userIn.next();
 			} 
     		input = userIn.nextInt();
-    		if(input > 9999 || input <= 1886) {
+    		if(input > 2030 || input <= 1886) {
     			System.out.println("Please enter a valid year.");
     			isCorrect = false;
     		}
@@ -86,7 +91,7 @@ public class PASApp {
 			} 
     		input = userIn.nextInt();
     		
-    		if (input < 0) {
+    		if (input <= 0) {
     			System.out.println("Please enter a positive input.");
     			isCorrect = false;
     		}
@@ -154,7 +159,7 @@ public class PASApp {
 				    		System.out.println("===================================");
 				    		fName = stringVerifier("Enter your first name: (You may add your second name)", "^[a-zA-Z ][a-zA-Z ]*$");
 				    		lName = stringVerifier("Enter your last name: ", "^[a-zA-Z ][a-zA-Z ]*$");
-					    	address = stringVerifier("Enter your address: (House number, Street, City, Province, Country, Zip code)","^[\\d]+[ ][a-zA-Z0-9,\\. ]*$");
+					    	address = stringVerifier("Enter your address: (House number, Street, City, Province, Country, Zip code)","^[\\d]+[ ][a-zA-Z0-9,\\-\\. ]*$");
 				    		System.out.println("Are you satisfied with your input? (Enter y if your inputs are okay)");
 				    		ok = userIn.nextLine();
 			    		 } while(!ok.equalsIgnoreCase("y"));	
@@ -215,8 +220,7 @@ public class PASApp {
 							    			address = cust.get(cusAccTwo).getAddress();
 							    			System.out.println("===================================");
 							    			bDay = dateVerifier("Enter the birthday: (format: Jan 01 1991) ");
-							    			System.out.println("Driver's license number: ");
-							    			licNum = userIn.nextLine();
+							    			licNum = stringVerifier("Driver's license number: ", "^[a-zA-Z0-9][a-zA-Z0-9- ]*$");
 							    			dateLic = dateVerifier("Enter the date issued of the license: (format: Jan 01 1991) "); 
 								    		System.out.println("===================================");
 							    		}
@@ -227,9 +231,8 @@ public class PASApp {
 							    			fName = stringVerifier("Enter your first name: (You may add your second name)", "^[a-zA-Z][a-zA-Z]*$");
 								    		lName = stringVerifier("Enter your last name: ", "^[a-zA-Z][a-zA-Z]*$");
 								    		bDay = dateVerifier("Enter the birthday: (format: Jan 01 1991)");
-								    		address = stringVerifier("Enter your address: (House number, Street, City, Province, Country, Zip code)","^[\\d]+[ ][a-zA-Z0-9,\\. ]*$");
-								    		System.out.println("Driver's license number: ");
-								    		licNum = userIn.nextLine();
+								    		address = stringVerifier("Enter your address: (House number, Street, City, Province, Country, Zip code)","^[\\d]+[ ][a-zA-Z0-9,\\.\\- ]*$");
+								    		licNum = stringVerifier("Driver's license number: ", "^[a-zA-Z0-9][a-zA-Z0-9- ]*$");
 								    		dateLic = dateVerifier("Enter the date issued of the license: (format: Jan 01 1991) ");
 								    		System.out.println("===================================");
 							    		}
@@ -250,14 +253,14 @@ public class PASApp {
 									    	 		do {
 											    		System.out.println("===================================");
 											    		carMake = stringVerifier("Enter the car make: ", "^[a-zA-Z][a-zA-Z]*$");
-											    		carModel = stringVerifier("Enter the car model: ", "^[a-zA-z0-9-. ]*$");
+											    		carModel = stringVerifier("Enter the car model: ", "^[a-zA-Z][a-zA-z0-9-. ]*$");
 											    		carYear = intVerifier("Enter the year: ");											    		
 											    		userIn.nextLine();
-											    		carType = stringVerifier("Enter the car type: ", "^[a-zA-z0-9- ]*$");
+											    		carType = stringVerifier("Enter the car type: ", "^[a-zA-Z][a-zA-z0-9- ]*$");
 											    		carFuelType = stringVerifier("Enter the fuel type: ", "^[a-zA-Z][a-zA-Z]*$");
 											    		carPrice = doubleVerifier("Enter the car price: ");
 											    		userIn.nextLine();
-											    		carColor = stringVerifier("Enter the car color: ", "^[a-zA-z0-9-. ]*$");
+											    		carColor = stringVerifier("Enter the car color: ", "^[a-zA-Z][a-zA-z0-9-. ]*$");
 											    		System.out.println("===================================");
 											    		System.out.println("Are you satisfied with your inputs? (Enter y if your inputs are okay)");
 											    		ok = userIn.nextLine();
@@ -267,7 +270,7 @@ public class PASApp {
 									    	 	}
 									    		//quote policy
 									    	 	totalPremium = cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).getTotalPremium();
-									    		System.out.println("The policy will cost about: $" + totalPremium);
+									    		System.out.printf("The policy will cost about: $%.2f\n", totalPremium);
 									    		System.out.println("Would you like to buy the policy? (Y/N)");
 									    		choiceTwo = userIn.nextLine();
 									    		if(choiceTwo.equalsIgnoreCase("y")) {
@@ -348,7 +351,7 @@ public class PASApp {
 					    	    	getAccNumb = cus.getAccNumb();
 					    	    	isFound = true;
 					    	    	if(isCancelled == cus.pol.get(polSear).checkStatus()) {
-					    	    		System.out.println("Sorry, this policy has already been cancelled/expired. ");
+					    	    		System.out.println("Sorry, this policy has already been cancelled/expired or scheduled. ");
 					    	    		isFound = false;
 					    	    		break;
 					    	    	}
@@ -359,12 +362,9 @@ public class PASApp {
 			    	    		cust.get(getAccNumb).pol.get(polSear).setClaimCounter(++polClNum);
 				    	    	userIn.nextLine();
 				    	    	accDate = dateVerifier("Enter the date of accident: (format: Jan 01 1991) ");
-					    		System.out.println("Enter the address of the accident: ");
-					    		addDate = userIn.nextLine();
-					    		System.out.println("Description of the accident: ");
-					    		depAcc = userIn.nextLine();
-					    		System.out.println("Description of the damage to vehicle: ");
-					    		depDmgV = userIn.nextLine();
+				    	    	addDate = stringVerifier("Enter the address of the accident: ", "^[a-zA-z0-9-.!%@# ]*$");
+					    		depAcc = stringVerifier("Description of the accident: ", "^[a-zA-z0-9-.!%@# ]*$");
+					    		depDmgV = stringVerifier("Description of the damage to vehicle: ", "^[a-zA-z0-9-.!%@# ]*$");
 					    		estRep = doubleVerifier("Estimated cost of repairs: ");
 					    		claim.add(new Claim(accDate, addDate, depAcc, depDmgV, estRep, clNum));
 					    		System.out.println("Policy is claimed. ");

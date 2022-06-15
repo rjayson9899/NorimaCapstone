@@ -1,7 +1,6 @@
 /*
- * This is the main driver of the whole capstone project.
- * This program is able to create a customer account and a
- * accompanying policy that can  expire, be cancelled or claimed.
+ * This is the claim class of the whole capstone project.
+ * This class contains the data for the claim information.
  * @author Macario N. Peralta V
  * Date created: June 6 2022
  */
@@ -16,7 +15,7 @@ public class Claim {
     private String desAcc;
     private String desDmgV;
     private double cost;
-    private boolean claimed;
+
     
     public Claim(String dateOfAcc, String addOfAcc, String desAcc, String desDmgV, double cost, int clNum) {
     	this.dateOfAcc = dateOfAcc;
@@ -46,27 +45,4 @@ public class Claim {
 		
 	}
 	
-	public void setDateAcc(String dateAcc) {
-		
-	}
-	
-	public void setAddAcc(String addAcc) {
-		
-	}
-	
-	public void setDesAcc(String desAcc) {
-		
-	}
-	
-	public void setDesDmgV(String desDV) {
-		
-	}
-	
-	public void setCost(String cost) {
-		
-	}
-	
-	public void claimed() {
-		claimed = true;
-	}
 }

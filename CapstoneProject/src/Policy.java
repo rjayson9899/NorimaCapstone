@@ -7,9 +7,12 @@
 package CapStone;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;  
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;  
 
 public class Policy {
 	
@@ -42,22 +45,30 @@ public class Policy {
 	}
 	 
 	 public boolean verifyEffDate(String srtDate) {
-		 effDate = srtDate.substring(0, 1).toUpperCase() + srtDate.substring(1);
-		 stDate = LocalDate.parse(effDate, DateTimeFormatter.ofPattern("LLL dd yyyy"));
-	
-		 if (stDate.isBefore(dateNow)) {
-			 System.out.println("The effective date should be starting today. ");
-			 isEffDate =  true;
-			 return isEffDate;
-		 }
-		 else {
-			eDate = stDate.plusMonths(6);
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("LLL dd yyyy");
-			expDate = eDate.format(formatter);
-			System.out.println("Expiration date: " + expDate);
-			isEffDate = false;
-			return isEffDate;
-		 }
+		 try {
+			 String dateFormat = "LLL dd uuuu";
+			 effDate = srtDate.substring(0, 1).toUpperCase() + srtDate.substring(1);
+			 stDate = LocalDate.parse(effDate, DateTimeFormatter.ofPattern(dateFormat, Locale.US).withResolverStyle(ResolverStyle.STRICT));
+		
+			 if (stDate.isBefore(dateNow)) {
+				 System.out.println("The effective date should be starting today. ");
+				 isEffDate =  true;
+				 return isEffDate;
+			 }
+			 else {
+				eDate = stDate.plusMonths(6);
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("LLL dd uuuu");
+				expDate = eDate.format(formatter);
+				System.out.println("Expiration date: " + expDate);
+				isEffDate = false;
+				return isEffDate;
+			 }
+		 } 
+		 catch(DateTimeParseException | StringIndexOutOfBoundsException | IllegalArgumentException  e) {
+				System.out.println("Please enter a valid input.");
+				isEffDate = true;
+				return isEffDate;
+			}
 	}
 	 
 	public String getStDate() {
@@ -88,6 +99,7 @@ public class Policy {
 	}
 	
 	public boolean checkStatus() {
+		isCancelled = false;
 		if (isCancelled == false && dateNow.isAfter(eDate) == false && dateNow.isBefore(stDate) == false) {
 			status = "Active";
 			return isCancelled;
@@ -101,6 +113,7 @@ public class Policy {
 			return isCancelled;
 		}
 		else if (dateNow.isBefore(stDate) == true) {
+			isCancelled = true;
 			status = "Scheduled";
 			return isCancelled;
 		}
@@ -113,7 +126,7 @@ public class Policy {
 		isCancelled = true;
 		eDate = LocalDate.now();
 		eDate = eDate.minusDays(1);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("LLL dd yyyy");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("LLL dd uuuu");
 		expDate = eDate.format(formatter);
 		System.out.println("Policy is cancelled. ");
 	}

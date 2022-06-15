@@ -66,7 +66,7 @@ public class RatingEngine {
 		driverDate = dateLic.substring(dateLic.lastIndexOf(" ") + 1);
 		this.dDate = Integer.parseInt(driverDate);
 		dLic = date.minusYears(dDate);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu");
 		driverDate = dLic.format(formatter);
 		dLX = Integer.parseInt(driverDate);
 	}

@@ -1,7 +1,6 @@
 /*
- * This is the main driver of the whole capstone project.
- * This program is able to create a customer account and a
- * accompanying policy that can  expire, be cancelled or claimed.
+ * This is the policy holder class of the whole capstone project.
+ * This class contains all of the details that the policy holder possess.
  * @author Macario N. Peralta V
  * Date created: June 6 2022
  */
@@ -24,32 +23,5 @@ public class PolicyHolder {
 		this.dateLic = dateLic;
 	}
 
-	public void setfName(String fName) {
-		this.fName = fName;
-	}
-	
-	public void setlName(String lName) {
-		this.lName = lName;
-	}
-	
-	public void setBDay(String bDay) {
-		this.bDay = bDay;
-	}
-	
-	public void setAddress(String addz) {
-		
-	}
-	
-	public void setdLicNum(String licNum) {
-		
-	}
-	
-	public void setDateLic(String dateLic) {
-		
-	}
-	
-	public void getAddress() {
-		
-	}
 }
 
