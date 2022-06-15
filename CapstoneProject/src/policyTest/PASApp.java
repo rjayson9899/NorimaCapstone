@@ -3,7 +3,10 @@ package policyTest;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 
@@ -123,7 +126,7 @@ public class PASApp {
 							System.out.println("    Policy Holder Details");
 							System.out.println("-------------------------------");
 							do{
-								effectDate = checkerDate(input, "Input effective date(yyyy-mm-dd):\nex.'2022-09-18': ");
+								effectDate = checkerDate(input, "Input effective date(yyyy-mm-dd):\nex.'2022-09-18': ", false);
 								wrongDate = Policy.checkDate(effectDate);
 							}while(!wrongDate);
 
@@ -153,10 +156,10 @@ public class PASApp {
 								lnamePol = checkerString(input, "Last Name: ", true);	
 							}
 							
-							LocalDate birthDate = checkerDate(input,"Input birth date(yyyy-mm-dd):\nex.'2022-09-18': ");
+							LocalDate birthDate = checkerDate(input,"Input birth date(yyyy-mm-dd):\nex.'2022-09-18': ", true);
 							System.out.print("Input license number: ");
 							String license = input.nextLine();
-							LocalDate licenseDate = checkerDate(input, "Input license date issued(yyyy-mm-dd):\n ex.'2022-09-18': " );
+							LocalDate licenseDate = checkerDate(input, "Input license date issued(yyyy-mm-dd):\n ex.'2022-09-18': ", true);
 							int licenseYear =licenseDate.getYear() ;
 
 							customerAccounts.get(indexGet).addPolicyAct(new Policy(effectDate, 
@@ -171,6 +174,7 @@ public class PASApp {
 							//Vehicle Details
 							int numVehicle = checkerInt(input, "How many vehicles for this policy? : ", false, true);
 							input.nextLine();
+							boolean checkInp = false;
 							
 							while(numVehicle > 0) {
 								clrscrn(1, true);
@@ -183,18 +187,29 @@ public class PASApp {
 								model = checkerString(input, "Model: ", false);
 								year = checkerInt(input, "Year: ", true, false);
 								input.nextLine();
-								System.out.println("Choose which type your vehicle is: ");
-								System.out.println("[1] 4-door sedan");
-								System.out.println("[2] 2-door sports car, SUV, or truck");
-								System.out.println("-------------------------------");
-								type = checkerInt(input, "Your type of vehicle: ", false, false);
+								do{
+									type = checkerInt(input, " Choose which type your vehicle is: \n[1] 4-door sedan\n" + 
+																"[2] 2-door sports car, SUV, or truck\n-------------------------------\nYour type of vehicle: ", false, false);
+									if(type == 1 || type == 2){
+										checkInp = true;
+									}
+									
+									else{	
+										clrscrn(0, false);
+									}
+								}while(!checkInp);
+								checkInp = false;
+								do{
+									fuel = checkerInt(input, "Choose which type of fuel: \n[1] Diesel\n"+
+														"[2] Electric\n[3] Petrol\n-------------------------------\nYour type of fuel: ", false, false);
+									if(fuel == 1 || fuel == 2 || fuel == 3){
+										checkInp = true;
+									}
+									else{
+										clrscrn(0, false);
+									}
+								}while(!(checkInp));
 								
-								System.out.println("Choose which type of fuel: ");
-								System.out.println("[1] Diesel");
-								System.out.println("[2] Electric");
-								System.out.println("[3] Petrol");
-								System.out.println("-------------------------------");
-								fuel = checkerInt(input, "Your type of fuel: ", false, false);
 								//input.nextLine();
 								price = checkerDouble(input, "Purchase price: ");
 								System.out.print("Color: ");
@@ -305,7 +320,7 @@ public class PASApp {
 							confirm = input.nextLine().charAt(0);
 	
 							if(confirm.equals('y') || confirm.equals('Y')){
-								LocalDate expDate = checkerDate(input, "Input new expiration date(yyyy-mm-dd):\nex.'2022-09-18': ");
+								LocalDate expDate = checkerDate(input, "Input new expiration date(yyyy-mm-dd):\nex.'2022-09-18': ", false);
 								customerAccounts.get(indexCus).getPolicyAct().get(indexPol).setExpDate(expDate);;
 								customerAccounts.get(indexCus).getPolicyAct().get(indexPol).setStatus();
 								System.out.println("Successfully edited expiration policy!"); 
@@ -370,7 +385,7 @@ public class PASApp {
 								System.out.println("\n-------------------------------");
 								System.out.println("        Claim Details");
 								System.out.println("-------------------------------");
-								LocalDate accidentDate = checkerDate(input, "Input accident date(yyyy-mm-dd):\nex.'2022-09-18': ");
+								LocalDate accidentDate = checkerDate(input, "Input accident date(yyyy-mm-dd):\nex.'2022-09-18': ", true);
 								System.out.print("Address of where the accident happened: ");
 								String accidentAdd = input.nextLine();
 								System.out.print("Description of the accident: ");
@@ -569,8 +584,8 @@ public class PASApp {
 			while(!yearCheck){
 				System.out.print(msg);
 				output = inpt.nextInt();
-				if(output<1990 || output > 2022){
-					System.out.println("Wrong input");
+				if( output < 1886 || output > LocalDate.now().getYear()){
+					System.out.println("Wrong year for car");
 				}
 				else{
 					return output;
@@ -611,6 +626,7 @@ public class PASApp {
 				} catch (Exception e) {
 					clrscrn(0, false);
 					System.out.print(msg);
+					
 				}
 			}		
 		}
@@ -618,30 +634,57 @@ public class PASApp {
 		return output;
 	}
 
-	private static LocalDate checkerDate(Scanner inpt, String msg) {
+	private static LocalDate checkerDate(Scanner inpt, String msg, boolean isFuture) {
 		LocalDate dateInput = LocalDate.now();
 		boolean isFinished = false;
 
-		do{
+		if(isFuture){
+			do{
 			
-			System.out.print(msg);
-			try{	
-				String date = inpt.nextLine();
-				dateInput = LocalDate.parse(date);
-				isFinished = true;
-			}
-			catch(Exception e){
-				System.out.println("Wrong input for date, follow the format");
-				clrscrn(1,false);
-				
-			}
-		}while(!isFinished);
+				System.out.print(msg);
+				try{	
+					String date = inpt.nextLine();
+					dateInput = LocalDate.parse(date, DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.US).withResolverStyle(ResolverStyle.STRICT));
+					if(dateInput.isAfter(LocalDate.now())){
+						System.out.println("Can't input advanced date");
+					}
+					else{
+						isFinished = true;
+					}
+					
+				}
+				catch(Exception e){
+					System.out.println("Wrong input for date, follow the format");
+					clrscrn(1,false);
+					
+				}
+			}while(!isFinished);
 
-		return dateInput;
+			return dateInput;
+		}
+
+		else{
+			do{
+				System.out.print(msg);
+				try{	
+					String date = inpt.nextLine();
+					dateInput = LocalDate.parse(date, DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.US).withResolverStyle(ResolverStyle.STRICT));
+					isFinished = true;
+				}
+				catch(Exception e){
+					System.out.println("Wrong input for date, follow the format");
+					clrscrn(1,false);
+					
+				}
+			}while(!isFinished);
+	
+			return dateInput;
+		}
+		
 	}
 
 	private static double checkerDouble(Scanner inpt, String msg) {
-
+		double output;
 		System.out.print(msg);
 		while(!inpt.hasNextDouble()) {
 			System.out.println("wrong input!");
@@ -649,7 +692,13 @@ public class PASApp {
 			clrscrn(1,false);
 			System.out.print(msg);
 		}
-		double output = inpt.nextDouble();
+		do{
+			System.out.println("Negative values are not accepted");
+			clrscrn(1,false);
+			System.out.print(msg);
+			output = inpt.nextDouble();
+		}while(output <= 0);
+
 		
 		return output;
 	}
@@ -665,7 +714,7 @@ public class PASApp {
 				output = inpt.nextLine();
 				output.trim();
 				if(!output.matches(regex1)){
-					System.out.println("Special characters or numeric values are not accepted.");
+					System.out.println("Special characters, null, or numeric values are not accepted.");
 				}
 			}
 		}
@@ -676,7 +725,7 @@ public class PASApp {
 				output = inpt.nextLine();
 	
 				if(!output.matches(regex2)){
-					System.out.println("Special characters or numeric values are not accepted.");
+					System.out.println("Special characters or null are not accepted.");
 				}
 			}
 		}
