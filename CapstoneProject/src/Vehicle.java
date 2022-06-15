@@ -56,53 +56,6 @@ public class Vehicle {
 		premium = rEng.calcP();
 	}
 	
-	public void setType(String carType) {
-		this.carType = carType;
-	}
-	
-	public void setPrice(double Price) {
-		this.price = Price;
-	}
-	
-	public void setFuelType(String fuelType) {
-		this.fuelType = fuelType;
-	}
-	
-	public void setColor(String color) {
-		this.color = color;
-	}
-	
-	public void setModel(String carModel) {
-		this.carModel = carModel;
-	}
-	
-	public void setMake(String carMake) {
-		this.carMake = carMake;
-	}
-	
-	public void setYear(int year) {
-		this.year = year;
-	}
-	
-	public int getYear() {
-		return year;
-	}
-	
-	public String getMake() {
-		return carMake;
-	}
-	
-	public String getModel() {
-		return carModel;
-	}
-
-	public String getFuelType() {
-		return fuelType;
-	}
-	
-	public String getColor() {
-		return color;
-	}
 	public double getPremium() {
 		return premium;
 	}

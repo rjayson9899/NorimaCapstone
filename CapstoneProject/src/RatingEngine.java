@@ -1,5 +1,6 @@
 /*
- * 
+ * This is the rating engine. This class is responsible for the
+ * computation of the premium of the customer.
  */
 package CapStone;
 

@@ -157,8 +157,8 @@ public class PASApp {
 			    		userIn.nextLine();
 			    		do {
 				    		System.out.println("===================================");
-				    		fName = stringVerifier("Enter your first name: (You may add your second name)", "^[a-zA-Z ][a-zA-Z ]*$");
-				    		lName = stringVerifier("Enter your last name: ", "^[a-zA-Z ][a-zA-Z ]*$");
+				    		fName = stringVerifier("Enter your first name: (You may add your second name)", "^[a-zA-Z][a-zA-Z ]*$");
+				    		lName = stringVerifier("Enter your last name: ", "^[a-zA-Z][a-zA-Z ]*$");
 					    	address = stringVerifier("Enter your address: (House number, Street, City, Province, Country, Zip code)","^[\\d]+[ ][a-zA-Z0-9,\\-\\. ]*$");
 				    		System.out.println("Are you satisfied with your input? (Enter y if your inputs are okay)");
 				    		ok = userIn.nextLine();
@@ -362,9 +362,9 @@ public class PASApp {
 			    	    		cust.get(getAccNumb).pol.get(polSear).setClaimCounter(++polClNum);
 				    	    	userIn.nextLine();
 				    	    	accDate = dateVerifier("Enter the date of accident: (format: Jan 01 1991) ");
-				    	    	addDate = stringVerifier("Enter the address of the accident: ", "^[a-zA-z0-9-.!%@# ]*$");
-					    		depAcc = stringVerifier("Description of the accident: ", "^[a-zA-z0-9-.!%@# ]*$");
-					    		depDmgV = stringVerifier("Description of the damage to vehicle: ", "^[a-zA-z0-9-.!%@# ]*$");
+				    	    	addDate = stringVerifier("Enter the address of the accident: ", "^[a-zA-Z0-9][a-zA-z0-9-.!%@# ]*$");
+					    		depAcc = stringVerifier("Description of the accident: ", "^[a-zA-Z0-9][a-zA-z0-9-.!%@# ]*$");
+					    		depDmgV = stringVerifier("Description of the damage to vehicle: ", "^[a-zA-Z0-9][a-zA-z0-9-.!%@# ]*$");
 					    		estRep = doubleVerifier("Estimated cost of repairs: ");
 					    		claim.add(new Claim(accDate, addDate, depAcc, depDmgV, estRep, clNum));
 					    		System.out.println("Policy is claimed. ");
