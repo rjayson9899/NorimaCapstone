@@ -11,12 +11,12 @@ Mendez
 1
 Ykcam
 Peralta
-Puso mo
+Quezon
 
 1
 Roger
 Mendez
-124 Ballas Country
+123 Grove St.
 
 1
 Edmark
@@ -52,7 +52,7 @@ n
 2
 0001
 n
-Efi
+Antonio
 Gabriel
 2000
 8
@@ -116,6 +116,9 @@ Gas
 n
 y
 n
+2027
+6
+16
 2023
 6
 16

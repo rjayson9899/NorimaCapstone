@@ -31,7 +31,7 @@ public class PASApp {
 		Policy tempPolicy;
 		CustomerAccount currentAccount;
 		Claim tempClaim;
-		LocalDate effectiveDate;
+		LocalDate effectiveDate, nowDate;
 		String firstName, lastName, address, strIn;
 		int choice, uniqueId, inputId;
 		boolean foundHit, isExpired;
@@ -208,7 +208,7 @@ public class PASApp {
 							if (byFile) System.out.println(strIn);
 							
 							if (strIn.equalsIgnoreCase("y")) {
-								System.out.print("Set policy to be effective immediately? [y for yes]: ");
+								System.out.print("\nSet policy to be effective immediately? [y for yes]: ");
 								strIn = in.nextLine();
 								
 								// Debug
@@ -220,12 +220,13 @@ public class PASApp {
 									currentAccount.addPolicy(tempPolicy);
 								}
 								else {
+									nowDate = LocalDate.now();
 									do {
 										effectiveDate = getDate("policy effective");
-										if (effectiveDate.compareTo(LocalDate.now()) < 0) {
-											System.out.println("Date cannot be before " + LocalDate.now());
+										if ((effectiveDate.compareTo(nowDate) < 0) || (effectiveDate.compareTo(nowDate.plusYears(5)) > 0)) {
+											System.out.println("\nDate can only be between " + nowDate + " and " + nowDate.plusYears(5) + "\n");
 										}
-									} while (effectiveDate.compareTo(LocalDate.now()) < 0);
+									} while ((effectiveDate.compareTo(nowDate) < 0) || (effectiveDate.compareTo(nowDate.plusYears(5)) > 0));
 									tempPolicy.setEffectiveDate(effectiveDate);
 									currentAccount.addPolicy(tempPolicy);
 								}
@@ -411,7 +412,7 @@ public class PASApp {
 						// Debug
 						if (byFile) System.out.println(strIn);
 						if ((strIn.length() != 7) || (strIn.charAt(0) != 'C')) {
-							System.out.println("Invalid input. Follow the format Cxxxxxx where x is a value between 0 - 9.");
+							System.out.println("\nInvalid input. Follow the format Cxxxxxx where x is a value between 0 - 9.\n");
 						}
 						else {
 							try {
@@ -486,7 +487,7 @@ public class PASApp {
 	 * 
 	 * @param none
 	 */
-	private static void printMenu() {
+	protected static void printMenu() {
 		System.out.println("==================================");
 		System.out.println("||          PAS System          ||");
 		System.out.println("==================================");
@@ -519,7 +520,7 @@ public class PASApp {
 	 * 
 	 * @return Vehicle instance
 	 */
-	private static Vehicle makeVehicle() {
+	protected static Vehicle makeVehicle() {
 		int yearNow = LocalDate.now().getYear();
 		String make;
 		String model;
@@ -536,7 +537,7 @@ public class PASApp {
 		do {
 			year = getValidInt("Enter year: ");
 			if (year > yearNow) {
-				System.out.println("Car year cannot be further from current year (" + yearNow + ")");
+				System.out.println("\nCar year cannot be further from current year (" + yearNow + ")\n");
 			}
 		} while (year > yearNow);
 		
@@ -567,7 +568,7 @@ public class PASApp {
 	 * @param custObj - CustomerAccount instance where name is taken
 	 * @return PolicyHolder instance
 	 */
-	private static PolicyHolder makeHolder(CustomerAccount custObj) {
+	protected static PolicyHolder makeHolder(CustomerAccount custObj) {
 		String licenseNumber;
 		LocalDate birthDate, licenseDate;
 		
@@ -597,7 +598,7 @@ public class PASApp {
 	 * 
 	 * @return PolicyHolder instance
 	 */
-	private static PolicyHolder makeHolder() {
+	protected static PolicyHolder makeHolder() {
 		String licenseNumber, firstName, lastName;
 		LocalDate birthDate, licenseDate;
 		
@@ -631,7 +632,7 @@ public class PASApp {
 	 * @param uniqueId - ID of claim to be instantiated
 	 * @return Claim instance
 	 */
-	private static Claim makeClaim(int uniqueId) {
+	protected static Claim makeClaim(int uniqueId) {
 		LocalDate accidentDate;
 		String accidentAddress, accidentDescription, accidentDamage;
 		double repairCosts;
@@ -679,7 +680,7 @@ public class PASApp {
 	 * @param type - Description of date type, in string
 	 * @return LocalDate - with defined values
 	 */
-	private static LocalDate getDate(String type) {
+	protected static LocalDate getDate(String type) {
 		LocalDate date = LocalDate.now();
 		int month = 0;
 		int day = 0;
@@ -690,7 +691,7 @@ public class PASApp {
 		do {
 			year = getValidBoundedInt("Enter " + type + " year: ", 4, true);
 			if (year < 1900) {
-				System.out.println("Year must be beyond 1900");
+				System.out.println("\nYear must be beyond 1900\n");
 			}
 			else {
 				isInvalid = false;
@@ -701,7 +702,7 @@ public class PASApp {
 		do {
 			month = getValidBoundedInt("Enter " + type + " month (01-12): ", 2, false);
 			if (month > 12 || month < 1) {
-				System.out.println("Only values 1 - 12 are valid");
+				System.out.println("\nOnly values 1 - 12 are valid\n");
 			}
 		} while(month > 12 || month < 1);
 		
@@ -714,7 +715,7 @@ public class PASApp {
 				isInvalid = false;
 			}
 			catch (DateTimeException e) {
-				System.out.println("Invalid day for month");
+				System.out.println("\nInvalid day for month\n");
 			}
 		} while (isInvalid);
 		
@@ -731,14 +732,14 @@ public class PASApp {
 	 * @param type - description of date to print, refer to getDate() for how this will be used
 	 * @return LocalDate - date from the past
 	 */
-	private static LocalDate getDateRequirePast(String type) {
+	protected static LocalDate getDateRequirePast(String type) {
 		LocalDate nowDate = LocalDate.now();
 		LocalDate newDate;
 		
 		do {
 			newDate = getDate(type);
 			if (newDate.compareTo(nowDate) > 0) {
-				System.out.println("Date cannot be after " + nowDate);
+				System.out.println("\nDate cannot be after " + nowDate + "\n");
 			}
 		} while (newDate.compareTo(nowDate) > 0);
 		
@@ -765,7 +766,7 @@ public class PASApp {
 	 * @param message - Custom message to display for every input attempt
 	 * @return String instance
 	 */
-	private static String getStringWord(String message) {
+	protected static String getStringWord(String message) {
 		String strIn;
 		
 		do {
@@ -777,18 +778,18 @@ public class PASApp {
 			
 			strIn = strIn.trim();
 			if (strIn.equals("")) {
-				System.out.println("Entry cannot be blank");
+				System.out.println("\nEntry cannot be blank\n");
 			}
 			else if (strIn.matches("^[,\\.\\- ]*$")) {
-				System.out.println("Input cannot purely be \".\", \"-\", and \",\"");
+				System.out.println("\nInput cannot purely be \".\", \"-\", and \",\"\n");
 				strIn = "";
 			}
 			else if (strIn.matches("^[,\\d\\.\\- ]*$")) {
-				System.out.println("Input cannot purely be numbers");
+				System.out.println("\nInput cannot purely be numbers\n");
 				strIn = "";
 			}
 			else if (!(strIn.matches("^[a-zA-Z0-9,\\.\\- ]*$"))) {
-				System.out.println("Input cannot contain special characters");
+				System.out.println("\nInput cannot contain special characters\n");
 				strIn = "";
 			}
 		} while(strIn.equals(""));
@@ -809,7 +810,7 @@ public class PASApp {
 	 * @param message - Custom message to display for every input attempt
 	 * @return int - validated integer
 	 */
-	private static int getValidInt(String message) {
+	protected static int getValidInt(String message) {
 		boolean isInvalid = true;
 		String getIntString = "";
 		int parsedInt = 0;
@@ -826,10 +827,10 @@ public class PASApp {
 			}
 			catch(NumberFormatException e) {
 				if (getIntString.equals("")) {
-					System.out.println("Input cannot be blank");
+					System.out.println("\nInput cannot be blank\n");
 				}
 				else {
-					System.out.println("Input is not valid");
+					System.out.println("\nInput is not valid\n");
 				}
 			}
 		} while (isInvalid);
@@ -854,7 +855,7 @@ public class PASApp {
 	 * @param message - Custom message to display for every input attempt
 	 * @return double - validated double
 	 */
-	private static double getMoneyInput(String message) {
+	protected static double getMoneyInput(String message) {
 		boolean isInvalid = true;
 		String getDoubleString = "";
 		double parsedDouble = 0.0;
@@ -871,10 +872,10 @@ public class PASApp {
 				parsedDouble = Double.parseDouble(getDoubleString);
 				
 				if (BigDecimal.valueOf(parsedDouble).scale() > 2) {
-					System.out.println("Input must only have 2 digits in decimal place");
+					System.out.println("\nInput must only have 2 digits in decimal place\n");
 				}
 				else if (parsedDouble < 0) {
-					System.out.println("Input cannot be negative");
+					System.out.println("\nInput cannot be negative\n");
 				}
 				else {
 					isInvalid = false;
@@ -882,10 +883,10 @@ public class PASApp {
 			}
 			catch (NumberFormatException e) {
 				if (getDoubleString.equals("")) {
-					System.out.println("Input cannot be blank");
+					System.out.println("\nInput cannot be blank\n");
 				}
 				else {
-					System.out.println("Invalid input! Input must consist of purely numbers");
+					System.out.println("\nInvalid input! Input must consist of purely numbers\n");
 				}
 			}
 			
@@ -910,13 +911,13 @@ public class PASApp {
 	 * @param requireLimitAsMinimum - Enforces maximum limit as minimum if true
 	 * @return int - validated integer
 	 */
-	private static int getValidBoundedInt(String message, int limit, boolean requireLimitAsMinimum) throws IllegalArgumentException {
+	protected static int getValidBoundedInt(String message, int limit, boolean requireLimitAsMinimum) throws IllegalArgumentException {
 		boolean isInvalid = true;
 		String getIntString = "";
 		int parsedInt = 0;
 		
 		if (limit <= 0) {
-			throw new IllegalArgumentException("Limit cannot less than or equal to 0");
+			throw new IllegalArgumentException("\nLimit cannot less than or equal to 0");
 		}
 		
 		do {
@@ -929,10 +930,10 @@ public class PASApp {
 				parsedInt = Integer.parseInt(getIntString);
 				
 				if (!(requireLimitAsMinimum) && (getIntString.length() > limit)) {
-					System.out.println("Input can only have maximum of " + limit + " digits");
+					System.out.println("\nInput can only have maximum of " + limit + " digits\n");
 				}
 				else if (requireLimitAsMinimum && getIntString.length() != limit) {
-					System.out.println("Input must be " + limit + " digits long");
+					System.out.println("\nInput must be " + limit + " digits long\n");
 				}
 				else {
 					isInvalid = false;
@@ -940,10 +941,10 @@ public class PASApp {
 			}
 			catch(NumberFormatException e) {
 				if (getIntString.equals("")) {
-					System.out.println("Input cannot be blank");
+					System.out.println("\nInput cannot be blank\n");
 				}
 				else {
-					System.out.println("Input is not valid");
+					System.out.println("\nInput is not valid\n");
 				}
 			}
 		} while (isInvalid);
