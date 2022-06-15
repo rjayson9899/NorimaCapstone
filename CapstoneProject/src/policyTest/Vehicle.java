@@ -8,14 +8,14 @@ public class Vehicle implements InterfaceApp{
 	private String make;
 	private String model;
 	private int year;
-	private int type;
-	private int fuel;
+	private String type;
+	private String fuel;
 	private int yearLicense;
 	private double price;
 	private String color;
 	private double premium;
 	
-	public Vehicle(String make, String model, int year, int type, int fuel, double price, String color, int yearLicense) {
+	public Vehicle(String make, String model, int year, String type, String fuel, double price, String color, int yearLicense) {
 		this.make = make;
 		this.model = model;
 		this.year = year;
@@ -44,16 +44,16 @@ public class Vehicle implements InterfaceApp{
 	public void setYear(int year) {
 		this.year = year;
 	}
-	public int getType() {
+	public String getType() {
 		return type;
 	}
-	public void setType(int type) {
+	public void setType(String type) {
 		this.type = type;
 	}
-	public int getFuel() {
+	public String getFuel() {
 		return fuel;
 	}
-	public void setFuel(int fuel) {
+	public void setFuel(String fuel) {
 		this.fuel = fuel;
 	}
 	public double getPrice() {
@@ -90,26 +90,8 @@ public class Vehicle implements InterfaceApp{
 		System.out.println("Make: " + getMake());
 		System.out.println("Model: " + getModel());
 		System.out.println("Year: " + getYear());
-		
-		if(getType() == 1) {
-			System.out.println("Type of vehicle: 4-door sedan");
-		}
-		
-		else if(getType() == 2) {
-			System.out.println("Type of vehicle: 2-door sports car, SUV, or truck");
-		}
-		
-		if(getFuel() == 1) {
-			System.out.println("Type of fuel: Diesel");
-		}
-		
-		else if(getFuel() == 2) {
-			System.out.println("Type of fuel: Electronic");
-		}
-		
-		else if (getFuel() == 3) {
-			System.out.println("Type of fuel: Petrol");
-		}
+		System.out.println("Type: " + getType());
+		System.out.println("Fuel: " + getFuel());
 		
 		System.out.println("Purchase price: " + currencyFormatter.format(price));
 		System.out.println("Color: " + color);

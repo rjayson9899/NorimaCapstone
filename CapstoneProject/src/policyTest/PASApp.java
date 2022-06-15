@@ -79,8 +79,7 @@ public class PASApp {
 							accountNumGenerator++;
 							System.out.println("Created account!");
 							System.out.println("Your account number is: " + customerAccounts.get(customerAccounts.size() - 1).getAccountNum());
-							
-							pressAnyKeyToContinue();
+							pressAnyKeyToContinue(input);
 						}	
 					}
 
@@ -175,6 +174,7 @@ public class PASApp {
 							int numVehicle = checkerInt(input, "How many vehicles for this policy? : ", false, true);
 							input.nextLine();
 							boolean checkInp = false;
+							String typeString = "", fuelString = "";
 							
 							while(numVehicle > 0) {
 								clrscrn(1, true);
@@ -192,18 +192,34 @@ public class PASApp {
 																"[2] 2-door sports car, SUV, or truck\n-------------------------------\nYour type of vehicle: ", false, false);
 									if(type == 1 || type == 2){
 										checkInp = true;
+										if(type == 1){
+											typeString = "4-door sedan";
+										}
+										else if(type == 2){
+											typeString = "2-door sports car, SUV, or truck";
+										}
 									}
 									
 									else{	
 										clrscrn(0, false);
 									}
 								}while(!checkInp);
+
 								checkInp = false;
 								do{
 									fuel = checkerInt(input, "Choose which type of fuel: \n[1] Diesel\n"+
 														"[2] Electric\n[3] Petrol\n-------------------------------\nYour type of fuel: ", false, false);
 									if(fuel == 1 || fuel == 2 || fuel == 3){
 										checkInp = true;
+										if(fuel == 1){
+											fuelString = "Diesel";
+										}
+										else if(fuel == 2){
+											fuelString = "Electric";
+										}
+										else if(fuel == 3){
+											fuelString = "Petrol";
+										}
 									}
 									else{
 										clrscrn(0, false);
@@ -218,7 +234,7 @@ public class PASApp {
 						
 
 								customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1)
-													.addVehicles(new Vehicle(make,model,year, type, fuel, price, color, licenseYear));
+													.addVehicles(new Vehicle(make,model,year, typeString, fuelString, price, color, licenseYear));
 								
 								numVehicle--;
 							}
@@ -248,7 +264,7 @@ public class PASApp {
 								customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).setStatus();
 								System.out.println("Policy bought! Your policy number is: " + 
 								customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).getPolicyNum());
-								pressAnyKeyToContinue();
+								pressAnyKeyToContinue(input);
 							}
 							
 							else {
@@ -311,7 +327,7 @@ public class PASApp {
 					else{
 						if(customerAccounts.get(indexCus).getPolicyAct().get(indexPol).getStatus().equals("Expired")){
 							System.out.println("Policy is Expired!");
-							pressAnyKeyToContinue();
+							pressAnyKeyToContinue(input);
 						}
 	
 						else{
@@ -324,7 +340,7 @@ public class PASApp {
 								customerAccounts.get(indexCus).getPolicyAct().get(indexPol).setExpDate(expDate);;
 								customerAccounts.get(indexCus).getPolicyAct().get(indexPol).setStatus();
 								System.out.println("Successfully edited expiration policy!"); 
-								pressAnyKeyToContinue();
+								pressAnyKeyToContinue(input);
 							}
 	
 							else{
@@ -403,7 +419,7 @@ public class PASApp {
 								
 								System.out.println("Successfully filed a claim!");
 								System.out.println("Your claim number is: " + claims.get(claims.size()-1).getClaimNum());
-								pressAnyKeyToContinue();
+								pressAnyKeyToContinue(input);
 							}
 						}
 					}
@@ -431,7 +447,7 @@ public class PASApp {
 							if(c.getFname().equalsIgnoreCase(fNameSearch) && c.getLname().equalsIgnoreCase(lNameSearch)){
 								c.getDetails();
 								accExist = true;
-								pressAnyKeyToContinue();
+								pressAnyKeyToContinue(input);
 								break;
 							}
 						}
@@ -451,7 +467,7 @@ public class PASApp {
 							if(c.getAccountNum().equals(accountNum)){
 								c.getDetails();
 								accExist = true;
-								pressAnyKeyToContinue();
+								pressAnyKeyToContinue(input);
 							}
 						}
 					}
@@ -481,7 +497,7 @@ public class PASApp {
 							if(p.getPolicyNum().equals(policyNumSearch)){
 								accExist = true;
 								p.getDetails();
-								pressAnyKeyToContinue();
+								pressAnyKeyToContinue(input);
 								break;
 							}
 						}
@@ -508,7 +524,7 @@ public class PASApp {
 						if(c.getClaimNum().equals(claimNum)){
 							accExist = true;
 							c.getDetails();
-							pressAnyKeyToContinue();
+							pressAnyKeyToContinue(input);
 							break;
 						}
 					}
@@ -557,12 +573,12 @@ public class PASApp {
 		}	
 	}
 
-	private static void pressAnyKeyToContinue(){ 
+	private static void pressAnyKeyToContinue(Scanner input){ 
         System.out.println("Press Enter key to continue...");
+		
         try
         {
-            System.in.read();
-			System.in.reset();
+            input.nextLine();
         }  
         catch(Exception e)
         {}  
@@ -623,11 +639,14 @@ public class PASApp {
 						output = Integer.parseInt(input);
 						accepted = true;
 					}
-				} catch (Exception e) {
-					clrscrn(0, false);
-					System.out.print(msg);
-					
+				} catch (NumberFormatException e) {
+					//clrscrn(0, false);
+					//System.out.print(msg);
+					System.out.println(e.getMessage());
+				} catch (Exception e){
+					System.out.println("Wrong input");
 				}
+
 			}		
 		}
 		
@@ -692,11 +711,14 @@ public class PASApp {
 			clrscrn(1,false);
 			System.out.print(msg);
 		}
+
 		do{
-			System.out.println("Negative values are not accepted");
-			clrscrn(1,false);
-			System.out.print(msg);
 			output = inpt.nextDouble();
+			if(output <= 0){
+				System.out.println("Negative values or 0 are not accepted.");
+				clrscrn(1,false);
+				System.out.print(msg);
+			}
 		}while(output <= 0);
 
 		
