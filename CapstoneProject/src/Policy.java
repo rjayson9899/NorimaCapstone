@@ -74,7 +74,9 @@ public class Policy {
 	public void createPolicyQuote() {
 		double premium;
 		this.totalPremium = 0;
-		System.out.println("Create a Policy Quote\n");
+		System.out.println("=========================");
+		System.out.println("  Create a Policy Quote  ");
+		System.out.println("=========================\n");
 		System.out.printf("%-20s \t%-20s \t%-20s\n", "Vehicle Make", "Vehicle Model", "Premium");
 		for (Vehicle vehicleObj : vehicleList) {
 			premium = RatingEngine.computePremium(vehicleObj.getVehiclePrice(), policyHolder.getLicensedYear(), vehicleObj.getVehicleYear());
@@ -83,6 +85,7 @@ public class Policy {
 			System.out.printf("%-20s \t%-20s \t%.2f\n", vehicleObj.getVehicleMake(), vehicleObj.getVehicleModel(), premium);
 		}
 		System.out.println();
+		System.out.println("============================================================");
 		System.out.printf("Total Vehicle Premium: %.2f\n", totalPremium);
 	}
 
