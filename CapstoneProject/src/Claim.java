@@ -58,6 +58,15 @@ public class Claim {
 	}
 	
 	/**
+	 * Returns the accident date of current instance
+	 * 
+	 * @return LocalDate - Accident date
+	 */
+	public LocalDate getAccidentDate() {
+		return accidentDate;
+	}
+	
+	/**
 	 * Returns integer component of claim id
 	 * 
 	 * @return int - claim number integer component

@@ -180,6 +180,29 @@ public class Policy {
 	}
 	
 	/**
+	 * Checks if the Policy is in force.
+
+	 * The program will return true if the current date is greater than
+	 * the effective date and is not expired. Expiration is checked by
+	 * calling the isExpired() method.
+	 * 
+	 * @return - true if above condition is met, false otherwise
+	 */
+	public boolean isInForce() {
+		LocalDate now = LocalDate.now();
+		
+		if (isExpired()) {
+			return false;
+		}
+		else if (now.compareTo(effectiveDate) < 0) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	
+	/**
 	 * Class Method.
 	 * Generates a unique ID based on policies found in a CustomerAccount list param.
 	 * 
