@@ -871,6 +871,7 @@ public class PASApp {
 			try {
 				getIntString = in.nextLine();
 				getIntString = getIntString.trim();
+				parsedInt = Integer.parseInt(getIntString);
 
 				if (!(requireLimitAsMinimum) && (getIntString.length() > limit)) {
 					System.out.println("\nInput can only have maximum of " + limit + " digits\n");
