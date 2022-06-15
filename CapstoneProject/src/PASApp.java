@@ -228,8 +228,8 @@ public class PASApp {
 							    	else { 
 								    		//policy holder details
 							    			System.out.println("===================================");
-							    			fName = stringVerifier("Enter your first name: (You may add your second name)", "^[a-zA-Z][a-zA-Z]*$");
-								    		lName = stringVerifier("Enter your last name: ", "^[a-zA-Z][a-zA-Z]*$");
+							    			fName = stringVerifier("Enter your first name: (You may add your second name)", "^[a-zA-Z][a-zA-Z ]*$");
+								    		lName = stringVerifier("Enter your last name: ", "^[a-zA-Z][a-zA-Z ]*$");
 								    		bDay = dateVerifier("Enter the birthday: (format: Jan 01 1991)");
 								    		address = stringVerifier("Enter your address: (House number, Street, City, Province, Country, Zip code)","^[\\d]+[ ][a-zA-Z0-9,\\.\\- ]*$");
 								    		licNum = stringVerifier("Driver's license number: ", "^[a-zA-Z0-9][a-zA-Z0-9- ]*$");
@@ -252,12 +252,12 @@ public class PASApp {
 										    		//vehicle details
 									    	 		do {
 											    		System.out.println("===================================");
-											    		carMake = stringVerifier("Enter the car make: ", "^[a-zA-Z][a-zA-Z]*$");
+											    		carMake = stringVerifier("Enter the car make: ", "^[a-zA-Z][a-zA-Z ]*$");
 											    		carModel = stringVerifier("Enter the car model: ", "^[a-zA-Z][a-zA-z0-9-. ]*$");
 											    		carYear = intVerifier("Enter the year: ");											    		
 											    		userIn.nextLine();
 											    		carType = stringVerifier("Enter the car type: ", "^[a-zA-Z][a-zA-z0-9- ]*$");
-											    		carFuelType = stringVerifier("Enter the fuel type: ", "^[a-zA-Z][a-zA-Z]*$");
+											    		carFuelType = stringVerifier("Enter the fuel type: ", "^[a-zA-Z][a-zA-Z ]*$");
 											    		carPrice = doubleVerifier("Enter the car price: ");
 											    		userIn.nextLine();
 											    		carColor = stringVerifier("Enter the car color: ", "^[a-zA-Z][a-zA-z0-9-. ]*$");
