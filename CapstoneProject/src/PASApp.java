@@ -203,13 +203,32 @@ public class PASApp {
 							tempPolicy.generateQuote();
 							System.out.print("Will you get this policy? [y for yes]: ");
 							strIn = in.nextLine();
+							
 							// Debug
 							if (byFile) System.out.println(strIn);
 							
 							if (strIn.equalsIgnoreCase("y")) {
-								effectiveDate = LocalDate.now();
-								tempPolicy.setEffectiveDate(effectiveDate);
-								currentAccount.addPolicy(tempPolicy);
+								System.out.print("Set policy to be effective immediately? [y for yes]: ");
+								strIn = in.nextLine();
+								
+								// Debug
+								if (byFile) System.out.println(strIn);
+								
+								if (strIn.equalsIgnoreCase("y")) {
+									effectiveDate = LocalDate.now();
+									tempPolicy.setEffectiveDate(effectiveDate);
+									currentAccount.addPolicy(tempPolicy);
+								}
+								else {
+									do {
+										effectiveDate = getDate("policy effective");
+										if (effectiveDate.compareTo(LocalDate.now()) < 0) {
+											System.out.println("Date cannot be before " + LocalDate.now());
+										}
+									} while (effectiveDate.compareTo(LocalDate.now()) < 0);
+									tempPolicy.setEffectiveDate(effectiveDate);
+									currentAccount.addPolicy(tempPolicy);
+								}
 								System.out.printf("Policy created with id %06d\n", uniqueId);
 							}
 							else {

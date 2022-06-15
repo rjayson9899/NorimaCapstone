@@ -171,6 +171,9 @@ public class Policy {
 		if (this.expirationDate.compareTo(now) < 0) {
 			return true;
 		}
+		else if (this.expirationDate.compareTo(effectiveDate) < 0) {
+			return true;
+		}
 		else {
 			return false;
 		}
