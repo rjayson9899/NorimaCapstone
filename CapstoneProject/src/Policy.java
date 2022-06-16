@@ -33,6 +33,7 @@ public class Policy {
 	LocalDate eDate;
 	LocalDate dateNow = LocalDate.now();
 	private boolean isCancelled = false;
+	private boolean isExpired = false;
 	private boolean isEffDate = false;
 	
 	ArrayList<Vehicle> car = new ArrayList<>();
@@ -99,7 +100,6 @@ public class Policy {
 	}
 	
 	public boolean checkStatus() {
-		isCancelled = false;
 		if (isCancelled == false && dateNow.isAfter(eDate) == false && dateNow.isBefore(stDate) == false) {
 			status = "Active";
 			return isCancelled;
@@ -110,7 +110,8 @@ public class Policy {
 		}
 		else if (dateNow.isAfter(eDate) == true) {
 			status = "Expired";
-			return isCancelled;
+			isExpired = true;
+			return isExpired;
 		}
 		else if (dateNow.isBefore(stDate) == true) {
 			isCancelled = true;

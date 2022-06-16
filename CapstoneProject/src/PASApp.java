@@ -41,6 +41,7 @@ public class PASApp {
 	   String input = null;
 	   LocalDate date = null;
 	   LocalDate eDate = LocalDate.now();
+	   LocalDate limitDate = LocalDate.of(1900, 12, 31);
 	   do {
 		   try {
 			   isWrongDate = false;
@@ -56,7 +57,7 @@ public class PASApp {
 				isWrongDate = true;
 			}
 	   }
-	   while(isWrongDate == true || eDate.isBefore(date));
+	   while(date.isBefore(limitDate) || eDate.isBefore(date) || isWrongDate == true);
 	   return input;
    }
    
@@ -71,7 +72,7 @@ public class PASApp {
 				userIn.next();
 			} 
     		input = userIn.nextInt();
-    		if(input > 2030 || input <= 1886) {
+    		if(input > 2022 || input <= 1886) {
     			System.out.println("Please enter a valid year.");
     			isCorrect = false;
     		}
@@ -350,6 +351,7 @@ public class PASApp {
 					    	    if (polSear == cus.pol.get(polSear).getPolNum()) {
 					    	    	getAccNumb = cus.getAccNumb();
 					    	    	isFound = true;
+					    	    	cus.pol.get(polSear).checkStatus();
 					    	    	if(isCancelled == cus.pol.get(polSear).checkStatus()) {
 					    	    		System.out.println("Sorry, this policy has already been cancelled/expired or scheduled. ");
 					    	    		isFound = false;
