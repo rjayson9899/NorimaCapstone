@@ -25,12 +25,9 @@ public class PASApp {
 		
 		do {
 
-			for(CustomerAccount c: customerAccounts){ //A for loop that always update the status of each policy
-				for(Policy p: c.getPolicyAct()){
-					p.setStatus();
-				}
-			}
+			
 			//main menu user interface
+			
 			clrscrn(0, false);
 			choice = checkerInt(input, "-------------------------------\n          PAS System           \n-------------------------------\n"+ 
 								"[1] Create Customer Account\n[2] Get quote and Buy Policy\n[3] Cancel Policy\n" + 
@@ -286,6 +283,8 @@ public class PASApp {
 					Character confirm;
 					accExist = false;
 
+					loadStatus(customerAccounts);
+
 					System.out.println("\n-------------------------------");
 					System.out.println("        Cancel Policy");
 					System.out.println("-------------------------------");
@@ -341,6 +340,8 @@ public class PASApp {
 					clrscrn(1,true);
 					String status = "";
 					accExist = false;
+
+					loadStatus(customerAccounts);
 
 					if(claimNumGenerator > 9998){
 						System.out.println("No more room for claims.");
@@ -418,6 +419,8 @@ public class PASApp {
 					clrscrn(1,true);
 					accExist = false;
 
+					loadStatus(customerAccounts);
+
 					int search = checkerInt(input, "\n-------------------------------\n       Search Customer\n-------------------------------\n" + 
 											"[1] Using first and last name\n[2] Using account number\n-------------------------------\nInput number of choice: ", false, false);
 					
@@ -468,7 +471,9 @@ public class PASApp {
 					
 					
 				case 6:
-					//input.nextLine();
+					accExist = false;
+
+					loadStatus(customerAccounts);
 					clrscrn(1,true);
 					accExist = false;
 					System.out.println("\n-------------------------------");
@@ -476,6 +481,7 @@ public class PASApp {
 					System.out.println("-------------------------------");
 					System.out.print("Input policy number: ");
 					String policyNumSearch = input.nextLine();
+
 					for(CustomerAccount c: customerAccounts){
 						for(Policy p: c.getPolicyAct()){ // loop that finds the policy
 							if(p.getPolicyNum().equals(policyNumSearch)){
@@ -490,6 +496,7 @@ public class PASApp {
 							System.out.println("No policy exist!");
 							clrscrn(1, false);
 						}
+
 					}
 					
 					break;
@@ -497,6 +504,7 @@ public class PASApp {
 				case 7:
 					clrscrn(1,true);
 					accExist = false;
+					loadStatus(customerAccounts);
 					System.out.println("\n-------------------------------");
 					System.out.println("        Search Claim");
 					System.out.println("-------------------------------");
@@ -739,7 +747,11 @@ public class PASApp {
 		return output;
 	}
 
-
-	
-	
+	private static void loadStatus(ArrayList<CustomerAccount> customerAccounts){
+		for(CustomerAccount c: customerAccounts){ //A for loop that always update the status of each policy
+			for(Policy p: c.getPolicyAct()){
+				p.setStatus();
+			}
+		}
+	}	
 }
