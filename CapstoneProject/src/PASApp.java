@@ -311,10 +311,6 @@ public class PASApp {
 					}
 				}
 
-				if (!isMatch) {
-					System.out.println("Policy does not exist!");
-				}
-
 				break;
 
 			case 5: // Search Account Functionality
@@ -495,7 +491,10 @@ public class PASApp {
 				inputString = input.nextLine();
 				inputString = inputString.trim();
 				parsedInt = Integer.parseInt(inputString);
-				if (inputString.length() != maximumCharacter) {
+				if (parsedInt < 0) {
+					System.out.println("Invalid input!");
+					inputString = "";
+				} else if (inputString.length() != maximumCharacter) {
 					System.out.println("Input must consists of " + maximumCharacter + " digits");
 					inputString = "";
 				} 
@@ -522,9 +521,9 @@ public class PASApp {
 
 			if (year < 1950) {
 				System.out.println("Year cannot be less than 1950");
-			} else if (year > 9999)
-				System.out.println("Year cannot be greater than 9999");
-		} while (year <= 1950 || year > 9999);
+			} else if (year > 2022)
+				System.out.println("Year cannot be greater than 2022");
+		} while (year <= 1950 || year > 2022);
 
 		do {
 			month = getIntegerInput("Enter month (mm): ");
