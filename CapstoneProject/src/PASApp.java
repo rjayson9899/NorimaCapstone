@@ -200,18 +200,13 @@ public class PASApp {
 			    	if(policyNum > 999999) {
 			    		System.out.println("Policy already full.");
 			    	}
-			    	else {
+			    	else {	
+			    		    userIn.nextLine();
 		    				isFound = false;
 			    			System.out.println("Enter the Customer's Account number: ");
-			    			while(!userIn.hasNextInt()) {
-			    				System.out.println("Please enter a valid input.");
-			    				userIn.next();
-			    			}  
-			    			cusAccTwo = userIn.nextInt();
-					    	 String cusAccString = String.format("%04d", cusAccTwo);	 
+			    			String cusAccString = userIn.nextLine();	 
 					    	 for(CustomerAccount cus : cust) {
 						    	    if (cus.getAccNum().equals(cusAccString)) {
-						    	    	userIn.nextLine();
 						    	    	isFound = true;
 							    		System.out.println("Is the policy holder the account holder? (Y/N)");
 							    		choiceTwo = userIn.nextLine();
@@ -219,23 +214,31 @@ public class PASApp {
 							    			fName = cust.get(cusAccTwo).getfName();
 							    			lName = cust.get(cusAccTwo).getlName();
 							    			address = cust.get(cusAccTwo).getAddress();
-							    			System.out.println("===================================");
-							    			bDay = dateVerifier("Enter the birthday: (format: Jan 01 1991) ");
-							    			licNum = stringVerifier("Driver's license number: ", "^[a-zA-Z0-9][a-zA-Z0-9- ]*$");
-							    			dateLic = dateVerifier("Enter the date issued of the license: (format: Jan 01 1991) "); 
-								    		System.out.println("===================================");
+							    			do {
+								    			System.out.println("===================================");
+								    			bDay = dateVerifier("Enter the birthday: (format: Jan 01 1991) ");
+								    			licNum = stringVerifier("Driver's license number: ", "^[a-zA-Z0-9][a-zA-Z0-9- ]*$");
+								    			dateLic = dateVerifier("Enter the date issued of the license: (format: Jan 01 1991) "); 
+									    		System.out.println("===================================");
+									    		System.out.println("Are you satisfied with your input? (Enter y if your inputs are okay)");
+									    		ok = userIn.nextLine();
+							    			} while(!ok.equalsIgnoreCase("y"));
 							    		}
 						    	    
 							    	else { 
 								    		//policy holder details
-							    			System.out.println("===================================");
-							    			fName = stringVerifier("Enter your first name: (You may add your second name)", "^[a-zA-Z][a-zA-Z ]*$");
-								    		lName = stringVerifier("Enter your last name: ", "^[a-zA-Z][a-zA-Z ]*$");
-								    		bDay = dateVerifier("Enter the birthday: (format: Jan 01 1991)");
-								    		address = stringVerifier("Enter your address: (House number, Street, City, Province, Country, Zip code)","^[\\d]+[ ][a-zA-Z0-9,\\.\\- ]*$");
-								    		licNum = stringVerifier("Driver's license number: ", "^[a-zA-Z0-9][a-zA-Z0-9- ]*$");
-								    		dateLic = dateVerifier("Enter the date issued of the license: (format: Jan 01 1991) ");
-								    		System.out.println("===================================");
+							    			do {
+								    			System.out.println("===================================");
+								    			fName = stringVerifier("Enter your first name: (You may add your second name)", "^[a-zA-Z][a-zA-Z ]*$");
+									    		lName = stringVerifier("Enter your last name: ", "^[a-zA-Z][a-zA-Z ]*$");
+									    		bDay = dateVerifier("Enter the birthday: (format: Jan 01 1991)");
+									    		address = stringVerifier("Enter your address: (House number, Street, City, Province, Country, Zip code)","^[\\d]+[ ][a-zA-Z0-9,\\.\\- ]*$");
+									    		licNum = stringVerifier("Driver's license number: ", "^[a-zA-Z0-9][a-zA-Z0-9- ]*$");
+									    		dateLic = dateVerifier("Enter the date issued of the license: (format: Jan 01 1991) ");
+									    		System.out.println("===================================");
+									    		System.out.println("Are you satisfied with your input? (Enter y if your inputs are okay)");
+									    		ok = userIn.nextLine();
+							    			} while(!ok.equalsIgnoreCase("y"));
 							    		}
 							    		 polyNum = String.format("%06d", policyNum);
 							    			cust.get(cusAccTwo).pol.add(new Policy(polyNum));

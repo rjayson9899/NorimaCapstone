@@ -73,6 +73,9 @@ public class RatingEngine {
 	}
 	
 	public double calcP() {
+		if (dLX <= 0) {
+			dLX = 1;
+		}
 		premium = (vP * vPF) + ((vP/100)/dLX);
 		return premium;
 	}
