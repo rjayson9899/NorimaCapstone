@@ -25,9 +25,10 @@ public class PASApp {
 		ArrayList<CustomerAccount> customerList = new ArrayList<CustomerAccount>();
 		ArrayList<Claim> claimList = new ArrayList<Claim>();
 		Policy tempPolicy;
+		PolicyHolder tempHolder;
 		CustomerAccount currentAccount;
 		Claim tempClaim;
-		LocalDate effectiveDate, nowDate;
+		LocalDate effectiveDate, nowDate, maxDate;
 		String firstName, lastName, address, strIn;
 		int choice, uniqueId, inputId;
 		boolean foundHit;
@@ -150,66 +151,93 @@ public class PASApp {
 				 * 		(String)	choice	- input if to accept quoted policy
 				 */
 				case 2:
+					nowDate = LocalDate.now();
 					uniqueId = Policy.generateUniqueId(customerList);
+					
 					if (uniqueId >= 0) {
 						inputId = getPositiveIntBoundedInput("Input Account Number to create Policy in: ", 4, true);
-						foundHit = false;
 						currentAccount = null;
 						
 						for (CustomerAccount acct: customerList) {
 							if (acct.getAccountNumber() == inputId) {
 								currentAccount = acct;
-								foundHit = true;
 								break;
 							}
 						}
 					
-						if (foundHit) {
+						if (currentAccount != null) {
 							tempPolicy = new Policy(uniqueId);
 							
-							System.out.print("Set Current account as holder? [y for yes]: ");
-							strIn = in.nextLine();
-							if (strIn.equalsIgnoreCase("y")) {
-								tempPolicy.setPolicyHolder(makeHolder(currentAccount));
-							}
-							else {
-								tempPolicy.setPolicyHolder(makeHolder());
-							}
-							
-							do  {
-								tempPolicy.addVehicle(makeVehicle());
-								System.out.print("Input y to add another vehicle, else press enter to continue: ");
-								strIn = in.nextLine();
-							} while (strIn.equalsIgnoreCase("y"));
-							
-							tempPolicy.generateQuote();
-							System.out.print("Will you get this policy? [y for yes]: ");
-							strIn = in.nextLine();
-							
-							if (strIn.equalsIgnoreCase("y")) {
-								System.out.print("\nSet policy to be effective immediately? [y for yes]: ");
+							do {
+								System.out.print("Set Current account as holder? [y for yes]: ");
 								strIn = in.nextLine();
 								
 								if (strIn.equalsIgnoreCase("y")) {
-									effectiveDate = LocalDate.now();
-									tempPolicy.setEffectiveDate(effectiveDate);
-									currentAccount.addPolicy(tempPolicy);
+									tempHolder = makeHolder(currentAccount);
 								}
 								else {
-									nowDate = LocalDate.now();
-									do {
-										effectiveDate = getDate("policy effective");
-										if ((effectiveDate.compareTo(nowDate) < 0) || (effectiveDate.compareTo(nowDate.plusYears(5)) > 0)) {
-											System.out.println("\nDate can only be between " + nowDate + " and " + nowDate.plusYears(5) + "\n");
-										}
-									} while ((effectiveDate.compareTo(nowDate) < 0) || (effectiveDate.compareTo(nowDate.plusYears(5)) > 0));
-									tempPolicy.setEffectiveDate(effectiveDate);
-									currentAccount.addPolicy(tempPolicy);
+									tempHolder = makeHolder();
 								}
-								System.out.printf("Policy created with id %06d\n", uniqueId);
+								
+								if (!(tempHolder.hasValidBirthDate()) || !(tempHolder.hasValidLicenseDate())) {
+									System.out.println("ERROR: Inputted details of policy holder violates the following rules:");
+									if (!(tempHolder.hasValidBirthDate())) {
+										System.out.println("\t> Age must be 18+");
+									}
+									if (!(tempHolder.hasValidLicenseDate())) {
+										System.out.println("\t> License must be issued when holder is at least 16 years old");
+									}
+									System.out.println();
+									
+									System.out.print("Enter another Policy holder? [y for yes]: ");
+									strIn = in.nextLine();
+									if (!(strIn.equalsIgnoreCase("y"))) {
+										break;
+									}
+								}
+
+							} while (!(tempHolder.hasValidBirthDate()) || !(tempHolder.hasValidLicenseDate()));
+							
+							if (tempHolder.hasValidBirthDate() || tempHolder.hasValidLicenseDate()) {
+								tempPolicy.setPolicyHolder(tempHolder);
+								do  {
+									tempPolicy.addVehicle(makeVehicle());
+									System.out.print("Input y to add another vehicle, else press enter to continue: ");
+									strIn = in.nextLine();
+								} while (strIn.equalsIgnoreCase("y"));
+								
+								tempPolicy.generateQuote();
+								System.out.print("Will you get this policy? [y for yes]: ");
+								strIn = in.nextLine();
+								
+								if (strIn.equalsIgnoreCase("y")) {
+									System.out.print("\nSet policy to be effective immediately? [y for yes]: ");
+									strIn = in.nextLine();
+									
+									if (strIn.equalsIgnoreCase("y")) {
+										effectiveDate = LocalDate.now();
+										tempPolicy.setEffectiveDate(effectiveDate);
+										currentAccount.addPolicy(tempPolicy);
+									}
+									else {
+										maxDate = nowDate.plusYears(5);
+										do {
+											effectiveDate = getDate("policy effective");
+											if ((effectiveDate.compareTo(nowDate) < 0) || (effectiveDate.compareTo(maxDate) > 0)) {
+												System.out.println("\nDate can only be between " + nowDate + " and " + maxDate + "\n");
+											}
+										} while ((effectiveDate.compareTo(nowDate) < 0) || (effectiveDate.compareTo(maxDate) > 0));
+										tempPolicy.setEffectiveDate(effectiveDate);
+										currentAccount.addPolicy(tempPolicy);
+									}
+									System.out.printf("Policy created with id %06d\n", uniqueId);
+								}
+								else {
+									System.out.println("Policy buy cancelled.");
+								}
 							}
 							else {
-								System.out.println("Policy buy cancelled.");
+								System.out.println("No valid policy holder inputted, policy creation aborted.");
 							}
 						}
 						else {

@@ -110,4 +110,41 @@ public class PolicyHolder {
 		return licenseDate.getYear();
 	}
 	
+	/**
+	 * Checks if the policy holder has a valid birth date
+	 * 
+	 * Valid birth dates are dates which are less than or equal to
+	 * 18 years of the current date.
+	 * 
+	 * @return boolean - true if valid, false if not
+	 */
+	public boolean hasValidBirthDate() {
+		LocalDate validBirthDate = LocalDate.now().minusYears(18);
+		
+		if (this.birthDate.compareTo(validBirthDate) <= 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks if the policy holder has a valid license date
+	 * 
+	 * Valid dates are dates which are greater than 16 years
+	 * of the holders birth date.
+	 * 
+	 * @return boolean - true if valid, false if not
+	 */
+	public boolean hasValidLicenseDate() {
+		LocalDate validLicenseDate = birthDate.plusYears(16);
+		
+		if (licenseDate.compareTo(validLicenseDate) >= 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 }
