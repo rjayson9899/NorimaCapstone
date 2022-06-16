@@ -40,6 +40,7 @@ public class PASApp {
 			
 				case 1: //Creating Account
 					clrscrn(1, true);
+					
 
 					if(accountNumGenerator > 9998){ //checker if the number of accounts exceed the amount needed
 						System.out.println("No more room for a new account.");
@@ -89,7 +90,7 @@ public class PASApp {
 					String make = "",model = "",color = "";
 					int year = 0, type = 0, fuel = 0;
 					double price = 0, total = 0;
-					LocalDate effectDate, expiredDate;
+					LocalDate effectDate, expiredDate, birthDate, licenseDate;
 
 					if(policyNumGenerator > 99998){ //checks if the maximum number of policies is achieved
 						System.out.println("No more room for a new policy.");
@@ -146,12 +147,23 @@ public class PASApp {
 								lnamePol = checkerString(input, "Last Name: ", true);	
 							}
 							
-							LocalDate birthDate = checkerDate(input,"Input birth date(yyyy-mm-dd):\nex.'2022-09-18': ", true);
+							do{
+								birthDate = checkerDate(input,"Input birth date(yyyy-mm-dd):\nex.'2022-09-18': ", true);
+								if((LocalDate.now().getYear() - birthDate.getYear()) < 18){
+									System.out.println("You are not yet legal to have this kind of policy.");
+								}
+							}while((LocalDate.now().getYear() - birthDate.getYear()) < 18);
+							int placer = birthDate.plusYears(18).getYear();
 							System.out.print("Input license number: ");
 							String license = input.nextLine();
-							LocalDate licenseDate = checkerDate(input, "Input license date issued(yyyy-mm-dd):\n ex.'2022-09-18': ", true);
+							do{
+								licenseDate = checkerDate(input, "Input license date issued(yyyy-mm-dd):\n ex.'2022-09-18': ", true);
+								if(licenseDate.isBefore(birthDate) || licenseDate.isEqual(birthDate) || licenseDate.getYear() < placer){
+									System.out.println("Date mismatch with your birth date!");
+								}
+								
+							}while(licenseDate.isBefore(birthDate) || licenseDate.isEqual(birthDate) || licenseDate.getYear() < placer );
 							int licenseYear =licenseDate.getYear() ;
-
 							//initial creation for the policy
 							customerAccounts.get(indexGet).addPolicyAct(new Policy(effectDate, 
 																			new PolicyHolder(fnamePol, lnamePol, birthDate, license, licenseDate)));
@@ -399,13 +411,26 @@ public class PASApp {
 								claims.add(new Claim( accidentDate, accidentAdd, descriptionAccident,
 											descriptionDamage,estCost));
 								claims.get(claims.size()-1).generateId(claimNumGenerator);
-								
-								
+							
 								claimNumGenerator++;
+
+								claims.get(claims.size()-1).getDetails();
+								input.nextLine();
+								System.out.println("Would you like to proceed with this policy? (y/n)");
+								confirm = input.nextLine().charAt(0);
+	
+								if(confirm.equals('y') || confirm.equals('Y')){
+									System.out.println("Successfully filed a claim!");
+									System.out.println("Your claim number is: " + claims.get(claims.size()-1).getClaimNum());
+									pressAnyKeyToContinue(input);
+								}
 								
-								System.out.println("Successfully filed a claim!");
-								System.out.println("Your claim number is: " + claims.get(claims.size()-1).getClaimNum());
-								pressAnyKeyToContinue(input);
+								else{
+									claims.remove(claims.size()-1);
+									claimNumGenerator--;
+									System.out.println("Claim cancelled!\nReturning to main menu...");
+									clrscrn(1, false);
+								}
 							}
 						}
 					}
