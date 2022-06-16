@@ -213,7 +213,7 @@ public class CustomerAccount {
 	 * Output is generated directly to console.
 	 */
 	public static void printPolicyHeader() {
-		System.out.printf("\n%-20s\t%-20s\t%-20s\t%-20s\t%20s\t%20s\n", "Policy Number", "Effective Date", "Expiration Date", "Policy Holder Name", "Premium", "Valid?");
+		System.out.printf("\n%-20s\t%-20s\t%-20s\t%-20s\t%20s\t%20s\t%20s\n", "Policy Number", "Effective Date", "Expiration Date", "Policy Holder Name", "Premium", "Expired?", "In Force?");
 	}
 	
 	/**
@@ -222,17 +222,12 @@ public class CustomerAccount {
 	 */
 	public void printPolicies() {
 		NumberFormat money = NumberFormat.getCurrencyInstance(Locale.US);
-		String policyIdString, validString, premiumString;
+		String policyIdString, premiumString;
+		
 		for (Policy polObj: policyList) {
 			policyIdString = String.format("%06d", polObj.getPolicyNumber());
 			premiumString = money.format(polObj.getPremium());
-			if (polObj.isExpired()) {
-				validString = "No";
-			}
-			else {
-				validString = "Yes";
-			}
-			System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%20s\t%20s\n", policyIdString, polObj.getEffectiveDate(), polObj.getExpirationDate(), polObj.getHolderName(), premiumString, validString);
+			System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%20s\t%20s\t%20s\n", policyIdString, polObj.getEffectiveDate(), polObj.getExpirationDate(), polObj.getHolderName(), premiumString, polObj.isExpired(), polObj.isInForce());
 		}
 	}
 	
@@ -245,19 +240,14 @@ public class CustomerAccount {
 	 */
 	public void printPolicyMatchingId(int id) {
 		NumberFormat money = NumberFormat.getCurrencyInstance(Locale.US);
-		String policyIdString, validString, premiumString;
+		String policyIdString, premiumString;
+		
 		for (Policy polObj: policyList) {
 			if (polObj.getPolicyNumber() == id) {
 				policyIdString = String.format("%06d", polObj.getPolicyNumber());
 				premiumString = money.format(polObj.getPremium());
-				if ((polObj.getExpirationDate().compareTo(LocalDate.now())) < 0) {
-					validString = "No";
+				System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%20s\t%20s\t%20s\n", policyIdString, polObj.getEffectiveDate(), polObj.getExpirationDate(), polObj.getHolderName(), premiumString, polObj.isExpired(), polObj.isInForce());
 				}
-				else {
-					validString = "Yes";
-				}
-				System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%20s\t%20s\n", policyIdString, polObj.getEffectiveDate(), polObj.getExpirationDate(), polObj.getHolderName(), premiumString, validString);
-			}
 		}
 	}
 	

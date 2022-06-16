@@ -152,7 +152,7 @@ public class PASApp {
 				case 2:
 					uniqueId = Policy.generateUniqueId(customerList);
 					if (uniqueId >= 0) {
-						inputId = getValidBoundedInt("Input Account Number to create Policy in: ", 4, true);
+						inputId = getPositiveIntBoundedInput("Input Account Number to create Policy in: ", 4, true);
 						foundHit = false;
 						currentAccount = null;
 						
@@ -234,7 +234,7 @@ public class PASApp {
 				 * 		(int)	inputID - The ID of the Policy to cancel
 				 */
 				case 3:
-					inputId = getValidBoundedInt("Input Policy Number to cancel: ", 6, true);
+					inputId = getPositiveIntBoundedInput("Input Policy Number to cancel: ", 6, true);
 					foundHit = false;
 					
 					for (CustomerAccount custObj: customerList) {
@@ -281,7 +281,7 @@ public class PASApp {
 				 * 		> makeClaim();
 				 */
 				case 4:
-					inputId = getValidBoundedInt("Input Policy Number to file claim: ", 6, true);
+					inputId = getPositiveIntBoundedInput("Input Policy Number to file claim: ", 6, true);
 					foundHit = false;
 					currentAccount = null;
 					
@@ -303,9 +303,11 @@ public class PASApp {
 							uniqueId = Claim.generateUniqueId(claimList);
 							if (uniqueId >= 0) {
 								tempClaim = makeClaim(uniqueId);
+								
 								effectiveDate = currentAccount.getPolicyMatchingId(inputId).getEffectiveDate();
-								if (tempClaim.getAccidentDate().compareTo(effectiveDate) < 0 ) {
-									System.out.println("Cannot file claim that occured before " + effectiveDate);
+								
+								if (tempClaim.getAccidentDate().compareTo(effectiveDate) < 0) {
+									System.out.println("Cannot file claim for accident that occured before " + effectiveDate);
 								}
 								else {
 									claimList.add(tempClaim);
@@ -364,7 +366,7 @@ public class PASApp {
 				 * printed. Otherwise, program will output "no match."
 				 */
 				case 6:
-					inputId = getValidBoundedInt("Input Policy Number to find: ", 6, true);
+					inputId = getPositiveIntBoundedInput("Input Policy Number to find: ", 6, true);
 					foundHit = false;
 					
 					for (CustomerAccount custObj: customerList) {
@@ -398,19 +400,13 @@ public class PASApp {
 						System.out.print("Input Claim Number to find: ");
 						strIn = in.nextLine();
 						
-						if ((strIn.length() != 7) || (strIn.charAt(0) != 'C')) {
+						if (!(strIn.matches("^C[\\d]{6}$"))) {
 							System.out.println("\nInvalid input. Follow the format Cxxxxxx where x is a value between 0 - 9.\n");
 						}
 						else {
-							try {
-								inputId = Integer.parseInt(strIn.substring(1));
-							}
-							catch (NumberFormatException e) {
-								System.out.println("Invalid Claim ID value");
-								strIn = "";
-							}
+							inputId = Integer.parseInt(strIn.substring(1));
 						}
-					} while((strIn.length() != 7) || (strIn.charAt(0) != 'C'));
+					} while(!(strIn.matches("^C[\\d]{6}$")));
 					
 					
 					foundHit = false;
@@ -441,7 +437,36 @@ public class PASApp {
 			}
 			
 		} while (choice != 8);
+		
+		//DEBUG
+		// ===========================================================================================
+		System.out.println("Data dump");
+		CustomerAccount.printCustomerAccountHeader();
+		for (CustomerAccount cstObj: customerList) {
+			cstObj.printCustomerAccountDetails();
+		}
+		CustomerAccount.printPolicyHeader();
+		for (CustomerAccount cstObj: customerList) {
+			cstObj.printPolicies();
+		}
+		CustomerAccount.printVehicleHeader();
+		for(CustomerAccount cstObj: customerList) {
+			cstObj.printVehicles();
+		}
+		CustomerAccount.printPolicyHolderHeader();
+		for(CustomerAccount cstObj: customerList) {
+			cstObj.printPolicyHolders();
+		}
+		Claim.printClaimHeader();
+		for (Claim clmObj: claimList) {
+			clmObj.printClaimDetails();
+		}
+		// ===========================================================================================
+		
 	}
+	
+	// HELPER METHODS
+	// =================================================================================================================================================
 	
 	/**
 	 * Prints the menu of the PAS System
@@ -496,11 +521,11 @@ public class PASApp {
 		model = getStringWord("Enter model: ");
 		
 		do {
-			year = getValidInt("Enter year: ");
-			if (year > yearNow) {
-				System.out.println("\nCar year cannot be further from current year (" + yearNow + ")\n");
+			year = getIntBoundedInput("Enter year: ", 4, true);
+			if (year > yearNow || year < 1900) {
+				System.out.println("\nCar year must be between 1900 and " + yearNow + "\n");
 			}
-		} while (year > yearNow);
+		} while (year > yearNow || year < 1900);
 		
 		
 		type = getStringWord("Enter type: ");
@@ -618,10 +643,10 @@ public class PASApp {
 	 * 		(int)	month	-	Month of date to create, limited to 1 - 12
 	 * 		(int)	day		-	Day of date to create, limited to valid days of month and year inputed
 	 * 
-	 * All inputs for each date component makes use getValidBoundedInt() method. 
+	 * All inputs for each date component makes use getIntBoundedInput() method. 
 	 * This ensures that each input has a limited amount of digits when inputting.
 	 * Description of how input length is limited will be described further down below. 
-	 * For more information on getValidBoundedInt() method functionality, refer to 
+	 * For more information on getIntBoundedInput() method functionality, refer to 
 	 * respective documentation.
 	 * 
 	 * The year method is limited to a minimum year of 1900. All inputs for year require
@@ -650,7 +675,7 @@ public class PASApp {
 		
 		// Get Year
 		do {
-			year = getValidBoundedInt("Enter " + type + " year: ", 4, true);
+			year = getIntBoundedInput("Enter " + type + " year: ", 4, true);
 			if (year < 1900) {
 				System.out.println("\nYear must be beyond 1900\n");
 			}
@@ -661,7 +686,7 @@ public class PASApp {
 		
 		// Get Month
 		do {
-			month = getValidBoundedInt("Enter " + type + " month (01-12): ", 2, false);
+			month = getIntBoundedInput("Enter " + type + " month (01-12): ", 2, false);
 			if (month > 12 || month < 1) {
 				System.out.println("\nOnly values 1 - 12 are valid\n");
 			}
@@ -671,7 +696,7 @@ public class PASApp {
 		isInvalid = true;
 		do {
 			try {
-				day = getValidBoundedInt("Enter " + type + " day: ", 2, false);
+				day = getIntBoundedInput("Enter " + type + " day: ", 2, false);
 				date = LocalDate.of(year, month, day);
 				isInvalid = false;
 			}
@@ -864,12 +889,16 @@ public class PASApp {
 	 * the same as the value set in limit. Otherwise, program will allow inputs
 	 * with length less than or equal to the value of limit param.
 	 * 
+	 * Limit only applies to the numeric portion of the input which means when
+	 * a negative number is inputed, the negative sign will not count as an
+	 * additional character.
+	 * 
 	 * @param message - Custom message to display for every input attempt
 	 * @param limit - Maximum length input string can be
 	 * @param requireLimitAsMinimum - Enforces maximum limit as minimum if true
 	 * @return int - validated integer
 	 */
-	protected static int getValidBoundedInt(String message, int limit, boolean requireLimitAsMinimum) throws IllegalArgumentException {
+	protected static int getIntBoundedInput(String message, int limit, boolean requireLimitAsMinimum) throws IllegalArgumentException {
 		boolean isInvalid = true;
 		String getIntString = "";
 		int parsedInt = 0;
@@ -884,15 +913,32 @@ public class PASApp {
 				getIntString = in.nextLine();
 				getIntString = getIntString.trim();
 				parsedInt = Integer.parseInt(getIntString);
-
-				if (!(requireLimitAsMinimum) && (getIntString.length() > limit)) {
-					System.out.println("\nInput can only have maximum of " + limit + " digits\n");
+				
+				if (parsedInt < 0) {
+					getIntString = getIntString.substring(1);
 				}
-				else if (requireLimitAsMinimum && getIntString.length() != limit) {
-					System.out.println("\nInput must be " + limit + " digits long\n");
+				
+				if (requireLimitAsMinimum) {
+					if (parsedInt < 0 && getIntString.length() == limit) {
+						isInvalid = false;
+					}
+					else if (getIntString.length() != limit) {
+						System.out.println("\nInput must be " + limit + " digits long\n");
+					}
+					else {
+						isInvalid = false;
+					}
 				}
 				else {
-					isInvalid = false;
+					if (parsedInt < 0 && getIntString.length() <= limit) {
+						isInvalid = false;
+					}
+					else if (getIntString.length() > limit) {
+						System.out.println("\nInput can only have maximum of " + limit + " digits\n");
+					}
+					else {
+						isInvalid = false;
+					}
 				}
 			}
 			catch(NumberFormatException e) {
@@ -904,6 +950,33 @@ public class PASApp {
 				}
 			}
 		} while (isInvalid);
+		
+		return parsedInt;
+	}
+	
+	/**
+	 * Returns inputed int value after verification.
+	 * Can display custom message that repeats for every input attempt.
+	 * 
+	 * Makes use of the behavior of getIntBoundedInput but adds an additional
+	 * condition. Program will also check if the value inputed is positive.
+	 * If it is not positive, the program will force the user to input another
+	 * value.
+	 * 
+	 * @param message - Custom message to display for every input attempt
+	 * @param limit - Maximum length input string can be
+	 * @param requireLimitAsMinimum - Enforces maximum limit as minimum if true
+	 * @return int - positive validated integer
+	 */
+	protected static int getPositiveIntBoundedInput(String message, int limit, boolean requireLimitAsMinimum) {
+		int parsedInt;
+		
+		do {
+			parsedInt = getIntBoundedInput(message, limit, requireLimitAsMinimum);
+			if (parsedInt < 0) {
+				System.out.println("\nInput cannot be negative\n");
+			}
+		} while (parsedInt < 0);
 		
 		return parsedInt;
 	}
