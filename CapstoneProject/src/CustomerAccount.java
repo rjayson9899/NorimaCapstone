@@ -1,13 +1,12 @@
+package CapStone;
+
+import java.util.ArrayList;
 /*
  * This is the customer object that holds the data for the 
  * main account holder. 
  * @author Macario N. Peralta V
  * Date created: June 6 2022
  */
-package CapStone;
-
-import java.util.ArrayList;
-
 public class CustomerAccount {
 	private String cusAccNum;
 	private String fName;
@@ -30,8 +29,8 @@ public class CustomerAccount {
 		}
 	}
 	
-	public void seeDetails() {
-		
+	//shows the details of the account holder.
+	public void seeDetails() {		
 		System.out.println("==================Customer Account holder===================");
 		System.out.println("Account number: " + cusAccNum);
 		System.out.println("Full name: " + this.fName + " " + this.lName);

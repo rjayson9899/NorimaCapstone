@@ -1,11 +1,10 @@
+package CapStone;
 /*
  * This is the policy holder class of the whole capstone project.
  * This class contains all of the details that the policy holder possess.
  * @author Macario N. Peralta V
  * Date created: June 6 2022
  */
-package CapStone;
-
 public class PolicyHolder {
 	private String fName;
 	private String lName;
@@ -21,6 +20,10 @@ public class PolicyHolder {
 		this.address = address;
 		this.dLicense = dL;
 		this.dateLic = dateLic;
+	}
+	
+	public String getDateLic() {
+		return dateLic;
 	}
 
 }

@@ -1,9 +1,3 @@
-/*
- * This is the policy object that hold the data for the policies
- * of each customer account.
- * @author Macario N. Peralta V
- * Date created: June 6 2022
- */
 package CapStone;
 
 import java.util.ArrayList;
@@ -13,7 +7,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;  
-
+/*
+ * This is the policy object that hold the data for the policies
+ * of each customer account.
+ * @author Macario N. Peralta V
+ * Date created: June 6 2022
+ */
 public class Policy {
 	
 	private int claimCounter = 0;
@@ -27,7 +26,6 @@ public class Policy {
 	private String effDate;
 	private String expDate;
 	private String status;
-	private int carPrice;
 	private double policyPremium;
 	LocalDate stDate;
 	LocalDate eDate;
@@ -45,6 +43,7 @@ public class Policy {
 		this.polNum = polNum;
 	}
 	 
+	//this method verifies the starting effective date inputted by the user.
 	 public boolean verifyEffDate(String srtDate) {
 		 try {
 			 String dateFormat = "LLL dd uuuu";
@@ -85,6 +84,7 @@ public class Policy {
 		return polN;
 	}
 	
+	//this method creates a policy holder object within the policy class.
 	public void setPolH(String fName, String lName, String bDay, String address, String dL, String dateLic) {
 		this.fName = fName;
 		this.lName = lName;
@@ -95,10 +95,12 @@ public class Policy {
 		this.polyHol = new PolicyHolder(fName, lName, bDay, address, dL, dateLic);
 	}
 	
+	//this method creates a vehicle object within the policy class.
 	public void setCar(String carMake, String carModel, int carYear, String carType, String carFuelT, String carColor, double price) {
 		car.add(new Vehicle(carMake, carModel, carYear, carType, carFuelT, carColor, price, dateLic));
 	}
 	
+	//this method checks for the current status of the policy.
 	public boolean checkStatus() {
 		if (isCancelled == false && dateNow.isAfter(eDate) == false && dateNow.isBefore(stDate) == false) {
 			status = "Active";
@@ -123,6 +125,7 @@ public class Policy {
 		}
 	}
 	
+	//this method sets the status of the policy to cancelled.
 	public void cancelPol() {
 		isCancelled = true;
 		eDate = LocalDate.now();
@@ -132,6 +135,7 @@ public class Policy {
 		System.out.println("Policy is cancelled. ");
 	}
 	
+	//this method shows all of the details that are in this class.
 	public void seeDetails() {		
 		System.out.println("========================Policy==============================");
 		System.out.println("Policy number: " + polNum);
@@ -139,7 +143,7 @@ public class Policy {
 		System.out.println("Effective date: " + effDate);
 		System.out.println("Expiration date: " + expDate);
 		System.out.println("Times claimed: " + claimCounter);
-		System.out.println("Policy Premium: " + policyPremium);
+		System.out.println("Policy Premium: $" + policyPremium);
 		System.out.println("======================Policy holder=========================");
 		System.out.println("Full name: " + fName + " " + lName);
 		System.out.println("Birthday: " + bDay);
@@ -155,6 +159,7 @@ public class Policy {
 		this.claimCounter = clCount;
 	}
 	
+	//this method shows the total premium of the specific policy.
 	public double getTotalPremium() {
 		for(Vehicle carz : car) {
 			policyPremium += carz.getPremium();

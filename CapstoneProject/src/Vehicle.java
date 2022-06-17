@@ -1,11 +1,10 @@
+package CapStone;
 /*
  * This is the vehicle object that holds the data of the 
  * vehicles covered by the policy.
  * @author Macario N. Peralta V
  * Date created: June 6 2022
  */	
-package CapStone;
-
 public class Vehicle {
 	private String carType;
 	private double price;
@@ -34,18 +33,20 @@ public class Vehicle {
 		setPremium();
 	}
 	
+	//this method just shows the details of the vehicle.
 	public void seeDetails() {
-		System.out.println("======================Vehicle=========================");
+		System.out.println("======================Vehicle===============================");
 		System.out.println("Car: " + year + " " + carMake + " " + carModel);
 		System.out.println("Car type: " + carType);
 		System.out.println("Fuel Type: " + fuelType);
 		System.out.println("Color: " + color);
-		System.out.println("Price (New): " + price);
+		System.out.println("Price (New): $" + price);
 		System.out.println("Premium: " + premium);
 		System.out.println("Car age: " + age);
-		System.out.println("======================================================");
+		System.out.println("=============================================================");
 	}
 	
+	//this method sends the details of the vehicle to the rating engine for calculation.
 	public void sendDataToREng() {
 		rEng.setVPrice(price);
 		age = rEng.setCarAge(year);

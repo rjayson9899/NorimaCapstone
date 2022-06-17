@@ -1,12 +1,11 @@
-/*
- * This is the rating engine. This class is responsible for the
- * computation of the premium of the customer.
- */
 package CapStone;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
+/*
+ * This is the rating engine. This class is responsible for the
+ * computation of the premium of the customer.
+ */
 public class RatingEngine {
 
 	private double premium;
@@ -29,6 +28,7 @@ public class RatingEngine {
 		this.vP = VPrice;
 	}
 	
+	//this method calculates and sets the car age.
 	public int setCarAge(int age) {
 		this.carYear = age;
 		carA = date.minusYears(carYear);
@@ -37,6 +37,8 @@ public class RatingEngine {
 		carAge = Integer.parseInt(this.age);
 		return this.carAge;
 	}
+	
+	//this method sets up the price factor per vehicle.
 	public void setVPF() {
 		
 		if(carAge < 1) {
@@ -63,6 +65,7 @@ public class RatingEngine {
 		
 	}
 	
+	//this method calculates and sets the age of the driver's license.
 	public void setdLX(String dateLic) {
 		driverDate = dateLic.substring(dateLic.lastIndexOf(" ") + 1);
 		this.dDate = Integer.parseInt(driverDate);
@@ -72,6 +75,7 @@ public class RatingEngine {
 		dLX = Integer.parseInt(driverDate);
 	}
 	
+//this method calculates the premium of the policy.	
 	public double calcP() {
 		if (dLX <= 0) {
 			dLX = 1;

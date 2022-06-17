@@ -1,15 +1,13 @@
+package CapStone;
 /*
  * This is the claim class of the whole capstone project.
  * This class contains the data for the claim information.
  * @author Macario N. Peralta V
  * Date created: June 6 2022
  */
-package CapStone;
-
 public class Claim {
 	
 	private String claimNum;
-	private int claimNumb;
 	private String dateOfAcc;
     private String addOfAcc;
     private String desAcc;
@@ -17,24 +15,24 @@ public class Claim {
     private double cost;
 
     
-    public Claim(String dateOfAcc, String addOfAcc, String desAcc, String desDmgV, double cost, int clNum) {
+    public Claim(String dateOfAcc, String addOfAcc, String desAcc, String desDmgV, double cost, String clNum) {
     	this.dateOfAcc = dateOfAcc;
     	this.addOfAcc = addOfAcc;
     	this.desAcc = desAcc;
     	this.desDmgV = desDmgV;
     	this.cost = cost;
-    	this.claimNumb = clNum;
-    	this.claimNum = Integer.toString(clNum);
+    	this.claimNum = "C" + clNum;
     }
+    
 	public void accidentClaim() {
-		claimNum = String.format("%06d", claimNum);
-		System.out.println("The claim number is: C" + claimNum);
+		System.out.println("The claim number is: " + claimNum);
 	}
 	
-	public int getClaimNum() {
-		return claimNumb;
+	public String getClaimNum() {
+		return claimNum;
 	}
 	
+	//this method shows the claim details.
 	public void seeDetails() {
 		System.out.println("======================Claim============================");
 		System.out.println("Date of the accident: " + dateOfAcc);
