@@ -25,7 +25,7 @@ public class Policy {
 	public Policy(int policyNumber) {
 		this.policyNumber = policyNumber;
 	}
-
+	
 	public LocalDate getEffectiveDatePolicy() {
 		return effectiveDatePolicy;
 	}

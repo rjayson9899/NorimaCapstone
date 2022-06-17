@@ -51,7 +51,7 @@ public class CustomerAccount {
 		}
 	}
 	
-	public boolean getPolicy(int policyID) {
+	public boolean hasPolicy(int policyID) {
 		for (Policy polObj : policyList) {
 			if (polObj.getPolicyNumber() == policyID) {
 				return true;
@@ -59,6 +59,21 @@ public class CustomerAccount {
 		}
 		return false;
 	}
+	
+	public ArrayList<Policy> getPolicyList() {
+		return policyList;
+	}
+	
+	public Policy getPolicy(int policyID) throws IllegalArgumentException {
+		for (Policy polObj : policyList) {
+			if (polObj.getPolicyNumber() == policyID) {
+				return polObj;
+			}
+		}
+		throw new IllegalArgumentException("No policy found!"); 
+	}
+	
+	
 
 	public void displayCustomerPolicy(int policyID) {
 		String policyStatus = "";
