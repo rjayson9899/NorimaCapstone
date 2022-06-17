@@ -67,6 +67,7 @@ public class PASApp {
 				case 1:
 					uniqueId = CustomerAccount.generateUniqueId(customerList);
 					
+					// Get input from user
 					if (uniqueId > 0) {
 						do {
 							System.out.println("\nInput customer details");
@@ -93,6 +94,7 @@ public class PASApp {
 							}
 						}
 						
+						// Create new entry if name is not taken
 						if (!foundHit) {
 							customerList.add(new CustomerAccount(uniqueId, firstName, lastName, address));
 							System.out.printf("\nAccount Registered with account Number %04d\n", uniqueId);
@@ -152,6 +154,7 @@ public class PASApp {
 					nowDate = LocalDate.now();
 					uniqueId = Policy.generateUniqueId(customerList);
 					
+					// Prevent progression if no unique ID can be generated
 					if (uniqueId > 0) {
 						inputId = getPositiveIntLimitedInput("Input Account Number to create Policy in: ", 4, true);
 						
@@ -189,6 +192,8 @@ public class PASApp {
 									if (!(tempHolder.hasValidLicenseDate())) {
 										System.out.println("\t> License must be issued when holder is at least 18 years old");
 									}
+									
+									// Output information, notifies which fields are invalid
 									System.out.println();
 									System.out.println("Review the following information:");
 									System.out.println("First Name: " + tempHolder.getFirstName());
@@ -200,6 +205,7 @@ public class PASApp {
 														+ (tempHolder.hasValidLicenseDate()? "": " (Invalid)"));
 								}
 								else {
+									// Output information
 									System.out.println();
 									System.out.println("Review the following information:");
 									System.out.println("First Name: " + tempHolder.getFirstName());
@@ -209,6 +215,7 @@ public class PASApp {
 									System.out.println("License Issue Date: " + tempHolder.getLicenseDate());
 								}
 								
+								// Get user input if policy holder is to be changed
 								System.out.print("\nEnter a different Policy holder? [y for yes, anything else for no]: ");
 								strIn = in.nextLine();
 							} while (strIn.equalsIgnoreCase("y"));
@@ -290,10 +297,13 @@ public class PASApp {
 				 */
 				case 3:
 					inputId = getPositiveIntLimitedInput("Input Policy Number to cancel: ", 6, true);
-					foundHit = false;
 					
+					// Search customer accounts for a matching policy
+					foundHit = false;
 					for (CustomerAccount custObj: customerList) {
+						// Check if customer account has policy
 						if (custObj.hasPolicy(inputId)) {
+							// Cancels found policy or notifies user if policy is already cancelled
 							if (custObj.cancelAccountPolicy(inputId)) {
 								System.out.printf("Policy %06d Cancelled\n", inputId);
 							}
@@ -339,17 +349,18 @@ public class PASApp {
 				 */
 				case 4:
 					inputId = getPositiveIntLimitedInput("Input Policy Number to file claim: ", 6, true);
-					foundHit = false;
-					currentAccount = null;
 					
+					// Search customer accounts for a matching policy
+					currentAccount = null;
 					for (CustomerAccount custObj: customerList) {
 						if (custObj.hasPolicy(inputId)) {
 							currentAccount = custObj;
-							foundHit = true;
 						}
 					}
 					
-					if (foundHit) {
+					// Checks if a matching account was found
+					if (currentAccount!=null) {
+						// Verifies if policy is expired or not in force
 						if (currentAccount.getPolicyMatchingId(inputId).isExpired()) {
 							System.out.println("Policy selected is expired");
 						} 
@@ -358,10 +369,13 @@ public class PASApp {
 						}
 						else {
 							uniqueId = Claim.generateUniqueId(claimList);
+							
+							// Prevent progress if no unique ID can be generated
 							if (uniqueId > 0) {
 								tempClaim = makeClaim(uniqueId);
 								effectiveDate = currentAccount.getPolicyMatchingId(inputId).getEffectiveDate();
 								
+								// Verify if accident date falls inside policy effective range
 								if (tempClaim.getAccidentDate().isBefore(effectiveDate)) {
 									System.out.println("Cannot file claim for accident that occured before effective date: " + effectiveDate);
 								}
@@ -398,9 +412,9 @@ public class PASApp {
 				case 5:
 					firstName = getStringWord("Input First Name: ");
 					lastName = getStringWord("Input Last Name: ");
+					
+					// Search for matching customer account, print details if found
 					foundHit = false;
-					
-					
 					for (CustomerAccount custObj: customerList) {
 						if (custObj.getFirstName().equalsIgnoreCase(firstName) && custObj.getLastName().equalsIgnoreCase(lastName)) {
 							CustomerAccount.printCustomerAccountHeader();
@@ -431,6 +445,7 @@ public class PASApp {
 					inputId = getPositiveIntLimitedInput("Input Policy Number to find: ", 6, true);
 					foundHit = false;
 					
+					// Search for a matching policy, print details if found
 					for (CustomerAccount custObj: customerList) {
 						if (custObj.hasPolicy(inputId)) {
 							CustomerAccount.printPolicyHeader();
@@ -458,6 +473,7 @@ public class PASApp {
 				 * output "no match."
 				 */
 				case 7:
+					// Get claim number from user, repeats while input is not in proper format
 					do {
 						System.out.print("Input Claim Number to find: ");
 						strIn = in.nextLine();
@@ -470,9 +486,8 @@ public class PASApp {
 						}
 					} while(!(strIn.matches("^C[\\d]{6}$")));
 					
-					
+					// Search for a matching claim, print details if found
 					foundHit = false;
-					
 					for (Claim clmObj: claimList) {
 						if (clmObj.getClaimNumber().equals(strIn)) {
 							Claim.printClaimHeader();
@@ -563,7 +578,7 @@ public class PASApp {
 	 * 
 	 * Uses input validator methods. See following for documentation
 	 * 		> getStringNonEmpty()
-	 * 		> getValidInt()
+	 * 		> getIntLimitedInput()
 	 * 		> getValidDouble()
 	 * 
 	 * @return Vehicle instance
@@ -580,6 +595,7 @@ public class PASApp {
 			make = getStringWord("Enter make: ");
 			model = getStringWord("Enter model: ");
 			
+			// Gets Year of vehicle, requires input to be between 1900 and current year
 			do {
 				year = getIntLimitedInput("Enter year: ", 4, true);
 				if (year > yearNow || year < 1900) {
@@ -877,6 +893,7 @@ public class PASApp {
 	 * @param message - Custom message to display for every input attempt
 	 * @return int - validated integer
 	 */
+	@Deprecated
 	private static int getValidInt(String message) {
 		boolean isInvalid = true;
 		String getIntString = "";
@@ -997,6 +1014,8 @@ public class PASApp {
 				getIntString = getIntString.trim();
 				parsedInt = Integer.parseInt(getIntString);
 				
+				// Removes negative sign from integer string if parsed input is negative
+				// This is done so that program can identify the length of the digits alone
 				if (parsedInt < 0) {
 					getIntString = getIntString.substring(1);
 				}
