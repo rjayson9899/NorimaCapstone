@@ -2,6 +2,7 @@ package policyTest;
 
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
@@ -57,8 +58,20 @@ public class PASApp {
 						System.out.println("-------------------------------");
 						//inputs for creating account
 						String fname = checkerString(input, "First Name: ", true);
+						if(fname.equals("q")){
+							System.out.println("returning to main menu...");
+							break;
+						}
 						String lname = checkerString(input, "Last Name: ", true);
+						if(lname.equals("q")){
+							System.out.println("returning to main menu...");
+							break;
+						}
 						String address = checkerString(input, "Address: ", false);
+						if(address.equals("q")){
+							System.out.println("returning to main menu...");
+							break;
+						}
 						
 						System.out.println("\n-------------------------------");
 						System.out.println("           Details");
@@ -116,7 +129,7 @@ public class PASApp {
 
 					if(policyNumGenerator > 99998){ //checks if the maximum number of policies is achieved
 						System.out.println("No more room for a new policy.");
-						System.out.println("Returning to main.");
+						System.out.println("Returning to main menu.");
 						clrscrn(1, false);
 					}
 
@@ -127,6 +140,10 @@ public class PASApp {
 						System.out.println("-------------------------------");
 						System.out.print("Input account number: ");
 						String accNum = input.nextLine();
+						if(accNum.equals("q")){
+							System.out.println("returning to main menu...");
+							break;
+						}
 						
 						for(CustomerAccount x: customerAccounts) { //for each loop to get index of the account number , checks if account exist
 							if(x.getAccountNum().equals(accNum)) {
@@ -333,7 +350,9 @@ public class PASApp {
 							customerAccounts.get(indexGet).getPolicyAct()
 								.get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).setCost(total);
 							System.out.println("-------------------------------");
-							System.out.println(" Total Premium: $" + total);
+							Locale locale = new Locale("en", "US");      
+							NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+							System.out.println(" Total Premium: $" + currencyFormatter.format(total));
 							System.out.println("-------------------------------\n");
 							
 							System.out.println("-------------------------------");
@@ -433,6 +452,8 @@ public class PASApp {
 					clrscrn(1,true);
 					String status = "";
 					accExist = false;
+					boolean checkerAccidentDate = false;
+					LocalDate accidentDate, effDate = LocalDate.now();
 
 					loadStatus(customerAccounts);
 
@@ -479,7 +500,19 @@ public class PASApp {
 								System.out.println("\n-------------------------------");
 								System.out.println("        Claim Details");
 								System.out.println("-------------------------------");
-								LocalDate accidentDate = checkerDate(input, "Input accident date(yyyy-mm-dd):\nex.'2022-09-18': ", true);
+								
+								do{
+									accidentDate = checkerDate(input, "Input accident date(yyyy-mm-dd):\nex.'2022-09-18': ", true);
+
+									if(accidentDate.isBefore(effDate)){
+										System.out.println("Your policy is not yet active during this date.");
+									}
+									else{
+										checkerAccidentDate = true;
+									}
+
+								}while(!checkerAccidentDate);
+								
 								System.out.print("Address of where the accident happened: ");
 								String accidentAdd = input.nextLine();
 								System.out.print("Description of the accident: ");
@@ -784,6 +817,9 @@ public class PASApp {
 				System.out.print(msg);
 				try{	
 					String date = inpt.nextLine();
+					if(date.equals("q")){
+						return null;
+					}
 					dateInput = LocalDate.parse(date, DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.US).withResolverStyle(ResolverStyle.STRICT));
 					isFinished = true;
 				}
