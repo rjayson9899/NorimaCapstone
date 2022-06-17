@@ -50,7 +50,7 @@ public class PASApp {
 						clrscrn(1, false);
 					}
 					else{
-						
+						Character decision1;
 						accExist = false;
 						System.out.println("\n-------------------------------");
 						System.out.println("       Creating account");
@@ -59,26 +59,46 @@ public class PASApp {
 						String fname = checkerString(input, "First Name: ", true);
 						String lname = checkerString(input, "Last Name: ", true);
 						String address = checkerString(input, "Address: ", false);
-					
 						
-						for(CustomerAccount y: customerAccounts) { //for each loop to check if an account already exist
-							if(y.getFname().equalsIgnoreCase(fname) && y.getLname().equalsIgnoreCase(lname)
-									&& y.getAddress().equalsIgnoreCase(address)) {
-								System.out.println("Account already exist!");
-								accExist = true;
-								clrscrn(1, false);
-								break;
+						System.out.println("\n-------------------------------");
+						System.out.println("           Details");
+						System.out.println("-------------------------------");
+						System.out.println("first name: " + fname);
+						System.out.println("last name: " + lname);
+						System.out.println("address: " + address);
+						System.out.println("-------------------------------");
+						System.out.print("Proceed to creating account? (y/any key)");
+						decision1 = input.nextLine().charAt(0);
+							
+							if(decision1.equals('y') || decision1.equals('Y')) { // finilizing the policy when bought
+								for(CustomerAccount y: customerAccounts) { //for each loop to check if an account already exist
+									if(y.getFname().equalsIgnoreCase(fname) && y.getLname().equalsIgnoreCase(lname)
+											&& y.getAddress().equalsIgnoreCase(address)) {
+										System.out.println("Account already exist!");
+										accExist = true;
+										clrscrn(1, false);
+										break;
+									}
+								}
+								
+								if(!accExist) { //occurs if account does not exist
+									customerAccounts.add(new CustomerAccount(fname, lname, address));
+									customerAccounts.get(customerAccounts.size() - 1).generateId(accountNumGenerator);
+									accountNumGenerator++;
+									System.out.println("Created account!");
+									System.out.println("Your account number is: " + customerAccounts.get(customerAccounts.size() - 1).getAccountNum());
+									pressAnyKeyToContinue(input);
+								}	
 							}
-						}
+							
+							else {
+							     System.out.println("Going back to main menu...");
+								 clrscrn(1, false);
+							}
+
 						
-						if(!accExist) { //occurs if account does not exist
-							customerAccounts.add(new CustomerAccount(fname, lname, address));
-							customerAccounts.get(customerAccounts.size() - 1).generateId(accountNumGenerator);
-							accountNumGenerator++;
-							System.out.println("Created account!");
-							System.out.println("Your account number is: " + customerAccounts.get(customerAccounts.size() - 1).getAccountNum());
-							pressAnyKeyToContinue(input);
-						}	
+						
+						
 					}
 
 					break;
@@ -101,7 +121,7 @@ public class PASApp {
 					}
 
 					else{
-						
+						String fnamePol = "", lnamePol = "";
 						System.out.println("\n-------------------------------");
 						System.out.println("        Quoting policy");
 						System.out.println("-------------------------------");
@@ -117,70 +137,98 @@ public class PASApp {
 						}
 						//Policy Holder Details
 						if(accExist) { 
-							clrscrn(1, true);
-							System.out.println("\n-------------------------------");
-							System.out.println("    Policy Holder Details");
-							System.out.println("-------------------------------");
+							boolean checkerProceed = false;
+							int licenseYear;
 							do{
-								effectDate = checkerDate(input, "Input effective date(yyyy-mm-dd):\nex.'2022-09-18': ", false);
-								wrongDate = Policy.checkDate(effectDate);
-							}while(!wrongDate);
+								clrscrn(1, true);
+								System.out.println("\n-------------------------------");
+								System.out.println("    Policy Holder Details");
+								System.out.println("-------------------------------");
+								do{
+									effectDate = checkerDate(input, "Input effective date(yyyy-mm-dd):\nex.'2022-09-18': ", false);
+									wrongDate = Policy.checkDate(effectDate);
+								}while(!wrongDate);
 
-							expiredDate= effectDate.plusMonths(6);
-							System.out.println("Set expired date to: " + expiredDate);
-							String fnamePol = "", lnamePol = "";
-							System.out.print("Is the account owner also the policy holder? (y/n) ");
-							Character decision = input.nextLine().charAt(0);
-							
-							if(decision.equals('y') || decision.equals('Y')) { //condition if the account owner is also the policy holder
-								for(CustomerAccount c: customerAccounts) {
-									if(c.getAccountNum().equals(accNum)) {
-										fnamePol = c.getFname();
-										lnamePol = c.getLname();
-										System.out.println("Set the first name to: " + fnamePol);
-										System.out.println("Set the last name to: " + lnamePol);
-										break;
+								expiredDate= effectDate.plusMonths(6);
+								System.out.println("Set expired date to: " + expiredDate);
+								
+								System.out.print("Is the account owner also the policy holder? (y/any key) ");
+								Character decision = input.nextLine().charAt(0);
+								
+								if(decision.equals('y') || decision.equals('Y')) { //condition if the account owner is also the policy holder
+									for(CustomerAccount c: customerAccounts) {
+										if(c.getAccountNum().equals(accNum)) {
+											fnamePol = c.getFname();
+											lnamePol = c.getLname();
+											System.out.println("Set the first name to: " + fnamePol);
+											System.out.println("Set the last name to: " + lnamePol);
+											break;
+										}
 									}
 								}
-							}
-								
-							else {
-								fnamePol = checkerString(input, "First Name: ", true);
-								lnamePol = checkerString(input, "Last Name: ", true);	
-							}
-							
-							
-							do{
-								birthDate = checkerDate(input,"Input birth date(yyyy-mm-dd):\nex.'2022-09-18': ", true);
-								diff = Period.between(birthDate, LocalDate.now());
-
-								if(diff.getYears() < 18){
-									System.out.println("You are not yet legal to have this kind of policy.");
-								}
-							}while(diff.getYears() < 18);
-
-
-							
-							System.out.print("Input license number: ");
-							String license = input.nextLine();
-							do{
-								licenseDate = checkerDate(input, "Input license date issued(yyyy-mm-dd):\n ex.'2022-09-18': ", true);
-								if(licenseDate.isBefore(birthDate.plusYears(18))|| licenseDate.isEqual(birthDate)){
-									System.out.println("Date mismatch with your birth date!");
+									
+								else {
+									fnamePol = checkerString(input, "First Name: ", true);
+									lnamePol = checkerString(input, "Last Name: ", true);	
 								}
 								
-							}while(licenseDate.isBefore(birthDate.plusYears(18)) || licenseDate.isEqual(birthDate));
-							int licenseYear =licenseDate.getYear();
+								
+								do{
+									birthDate = checkerDate(input,"Input birth date(yyyy-mm-dd):\nex.'2022-09-18': ", true);
+									diff = Period.between(birthDate, LocalDate.now());
+
+									if(diff.getYears() < 18){
+										System.out.println("You are not yet legal to have this kind of policy.");
+									}
+								}while(diff.getYears() < 18);
+
+
+								
+								System.out.print("Input license number: ");
+								String license = input.nextLine();
+								do{
+									licenseDate = checkerDate(input, "Input license date issued(yyyy-mm-dd):\n ex.'2022-09-18': ", true);
+									if(licenseDate.isBefore(birthDate.plusYears(18))|| licenseDate.isEqual(birthDate)){
+										System.out.println("Date mismatch with your birth date!");
+									}
+									
+								}while(licenseDate.isBefore(birthDate.plusYears(18)) || licenseDate.isEqual(birthDate));
+								licenseYear =licenseDate.getYear();
+
+								System.out.println("-------------------------------");
+								System.out.println("       Policy Details: ");
+								System.out.println("-------------------------------");
+								System.out.println("Name: " + fnamePol + " " + lnamePol);
+								System.out.println("birth date: " + birthDate);
+								System.out.println("effective date: " + effectDate);
+								System.out.println("expiration date: " + expiredDate);
+								System.out.println("license number: " + license);
+								System.out.println("license date issued: " + licenseDate);
+								System.out.println("-------------------------------");
+								System.out.print("Are you sure about these inputs? (y/any) ");
+								Character decision2 = input.nextLine().charAt(0);
+							
+							if(decision2.equals('y') || decision2.equals('Y')) { // finilizing the policy when bought
 							//initial creation for the policy
-							customerAccounts.get(indexGet).addPolicyAct(new Policy(effectDate, 
+								checkerProceed = true;
+								customerAccounts.get(indexGet).addPolicyAct(new Policy(effectDate, 
 																			new PolicyHolder(fnamePol, lnamePol, birthDate, license, licenseDate)));
-							customerAccounts.get(indexGet).addPolicyHolders();
-							customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).generateId(policyNumGenerator);
-							customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).setExpDate(expiredDate);
-							customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).setStatus(" ");
+								customerAccounts.get(indexGet).addPolicyHolders();
+								customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).generateId(policyNumGenerator);
+								customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).setExpDate(expiredDate);
+								customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).setStatus(" ");
 																		
-							policyNumGenerator++;
+								policyNumGenerator++;
+							}
+							else{
+								System.out.println("Proceeding to redo inputs...");
+							}
+
+							}while(!checkerProceed);
 							
+							checkerProceed = false;
+							
+								
 							//Vehicle Details
 							int numVehicle = checkerInt(input, "How many vehicles for this policy? : ", false, true);
 							input.nextLine();
@@ -188,63 +236,87 @@ public class PASApp {
 							String typeString = "", fuelString = "";
 							
 							while(numVehicle > 0) { //Adding vehicle details
-								clrscrn(1, true);
-								System.out.println("\n-------------------------------");
-								System.out.println("       Vehicle Details");
-								System.out.println("-------------------------------");
-								make = checkerString(input, "Make: ", false);
-								model = checkerString(input, "Model: ", false);
-								year = checkerInt(input, "Year: ", true, false);
-								input.nextLine();
-								do{ //do while loop to check for the input of type
-									type = checkerInt(input, " Choose which type your vehicle is: \n[1] 4-door sedan\n" + 
-																"[2] 2-door sports car, SUV, or truck\n-------------------------------\nYour type of vehicle: ", false, false);
-									if(type == 1 || type == 2){
-										checkInp = true;
-										if(type == 1){
-											typeString = "4-door sedan";
+								do{
+									clrscrn(1, true);
+									System.out.println("\n-------------------------------");
+									System.out.println("       Vehicle Details");
+									System.out.println("-------------------------------");
+									make = checkerString(input, "Make: ", false);
+									model = checkerString(input, "Model: ", false);
+									year = checkerInt(input, "Year: ", true, false);
+									input.nextLine();
+									do{ //do while loop to check for the input of type
+										type = checkerInt(input, " Choose which type your vehicle is: \n[1] 4-door sedan\n" + 
+																	"[2] 2-door sports car, SUV, or truck\n-------------------------------\nYour type of vehicle: ", false, false);
+										if(type == 1 || type == 2){
+											checkInp = true;
+											if(type == 1){
+												typeString = "4-door sedan";
+											}
+											else if(type == 2){
+												typeString = "2-door sports car, SUV, or truck";
+											}
 										}
-										else if(type == 2){
-											typeString = "2-door sports car, SUV, or truck";
+										
+										else{	
+											clrscrn(0, false);
 										}
-									}
-									
-									else{	
-										clrscrn(0, false);
-									}
-								}while(!checkInp);
+									}while(!checkInp);
 
-								checkInp = false;
-								do{ //do while loop to check for the input of fuel
-									fuel = checkerInt(input, "Choose which type of fuel: \n[1] Diesel\n"+
-														"[2] Electric\n[3] Petrol\n-------------------------------\nYour type of fuel: ", false, false);
-									if(fuel == 1 || fuel == 2 || fuel == 3){
-										checkInp = true;
-										if(fuel == 1){
-											fuelString = "Diesel";
+									checkInp = false;
+									do{ //do while loop to check for the input of fuel
+										fuel = checkerInt(input, "Choose which type of fuel: \n[1] Diesel\n"+
+															"[2] Electric\n[3] Petrol\n-------------------------------\nYour type of fuel: ", false, false);
+										if(fuel == 1 || fuel == 2 || fuel == 3){
+											checkInp = true;
+											if(fuel == 1){
+												fuelString = "Diesel";
+											}
+											else if(fuel == 2){
+												fuelString = "Electric";
+											}
+											else if(fuel == 3){
+												fuelString = "Petrol";
+											}
 										}
-										else if(fuel == 2){
-											fuelString = "Electric";
+										else{
+											clrscrn(0, false);
 										}
-										else if(fuel == 3){
-											fuelString = "Petrol";
-										}
+									}while(!(checkInp));
+									
+									price = checkerDouble(input, "Purchase price: ");
+									System.out.print("Color: ");
+									input.nextLine();
+									color = input.nextLine();
+
+									System.out.println("\n-------------------------------");
+									System.out.println("       Vehicle Details");
+									System.out.println("-------------------------------");
+									System.out.println("Make: " + make);
+									System.out.println("Model: " + model);
+									System.out.println("Year: " + year);
+									System.out.println("type: " + typeString);
+									System.out.println("Fuel: " + fuelString);
+									System.out.println("Price: " + price);
+									System.out.println("Color: " + color);
+									System.out.println("-------------------------------");
+									System.out.println("Are you sure about the details of this vehicle? (y/any key) ");
+									Character decision = input.nextLine().charAt(0);
+							
+									if(decision.equals('y') || decision.equals('Y')) { // finilizing the policy when bought
+										checkerProceed = true;
+										customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1)
+														.addVehicles(new Vehicle(make,model,year, typeString, fuelString, price, color, licenseYear));
+									
+									numVehicle--;
 									}
 									else{
-										clrscrn(0, false);
+										System.out.println("Proceeding to redo inputs...");
 									}
-								}while(!(checkInp));
-								
-								price = checkerDouble(input, "Purchase price: ");
-								System.out.print("Color: ");
-								input.nextLine();
-								color = input.nextLine();
-						
 
-								customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1)
-													.addVehicles(new Vehicle(make,model,year, typeString, fuelString, price, color, licenseYear));
+
+								}while(!checkerProceed);
 								
-								numVehicle--;
 							}
 							clrscrn(1, true);
 							customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1)
@@ -265,8 +337,8 @@ public class PASApp {
 							System.out.println("-------------------------------\n");
 							
 							System.out.println("-------------------------------");
-							System.out.println("Would you like to buy the policy? (y/n)");
-							decision = input.nextLine().charAt(0);
+							System.out.println("Would you like to buy the policy? (y/any key)");
+							Character decision = input.nextLine().charAt(0);
 							
 							if(decision.equals('y') || decision.equals('Y')) { // finilizing the policy when bought
 								customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).setStatus();
@@ -285,6 +357,8 @@ public class PASApp {
 
 						}
 						
+
+
 						else {
 							System.out.println("Account does not exist!");
 							clrscrn(1, false);
@@ -335,7 +409,7 @@ public class PASApp {
 	
 						else{
 							
-							System.out.println("Would you like to cancel this policy? (y/n)");
+							System.out.println("Would you like to cancel this policy? (y/any key)");
 							confirm = input.nextLine().charAt(0);
 	
 							if(confirm.equals('y') || confirm.equals('Y')){
@@ -423,7 +497,7 @@ public class PASApp {
 
 								claims.get(claims.size()-1).getDetails();
 								input.nextLine();
-								System.out.println("Would you like to proceed with this policy? (y/n)");
+								System.out.println("Would you like to proceed with this policy? (y/any key)");
 								confirm = input.nextLine().charAt(0);
 	
 								if(confirm.equals('y') || confirm.equals('Y')){
