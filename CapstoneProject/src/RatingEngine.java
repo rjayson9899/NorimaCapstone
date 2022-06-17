@@ -11,7 +11,6 @@ import java.time.LocalDate;
  * 
  * @author Roger Jayson M. Mendez III
  */
-
 public class RatingEngine {
 	
 	/**

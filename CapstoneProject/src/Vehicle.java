@@ -11,7 +11,6 @@
  * 
  * @author Roger Jayson M. Mendez III
  */
-
 public class Vehicle {
 
 	private String make;

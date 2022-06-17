@@ -16,7 +16,6 @@ import java.util.Locale;
  * 
  * @author Roger Jayson M. Mendez III
  */
-
 public class Claim {
 
 	private final String claimNumber;
@@ -113,7 +112,7 @@ public class Claim {
 	 * Output is generated directly to console.
 	 */
 	public static void printClaimHeader() {
-		System.out.printf("\n%-20s\t%-20s\t%-20s\t%-20s\t%-20s\t%20s\n", "Claim Number", "Accident Date", "Accident Address", "Accident Description", "Damage Description", "Repair Costs");
+		System.out.printf("\n%-20s\t%-20s\t%-35s\t%-35s\t%-20s\t%20s\n", "Claim Number", "Accident Date", "Accident Address", "Accident Description", "Damage Description", "Repair Costs");
 	}
 	
 	/**
@@ -125,7 +124,7 @@ public class Claim {
 		NumberFormat money = NumberFormat.getCurrencyInstance(Locale.US);
 		String repairCostsString;
 		repairCostsString = money.format(this.repairCosts);
-		System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%-20s\t%20s\n", this.claimNumber, this.accidentDate, this.accidentAddress, this.accidentDescription, this.accidentDamage, repairCostsString);
+		System.out.printf("%-20s\t%-20s\t%-35s\t%-35s\t%-20s\t%20s\n", this.claimNumber, this.accidentDate, this.accidentAddress, this.accidentDescription, this.accidentDamage, repairCostsString);
 	}
 	
 }

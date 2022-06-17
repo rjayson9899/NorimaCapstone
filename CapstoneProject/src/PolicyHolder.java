@@ -12,7 +12,6 @@ import java.time.LocalDate;
  * 
  * @author Roger Jayson M. Mendez III
  */
-
 public class PolicyHolder {
 	
 	private String firstName;
@@ -138,7 +137,7 @@ public class PolicyHolder {
 	 * @return boolean - true if valid, false if not
 	 */
 	public boolean hasValidLicenseDate() {
-		LocalDate validLicenseDate = birthDate.plusYears(16);
+		LocalDate validLicenseDate = birthDate.plusYears(18);
 		
 		if (licenseDate.compareTo(validLicenseDate) >= 0) {
 			return true;

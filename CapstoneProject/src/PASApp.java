@@ -1,7 +1,9 @@
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.DateTimeException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -17,7 +19,6 @@ import java.util.Scanner;
  * 
  * @author Roger Jayson M. Mendez III
  */
-
 public class PASApp {
 	private static Scanner in = new Scanner(System.in);
 	
@@ -38,51 +39,63 @@ public class PASApp {
 			choice = getValidInt("Enter your choice: ");
 			
 			switch (choice) {
-				/*
-				 * Generates a new account and stores in program
+				/* Generates a new account and stores in program
 				 * 
-				 * Before taking inputs, the program will generate a unique ID
-				 * based on what is available in the system. This ID is generated
-				 * through a class method in the CustomerAccount class. It's behavior
-				 * will be thoroughly explained in the class file. The program will
-				 * proceed if a valid unique ID is returned. The only time it will
-				 * return an invalid ID is when the system has accounts occupying all
-				 * ID spaces. In this case, account creation will be aborted. Otherwise,
-				 * the program will proceed as follows:
+				 * Before taking inputs, the program will generate a unique ID based on what 
+				 * is available in the system. This ID is generated through a class method in 
+				 * the CustomerAccount class. Refer to CustomerAccount.generateUniqueId() for 
+				 * more details on how it works. 
 				 * 
-				 * Takes 3 inputs:
-				 * 		(String)	First Name	- first name of customer to register, cannot be blank
-				 * 		(String)	Last Name	- last name of customer to register, cannot be blank
-				 * 		(String)	Address		- address of customer to register, cannot be blank
+				 * If the system finds a vacant ID, the program will proceed to taking 3 inputs
+				 * described below.
 				 * 
-				 * Inputed first name and last name will be compared to 
-				 * names already present in the system. If a match for both
-				 * is found, the program will abort the creation of the new
-				 * account. Otherwise, a new account will be made along with
-				 * an automated unique ID.
+				 * Inputs:
+				 * 		(String)	First Name	- first name of customer to register
+				 * 		(String)	Last Name	- last name of customer to register
+				 * 		(String)	Address		- address of customer to register
+				 * 
+				 * The user is given an opportunity to review their inputs if they desire to
+				 * change certain details.
+				 * 
+				 * If the user is satisfied with their inputs, the first name and last names inputs are
+				 * compared against all registered users in the system. If an identical match is found,
+				 * account creation is aborted.
+				 * 
+				 * This case made use of the following helper methods:
+				 * 		> getStringWord()
 				 */
 				case 1:
 					uniqueId = CustomerAccount.generateUniqueId(customerList);
 					
-					if (uniqueId >= 0) {
-						System.out.println("\nInput customer details");
-						System.out.println("==================================");
-						firstName = getStringWord("Input First Name: ");
-						lastName = getStringWord("Input Last Name: ");
-						address = getStringWord("Input Address: ");
-						System.out.println("==================================\n");
-						foundHit = false;
+					if (uniqueId > 0) {
+						do {
+							System.out.println("\nInput customer details");
+							System.out.println("==================================");
+							firstName = getStringWord("Input First Name: ");
+							lastName = getStringWord("Input Last Name: ");
+							address = getStringWord("Input Address: ");
+							System.out.println("==================================\n");
+							
+							System.out.println("\nReview the following details:");
+							System.out.println("First Name: " + firstName);
+							System.out.println("Last Name: " + lastName);
+							System.out.println("Address: " + address);
+							System.out.print("\nWill you change customer details? [y for yes, anything else for no]: ");
+							strIn = in.nextLine();
+						} while (strIn.equalsIgnoreCase("y"));
 						
+						// Search in list if name is taken
+						foundHit = false;
 						for (CustomerAccount custObj: customerList) {
 							if (custObj.getFirstName().equalsIgnoreCase(firstName) && custObj.getLastName().equalsIgnoreCase(lastName)) {
-								System.out.println("Account name taken");
+								System.out.println("\nAccount name taken");
 								foundHit = true;
 							}
 						}
 						
 						if (!foundHit) {
 							customerList.add(new CustomerAccount(uniqueId, firstName, lastName, address));
-							System.out.printf("Account Registered with account Number %04d\n", uniqueId);
+							System.out.printf("\nAccount Registered with account Number %04d\n", uniqueId);
 						}
 					}
 					else {
@@ -95,69 +108,55 @@ public class PASApp {
 				/*
 				 * Quotes and/or Creates a Policy based on a series of inputs
 				 * 
-				 * Will first generate a unique ID for the policy. Unique ID is generated
-				 * through a class method available in the Policy class. If the method 
-				 * does not return a valid ID, policy creation will be aborted. This would
-				 * mean the unique ID space for policies has been fully occupied and can no
-				 * longer accommodate another entry.
+				 * To create a Policy, the following information is taken by the program in order:
+				 * 		> Account Number to file Policy in
+				 * 		> Policy Holder Information
+				 * 		> Vehicle Information - 1st in mandatory, others are optional
+				 * 		> Effective date - optional, can be automatically set to current date
 				 * 
-				 * To create a Policy, a customer account is required. The program will ask
-				 * for the ID of the account where the Policy will be created on. Failure to
-				 * provide a valid ID will result in the program aborting this process.
+				 * For the account number, the input must match an existing account. Input must be
+				 * 4 digits long and is verified via custom method getPositiveIntBoundedInput().
+				 * Incorrect inputs will result in the program demanding another input until it is
+				 * valid. Input is compared to all CustomerAccount instances in the system. If no
+				 * match is found, the program will return to the main menu.
 				 * 
-				 * The first step in the creation of the policy is to set the policy holder.
-				 * While the customer account itself can be the holder, the program also
-				 * accommodates custom named account holders. The decision whether the customer
-				 * itself or a custom name will be used as the holder will be decided by
-				 * user input. Inputting 'Y' regardless of case will result in the customer
-				 * account being the basis of the policy holder name. Any other input, including
-				 * blank string, will result in the program asking for a custom name. The handling
-				 * of inputs for creating a policy holder instance will be done through helper methods
-				 * found after the main method.
+				 * When inputting policy holder information, the user can decide if the holder will
+				 * be the customer themself or a custom named entity. Information to collect will
+				 * be adjusted based on their decision. Refer to makeHolder() helper methods for how
+				 * input will be handled. For a policy holder to be valid, the following
+				 * conditions must be met:
+				 * 		> Age is 18 or greater based on birth date
+				 * 		> License issue date must be on or after the date they became 18 years of age
+				 * The program will warn the user for any conditions it fails. The user is also given the
+				 * opportunity to review their inputs. If the user chooses to continue with invalid details,
+				 * policy creation will be aborted.
 				 * 
-				 * Inputs for the above process:
-				 * 		(String) choice	- input if to use customer account or custom name
-				 * For information on the inputs for policy holder, refer to the following helper method:
-				 * 		> makeHolder()			- For creating a policy holder with custom name
-				 * 		> makeHolder(custObj)	- For creating a policy holder using customer account name
+				 * If the policy holder is valid, the program will immediately collect information on
+				 * the vehicles to be insured. Refer to helper method makeVehicle() for details on
+				 * how inputs are handled. After the first, the user is given the option to add another
+				 * vehicle.
 				 * 
-				 * After creating a policy holder, the program will require the creation of one vehicle
-				 * to tie the policy with. The first vehicle is mandatory. For inputs, refer to the respective
-				 * helper method. After inputting the first vehicle, the program will ask if another vehicle
-				 * is to be added. An input of "Y", regardless of case, will result in another loop to get
-				 * the details of the next vehicle. Any other inputs, including whitespace, will allow the
-				 * program to proceed.
+				 * Once the user is done inputing the vehicle/s, a quote is generated and the user is
+				 * asked if they will take the policy. If they do,  the user can decide to set the 
+				 * current date as effective date or have it be a defined date. If they choose for a 
+				 * defined date, valid inputs will only range between now and 5 years from now.
 				 * 
-				 * Inputs for the above process:
-				 * 		(String)	choice	- input if to add another vehicle
-				 * For information on the inputs for policy holder, refer to the following helper method:
-				 * 		> makeVehicle()			- For creating a vehicle
+				 * If the user decides to not get the policy, the policy creation process is cancelled.
 				 * 
-				 * Finally, a quote is generated. For logic on how the quote is generated, refer to
-				 * documentation on Policy instance method generateQuote(). A prompt will ask the user
-				 * if they wish to get the policy. An input of "Y", regardless of case, will register the 
-				 * Policy into the account. Any other inputs, will result in the disposal of the generated
-				 * Policy so far. 
-				 * 
-				 * When the user accepts to buy the policy, a choice is presented if the user wants the
-				 * program to automatically configure the effective date as the current date. an input of
-				 * "Y", regardless of case, will make is so the program will automatically set the
-				 * effective date. Any other inputs will result in the program calling the getDate()
-				 * command to get a date. The input must generate a date between the range of today
-				 * to 5 years from now. Dates beyond this range will make the program force the user to
-				 * input another.
-				 * 
-				 * Inputs for the above process:
-				 * 		(String)	choice	- input if to accept quoted policy
+				 * Case makes use of the following helper methods:
+				 * 		> makeHolder()
+				 * 		> makeVehicle()
+				 * 		> getDate()
 				 */
 				case 2:
 					nowDate = LocalDate.now();
 					uniqueId = Policy.generateUniqueId(customerList);
 					
-					if (uniqueId >= 0) {
+					if (uniqueId > 0) {
 						inputId = getPositiveIntBoundedInput("Input Account Number to create Policy in: ", 4, true);
-						currentAccount = null;
 						
+						// Search for a matching account
+						currentAccount = null;
 						for (CustomerAccount acct: customerList) {
 							if (acct.getAccountNumber() == inputId) {
 								currentAccount = acct;
@@ -165,13 +164,15 @@ public class PASApp {
 							}
 						}
 					
+						// Prevent progression if no user was found matching inputed account number
 						if (currentAccount != null) {
 							tempPolicy = new Policy(uniqueId);
 							
+							// Create a Policy Holder for the policy
 							do {
-								System.out.print("Set Current account as holder? [y for yes]: ");
+								//Ask if user wants account holder as policy holder
+								System.out.print("\nSet Current account as holder? [y for yes, anything else for no]: ");
 								strIn = in.nextLine();
-								
 								if (strIn.equalsIgnoreCase("y")) {
 									tempHolder = makeHolder(currentAccount);
 								}
@@ -179,65 +180,88 @@ public class PASApp {
 									tempHolder = makeHolder();
 								}
 								
+								// Checks for date validity
 								if (!(tempHolder.hasValidBirthDate()) || !(tempHolder.hasValidLicenseDate())) {
 									System.out.println("ERROR: Inputted details of policy holder violates the following rules:");
 									if (!(tempHolder.hasValidBirthDate())) {
 										System.out.println("\t> Age must be 18+");
 									}
 									if (!(tempHolder.hasValidLicenseDate())) {
-										System.out.println("\t> License must be issued when holder is at least 16 years old");
+										System.out.println("\t> License must be issued when holder is at least 18 years old");
 									}
 									System.out.println();
-									
-									System.out.print("Enter another Policy holder? [y for yes]: ");
-									strIn = in.nextLine();
-									if (!(strIn.equalsIgnoreCase("y"))) {
-										break;
-									}
+									System.out.println("Review the following information:");
+									System.out.println("First Name: " + tempHolder.getFirstName());
+									System.out.println("Last Name: " + tempHolder.getLastName());
+									System.out.println("Birth Date: " + tempHolder.getBirthDate()
+														+ (tempHolder.hasValidBirthDate()? "": " (Invalid)"));
+									System.out.println("License No.: " + tempHolder.getDriverLicenseNumber());
+									System.out.println("License Issue Date: " + tempHolder.getLicenseDate()
+														+ (tempHolder.hasValidLicenseDate()? "": " (Invalid)"));
 								}
-
-							} while (!(tempHolder.hasValidBirthDate()) || !(tempHolder.hasValidLicenseDate()));
+								else {
+									System.out.println();
+									System.out.println("Review the following information:");
+									System.out.println("First Name: " + tempHolder.getFirstName());
+									System.out.println("Last Name: " + tempHolder.getLastName());
+									System.out.println("Birth Date: " + tempHolder.getBirthDate());
+									System.out.println("License No.: " + tempHolder.getDriverLicenseNumber());
+									System.out.println("License Issue Date: " + tempHolder.getLicenseDate());
+								}
+								
+								System.out.print("\nEnter a different Policy holder? [y for yes, anything else for no]: ");
+								strIn = in.nextLine();
+							} while (strIn.equalsIgnoreCase("y"));
 							
+							// Prevent progression if the policy holder details are invalid
 							if (tempHolder.hasValidBirthDate() || tempHolder.hasValidLicenseDate()) {
 								tempPolicy.setPolicyHolder(tempHolder);
+								
+								// Add cars to policy
 								do  {
 									tempPolicy.addVehicle(makeVehicle());
-									System.out.print("Input y to add another vehicle, else press enter to continue: ");
+									System.out.print("Input y to add another vehicle. Enter anything else to continue: ");
 									strIn = in.nextLine();
 								} while (strIn.equalsIgnoreCase("y"));
 								
+								// Generate a quote and asks the user if they will get the policy
 								tempPolicy.generateQuote();
-								System.out.print("Will you get this policy? [y for yes]: ");
+								System.out.print("Will you get this policy? [y for yes, anything else for no]: ");
 								strIn = in.nextLine();
 								
+								// Prevent progression if the user will not get the policy
 								if (strIn.equalsIgnoreCase("y")) {
-									System.out.print("\nSet policy to be effective immediately? [y for yes]: ");
+									// Ask if user wants current date as effective date
+									System.out.print("\nSet policy to be effective immediately? [y for yes, anything else for no]: ");
 									strIn = in.nextLine();
 									
 									if (strIn.equalsIgnoreCase("y")) {
+										// Sets current system date as effective date
 										effectiveDate = LocalDate.now();
-										tempPolicy.setEffectiveDate(effectiveDate);
-										currentAccount.addPolicy(tempPolicy);
 									}
 									else {
 										maxDate = nowDate.plusYears(5);
+										// Get effective policy date from user. Forces user to retry if date is not between
+										// current system date and system date 5 years from now.
 										do {
 											effectiveDate = getDate("policy effective");
-											if ((effectiveDate.compareTo(nowDate) < 0) || (effectiveDate.compareTo(maxDate) > 0)) {
+											if (effectiveDate.isBefore(nowDate) || effectiveDate.isAfter(maxDate)) {
 												System.out.println("\nDate can only be between " + nowDate + " and " + maxDate + "\n");
 											}
-										} while ((effectiveDate.compareTo(nowDate) < 0) || (effectiveDate.compareTo(maxDate) > 0));
-										tempPolicy.setEffectiveDate(effectiveDate);
-										currentAccount.addPolicy(tempPolicy);
+										} while (effectiveDate.isBefore(nowDate) || effectiveDate.isAfter(maxDate));
 									}
-									System.out.printf("Policy created with id %06d\n", uniqueId);
+									
+									// Adds policy to system
+									tempPolicy.setEffectiveDate(effectiveDate);
+									currentAccount.addPolicy(tempPolicy);
+									System.out.printf("\nPolicy created with id %06d\n", uniqueId);
 								}
 								else {
 									System.out.println("Policy buy cancelled.");
 								}
 							}
 							else {
-								System.out.println("No valid policy holder inputted, policy creation aborted.");
+								System.out.println("\nNo valid policy holder inputed, policy creation aborted.");
 							}
 						}
 						else {
@@ -260,6 +284,9 @@ public class PASApp {
 				 * 
 				 * Inputs:
 				 * 		(int)	inputID - The ID of the Policy to cancel
+				 * 
+				 * Case makes use of the following helper methods:
+				 * 		> getPositiveIntBoundedInput()
 				 */
 				case 3:
 					inputId = getPositiveIntBoundedInput("Input Policy Number to cancel: ", 6, true);
@@ -305,7 +332,9 @@ public class PASApp {
 				 * 
 				 * Inputs:
 				 * 		(int)	inputID - ID of Policy to file claim against
-				 * For information on the inputs to make a claim, refer to the following helper method:
+				 * 
+				 * Case makes use of the following helper methods:
+				 * 		> getPositiveIntBoundedInput()
 				 * 		> makeClaim();
 				 */
 				case 4:
@@ -329,13 +358,12 @@ public class PASApp {
 						}
 						else {
 							uniqueId = Claim.generateUniqueId(claimList);
-							if (uniqueId >= 0) {
+							if (uniqueId > 0) {
 								tempClaim = makeClaim(uniqueId);
-								
 								effectiveDate = currentAccount.getPolicyMatchingId(inputId).getEffectiveDate();
 								
-								if (tempClaim.getAccidentDate().compareTo(effectiveDate) < 0) {
-									System.out.println("Cannot file claim for accident that occured before " + effectiveDate);
+								if (tempClaim.getAccidentDate().isBefore(effectiveDate)) {
+									System.out.println("Cannot file claim for accident that occured before effective date: " + effectiveDate);
 								}
 								else {
 									claimList.add(tempClaim);
@@ -363,6 +391,9 @@ public class PASApp {
 				 * Using these inputs, the program will search all customer accounts
 				 * for a match. If a match is found, complete details matching the 
 				 * account will be printed. Otherwise, program will output "no match."
+				 * 
+				 * Case makes use of the following helper methods:
+				 * 		> getStringWord()
 				 */
 				case 5:
 					firstName = getStringWord("Input First Name: ");
@@ -392,6 +423,9 @@ public class PASApp {
 				 * Program will check all customer accounts for a matching policy ID.
 				 * If a match is found, all related information to the policy will be 
 				 * printed. Otherwise, program will output "no match."
+				 * 
+				 * Case makes use of the following helper methods:
+				 * 		> getPositiveIntBoundedInput()
 				 */
 				case 6:
 					inputId = getPositiveIntBoundedInput("Input Policy Number to find: ", 6, true);
@@ -501,7 +535,7 @@ public class PASApp {
 	 * 
 	 * @param none
 	 */
-	protected static void printMenu() {
+	private static void printMenu() {
 		System.out.println("==================================");
 		System.out.println("||          PAS System          ||");
 		System.out.println("==================================");
@@ -534,32 +568,41 @@ public class PASApp {
 	 * 
 	 * @return Vehicle instance
 	 */
-	protected static Vehicle makeVehicle() {
+	private static Vehicle makeVehicle() {
+		String make,model, type, fuelType, strIn;
 		int yearNow = LocalDate.now().getYear();
-		String make;
-		String model;
 		int year;
-		String type;
-		String fuelType;
 		double purchasePrice;
 		
-		System.out.println("\nInput vehicle details");
-		System.out.println("==================================");
-		make = getStringWord("Enter make: ");
-		model = getStringWord("Enter model: ");
-		
 		do {
-			year = getIntBoundedInput("Enter year: ", 4, true);
-			if (year > yearNow || year < 1900) {
-				System.out.println("\nCar year must be between 1900 and " + yearNow + "\n");
-			}
-		} while (year > yearNow || year < 1900);
-		
-		
-		type = getStringWord("Enter type: ");
-		fuelType = getStringWord("Enter fuel type: ");
-		purchasePrice = getMoneyInput("Enter purchase price: ");
-		System.out.println("==================================\n");
+			System.out.println("\nInput vehicle details");
+			System.out.println("==================================");
+			make = getStringWord("Enter make: ");
+			model = getStringWord("Enter model: ");
+			
+			do {
+				year = getIntBoundedInput("Enter year: ", 4, true);
+				if (year > yearNow || year < 1900) {
+					System.out.println("\nCar year must be between 1900 and " + yearNow + "\n");
+				}
+			} while (year > yearNow || year < 1900);
+			
+			
+			type = getStringWord("Enter type: ");
+			fuelType = getStringWord("Enter fuel type: ");
+			purchasePrice = getMoneyInput("Enter purchase price: ");
+			System.out.println("==================================\n");
+			
+			System.out.println("\nReview the following information:");
+			System.out.println("Vehicle make: " + make);
+			System.out.println("Vehicle model: " + model);
+			System.out.println("Vehicle year: " + year);
+			System.out.println("Vehicle type: " + type);
+			System.out.println("Vehicle fuel type: " + fuelType);
+			System.out.println("Vehicle purchase price: " + NumberFormat.getCurrencyInstance(Locale.US).format(purchasePrice));
+			System.out.print("\nWill you change details of vehicle? [y for yes, anything else for no]: ");
+			strIn = in.nextLine();
+		} while (strIn.equalsIgnoreCase("y"));
 		
 		return new Vehicle(make, model, year, type, fuelType, purchasePrice);
 	}
@@ -582,7 +625,7 @@ public class PASApp {
 	 * @param custObj - CustomerAccount instance where name is taken
 	 * @return PolicyHolder instance
 	 */
-	protected static PolicyHolder makeHolder(CustomerAccount custObj) {
+	private static PolicyHolder makeHolder(CustomerAccount custObj) {
 		String licenseNumber;
 		LocalDate birthDate, licenseDate;
 		
@@ -612,7 +655,7 @@ public class PASApp {
 	 * 
 	 * @return PolicyHolder instance
 	 */
-	protected static PolicyHolder makeHolder() {
+	private static PolicyHolder makeHolder() {
 		String licenseNumber, firstName, lastName;
 		LocalDate birthDate, licenseDate;
 		
@@ -630,6 +673,7 @@ public class PASApp {
 	
 	/**
 	 * Gets inputs from user and creates a Claim instance
+	 * User can review their inputs and confirm if they want to use it for their claim.
 	 * 
 	 * Inputs:
 	 * 		(LocalDate)	accident date			- Date accident took place, refer to getDate() method.
@@ -638,27 +682,39 @@ public class PASApp {
 	 * 		(String)	accident damage			- description of damage
 	 * 		(Double)	repair costs			- Repair costs of damaged vehicle
 	 * 		
-	 * Uses input validator methods. See following for documentation
-	 * 		> getDate()
-	 * 		> getStringNonEmpty()
-	 * 		> getValidDouble()
+	 * Uses input validator methods. See following for documentation:
+	 * 		> getDateRequirePast()
+	 * 		> getStringWord()
+	 * 		> getMoneyInput()
 	 * 
 	 * @param uniqueId - ID of claim to be instantiated
 	 * @return Claim instance
 	 */
-	protected static Claim makeClaim(int uniqueId) {
+	private static Claim makeClaim(int uniqueId) {
 		LocalDate accidentDate;
-		String accidentAddress, accidentDescription, accidentDamage;
+		String accidentAddress, accidentDescription, accidentDamage, strIn;
 		double repairCosts;
 		
-		System.out.println("\nInput claim details");
-		System.out.println("==================================");
-		accidentDate = getDateRequirePast("accident");
-		accidentAddress = getStringWord("Enter accident address: ");
-		accidentDescription = getStringWord("Enter accident description: ");
-		accidentDamage = getStringWord("Enter damage description: ");
-		repairCosts = getMoneyInput("Enter repair costs: ");
-		System.out.println("==================================\n");
+		do {
+			System.out.println("\nInput claim details");
+			System.out.println("==================================");
+			accidentDate = getDateRequirePast("accident");
+			accidentAddress = getStringWord("Enter accident address: ");
+			accidentDescription = getStringWord("Enter accident description: ");
+			accidentDamage = getStringWord("Enter damage description: ");
+			repairCosts = getMoneyInput("Enter repair costs: ");
+			System.out.println("==================================\n");
+			
+			System.out.println("\nReview the following information: ");
+			System.out.println("Accident Date: " + accidentDate);
+			System.out.println("Accident Address: " + accidentAddress);
+			System.out.println("Accident Description: " + accidentDescription);
+			System.out.println("Accident Damage: " + accidentDamage);
+			System.out.println("Repair costs: " + NumberFormat.getCurrencyInstance(Locale.US).format(repairCosts));
+			System.out.print("\nWill you change details of claim? [y for yes, anything else for no]: ");
+			strIn = in.nextLine();
+		} while (strIn.equalsIgnoreCase("y"));
+		
 		
 		return new Claim(uniqueId, accidentDate, accidentAddress, accidentDescription, accidentDamage, repairCosts);
 	}
@@ -694,7 +750,7 @@ public class PASApp {
 	 * @param type - Description of date type, in string
 	 * @return LocalDate - with defined values
 	 */
-	protected static LocalDate getDate(String type) {
+	private static LocalDate getDate(String type) {
 		LocalDate date = LocalDate.now();
 		int month = 0;
 		int day = 0;
@@ -746,16 +802,16 @@ public class PASApp {
 	 * @param type - description of date to print, refer to getDate() for how this will be used
 	 * @return LocalDate - date from the past
 	 */
-	protected static LocalDate getDateRequirePast(String type) {
+	private static LocalDate getDateRequirePast(String type) {
 		LocalDate nowDate = LocalDate.now();
 		LocalDate newDate;
 		
 		do {
 			newDate = getDate(type);
-			if (newDate.compareTo(nowDate) > 0) {
+			if (newDate.isAfter(nowDate)) {
 				System.out.println("\nDate cannot be after " + nowDate + "\n");
 			}
-		} while (newDate.compareTo(nowDate) > 0);
+		} while (newDate.isAfter(nowDate));
 		
 		return newDate;
 	}
@@ -780,7 +836,7 @@ public class PASApp {
 	 * @param message - Custom message to display for every input attempt
 	 * @return String instance
 	 */
-	protected static String getStringWord(String message) {
+	private static String getStringWord(String message) {
 		String strIn;
 		
 		do {
@@ -821,7 +877,7 @@ public class PASApp {
 	 * @param message - Custom message to display for every input attempt
 	 * @return int - validated integer
 	 */
-	protected static int getValidInt(String message) {
+	private static int getValidInt(String message) {
 		boolean isInvalid = true;
 		String getIntString = "";
 		int parsedInt = 0;
@@ -865,7 +921,7 @@ public class PASApp {
 	 * @param message - Custom message to display for every input attempt
 	 * @return double - validated double
 	 */
-	protected static double getMoneyInput(String message) {
+	private static double getMoneyInput(String message) {
 		boolean isInvalid = true;
 		String getDoubleString = "";
 		double parsedDouble = 0.0;
@@ -900,7 +956,6 @@ public class PASApp {
 					System.out.println("\nInvalid input! Input must consist of purely numbers\n");
 				}
 			}
-			
 		} while (isInvalid);
 		
 		return parsedDouble;
@@ -926,7 +981,7 @@ public class PASApp {
 	 * @param requireLimitAsMinimum - Enforces maximum limit as minimum if true
 	 * @return int - validated integer
 	 */
-	protected static int getIntBoundedInput(String message, int limit, boolean requireLimitAsMinimum) throws IllegalArgumentException {
+	private static int getIntBoundedInput(String message, int limit, boolean requireLimitAsMinimum) throws IllegalArgumentException {
 		boolean isInvalid = true;
 		String getIntString = "";
 		int parsedInt = 0;
@@ -996,7 +1051,7 @@ public class PASApp {
 	 * @param requireLimitAsMinimum - Enforces maximum limit as minimum if true
 	 * @return int - positive validated integer
 	 */
-	protected static int getPositiveIntBoundedInput(String message, int limit, boolean requireLimitAsMinimum) {
+	private static int getPositiveIntBoundedInput(String message, int limit, boolean requireLimitAsMinimum) {
 		int parsedInt;
 		
 		do {
