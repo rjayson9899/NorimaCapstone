@@ -178,7 +178,7 @@ public class PASApp {
 	
 	public static void main(String[] args) {
 		
-		int choiceOne;
+		String choiceOne;
 		String choiceTwo;
 		int cusAccTwo = 0, getAccNumb = 0, carYear;
 		int custAccNum = 0, numCar = 0;
@@ -195,10 +195,10 @@ public class PASApp {
 		
 		System.out.println("Hello! Welcome to the PAS system ");
 		do {
-			
+			clearScreen();
 			//main menu
 			System.out.println("========================================================");
-			System.out.println("                       PAS                        ");
+			System.out.println("                         PAS                        ");
 			System.out.println("========================================================");
 			System.out.println("1. Create a new Customer Account ");
 			System.out.println("2. Get a policy quote and buy the policy. ");
@@ -209,21 +209,26 @@ public class PASApp {
 			System.out.println("7. Search for and display a specific claim. ");
 			System.out.println("8. Exit. ");
 			System.out.println("========================================================");
-			while(!userIn.hasNextInt()) {
-				System.out.println("Please enter the number corresponding to your choice.");
-				userIn.next();
-			} 
-			choiceOne = userIn.nextInt();
-			switch(choiceOne) {
+			choiceOne = userIn.nextLine();
+			switch(choiceOne){
+			    case "":
+			    	clearScreen();
+			    	break;
+			    case " ":
+			    	clearScreen();
+			    	break;	
 				//create customer account
-			    case 1:
+			    case "1":
 			    	doesExist = false;
 			    	if (custAccNum > cust.size()) {
+			    		System.out.println("=============================================================");
 			    		System.out.println("No vacant account available. ");
+			    		System.out.println("=============================================================");
+			    		System.out.println("Press any key to continue. ");
+				    	userIn.nextLine();
 			    	}
 			    	else {
 			    		clearScreen();
-			    		userIn.nextLine();
 			    		do {
 			    			System.out.println("=============================================================");
 				    		fName = stringVerifier("Enter your first name: (You may add your second name)", "^[a-zA-Z][a-zA-Z ]*$");
@@ -270,13 +275,12 @@ public class PASApp {
 			    	break;
 			    	
 			    //quote and create policy
-			    case 2:
+			    case "2":
 			    	clearScreen();
 			    	if(policyNum > 999999) {
 			    		System.out.println("Policy already full.");
 			    	}
 			    	else {	
-			    		    userIn.nextLine();
 		    				isFound = false;
 				    		System.out.println("========================================================");
 			    			System.out.println("Enter the Customer's Account number: ");
@@ -356,6 +360,7 @@ public class PASApp {
 								    		//quote policy
 								    	 	totalPremium = cust.get(cusAccTwo).pol.get(cust.get(cusAccTwo).pol.size()-1).getTotalPremium();
 								    		System.out.printf("The policy will cost about: $%.2f\n", totalPremium);
+								    		System.out.println("========================================================");
 								    		System.out.println("Would you like to buy the policy? ");
 								    		System.out.println("Press y if yes and any key if no.");
 								    		choiceTwo = userIn.nextLine();
@@ -403,22 +408,18 @@ public class PASApp {
 			    	break;
 			    	
 			    //search for policy	
-			    case 3:
+			    case "3":
 			    	try {
 			    		clearScreen();
 				    	isFound = false;
-				    	userIn.nextLine();
-				    	System.out.println("========================================================");
+				    	System.out.println("=============================================================");
 				    	System.out.println("Enter the policy number: ");
-				    	while(!userIn.hasNextInt()) {
-		    				System.out.println("Please enter a valid input.");
-		    				userIn.next();
-		    			}  
-				    	polSear = userIn.nextInt();
-				    	userIn.nextLine();
+				    	String polFind = userIn.nextLine();
+			    		polSear = Integer.parseInt(polFind);
 				    	for(CustomerAccount cus : cust) {
-				    	    if (polSear == cus.pol.get(polSear).getPolNum()) {
+				    	    if (polFind.equals(cus.pol.get(polSear).getPolNum())) {
 				    	      cus.pol.get(polSear).cancelPol();
+				    	      System.out.println("=============================================================");
 					    	  System.out.println("Press any key to continue. ");
 						      userIn.nextLine();
 				    	      isFound = true;
@@ -438,11 +439,18 @@ public class PASApp {
 				    	userIn.nextLine();
 				    	clearScreen();
 			    	}
+		    		catch(NumberFormatException e) {
+		    			System.out.println("Invalid input ");
+		    			System.out.println("========================================================");
+		    			System.out.println("Press any key to continue. ");
+				    	userIn.nextLine();
+				    	clearScreen();
+		    		}
 
 			    	break;	
 			    	
 			    //claim accident details	
-			    case 4:
+			    case "4":
 			    	if(clNum > 999999) {
 			    		clearScreen();
 			    		System.out.println("========================================================");
@@ -453,19 +461,19 @@ public class PASApp {
 			    		try {
 			    			clearScreen();
 				    		isFound = false;
-				    		userIn.nextLine();
+				    		doesExist = false;
 				    		System.out.println("========================================================");
 				    		System.out.println("Enter the policy number: ");
 				    		String polFind = userIn.nextLine();
 				    		polSear = Integer.parseInt(polFind);
 				    		for(CustomerAccount cus : cust) {
-					    	    if (polSear == cus.pol.get(polSear).getPolNum()) {
+					    	    if (polFind.equals(cus.pol.get(polSear).getPolNum())) {
 					    	    	getAccNumb = cus.getAccNumb();
 					    	    	isFound = true;
 					    	    	cus.pol.get(polSear).checkStatus();
 					    	    	if(isCancelled == cus.pol.get(polSear).checkStatus()) {
-					    	    		System.out.println("Sorry, this policy has already been cancelled/expired or to be scheduled. ");
 					    	    		isFound = false;
+					    	    		doesExist = true;
 					    	    		break;
 					    	    	}
 					 
@@ -480,6 +488,7 @@ public class PASApp {
 					    		depAcc = stringVerifier("Description of the accident: ", "^[a-zA-Z0-9][a-zA-z0-9-.!%@# ]*$");
 					    		depDmgV = stringVerifier("Description of the damage to vehicle: ", "^[a-zA-Z0-9][a-zA-z0-9-.!%@# ]*$");
 					    		estRep = doubleVerifier("Estimated cost of repairs: ");
+					    		userIn.nextLine();
 					    		claim.add(new Claim(accDate, addDate, depAcc, depDmgV, estRep, clNumb));
 					    		System.out.println("Policy is claimed. ");
 					    		claim.get(clNum).accidentClaim();
@@ -489,7 +498,14 @@ public class PASApp {
 						        userIn.nextLine();
 						        clearScreen();
 			    	    	}
-				    	    else {
+				    	    else if (isFound == false && doesExist == true){
+				    	    	System.out.println("Sorry, this policy has already been cancelled/expired or to be scheduled. ");
+				    	    	System.out.println("========================================================");
+				    	    	System.out.println("Press any key to continue. ");
+						    	userIn.nextLine();
+						    	clearScreen();
+				    	    }
+				    	    else if (isFound == false && doesExist == false){
 				    	    	System.out.println("No policy exist. ");
 				    	    	System.out.println("========================================================");
 				    	    	System.out.println("Press any key to continue. ");
@@ -514,18 +530,14 @@ public class PASApp {
 			    	break;
 			    	
 			    //search customer account	
-			    case 5:
+			    case "5":
 			    	try {
 				    	isFound = false;
 				    	clearScreen();
-				    	userIn.nextLine();
 				    	System.out.println("========================================================");
-				    	System.out.println("Enter the customer's first name: ");
-				    	fName = userIn.nextLine();
-				    	fName = fName.trim();
-				    	System.out.println("Enter the customer's last name: ");
-				    	lName = userIn.nextLine();
-				    	lName.trim();
+				    	fName = stringVerifier("Enter the customer's first name: ", "^[a-zA-Z][a-zA-Z ]*$");
+				    	lName = stringVerifier("Enter the customer's last name: ", "^[a-zA-Z][a-zA-Z ]*$");
+				    	clearScreen();
 				    	for(CustomerAccount cus : cust) {
 				    	    if (cus.getfName().equalsIgnoreCase(fName) && cus.getlName().equalsIgnoreCase(lName)) {	 
 				    	    	isFound = true;
@@ -559,22 +571,22 @@ public class PASApp {
 			    	break;
 			    	
 			    //search for specific policy	
-			    case 6: 
+			    case "6": 
 			    	try {
 				     	isFound = false;
 				    	clearScreen();
-				    	userIn.nextLine();
 				    	System.out.println("========================================================");
 				    	System.out.println("Enter the policy number: ");
 				    	String polFind = userIn.nextLine();
 			    		polSear = Integer.parseInt(polFind);
 				    	for(CustomerAccount cus : cust) {
-				    	    if (polSear == cus.pol.get(polSear).getPolNum()) {
+				    	    if (polFind.equals(cus.pol.get(polSear).getPolNum())) {
 				    	    	isFound = true;
 				    	    	cus.pol.get(polSear).checkStatus();
 				    	    	cus.pol.get(polSear).seeDetails();
 				    	    	System.out.println("Press any key to continue. ");
 						    	userIn.nextLine();
+						    	clearScreen();
 				    	    }
 				    	}
 				    	if(isFound == false){
@@ -602,11 +614,10 @@ public class PASApp {
 			    	break;
 			   
 			    //search for specific claim
-			    case 7:
+			    case "7":
 			    	try {
 				    	isFound = false;
 				    	clearScreen();
-				    	userIn.nextLine();
 				    	System.out.println("========================================================");
 				    	System.out.println("Enter the claim number: ");
 				    	String clNumFind = userIn.nextLine();
@@ -643,7 +654,7 @@ public class PASApp {
 			    	break;
 			}
 		}
-		while(choiceOne != 8);
+		while(choiceOne != "8");
 		userIn.close();
 	}
 	

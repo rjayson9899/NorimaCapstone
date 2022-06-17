@@ -79,9 +79,8 @@ public class Policy {
 		return expDate;
 	}
 	
-	public int getPolNum() {
-		int polN = Integer.parseInt(polNum);
-		return polN;
+	public String getPolNum() {
+		return polNum;
 	}
 	
 	//this method creates a policy holder object within the policy class.

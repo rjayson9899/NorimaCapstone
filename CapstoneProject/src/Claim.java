@@ -40,7 +40,7 @@ public class Claim {
 		System.out.println("Brief Description of accident: " + desAcc);
 		System.out.println("Description of damage to vehicle: " + desDmgV);
 		System.out.println("Estimated cost of repairs: " + cost);
-		
+		System.out.println("=======================================================");
 	}
 	
 }
