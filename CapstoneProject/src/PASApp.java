@@ -44,7 +44,7 @@ public class PASApp {
 		double vehiclePrice;
 		double damageRepairCost;
 
-		LocalDate expirationDatePolicy = null, effectiveDatePolicy = null, customDate;
+		LocalDate expirationDatePolicy, effectiveDatePolicy, customDate;
 		LocalDate licensedIssueDate;
 		LocalDate birthDate;
 		LocalDate dateOfAccident;
@@ -375,7 +375,7 @@ public class PASApp {
 						} else {
 							isMatch = true;
 						}
-					}
+					} 
 				}
 
 				if (isMatch) {
@@ -398,7 +398,8 @@ public class PASApp {
 						System.out.println("=============================================");
 						System.out.println("  Filing an Accident Claim against a Policy  ");
 						System.out.println("=============================================");
-						
+						effectiveDatePolicy = null;
+						expirationDatePolicy = null;
 						
 						do {
 							do {
@@ -444,6 +445,8 @@ public class PASApp {
 					} else {
 						System.out.println("System is full of claims, cannot create a new claim!");
 					}
+				} else {
+					System.out.println("No policy found!");
 				}
 
 				break;
