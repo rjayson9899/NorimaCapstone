@@ -231,6 +231,8 @@ public class PASApp {
 			    		clearScreen();
 			    		do {
 			    			System.out.println("=============================================================");
+		    				System.out.println("                Customer account details                     ");
+			    			System.out.println("=============================================================");
 				    		fName = stringVerifier("Enter your first name: (You may add your second name)", "^[a-zA-Z][a-zA-Z ]*$");
 				    		lName = stringVerifier("Enter your last name: ", "^[a-zA-Z][a-zA-Z ]*$");
 					    	address = stringVerifier("Enter your address: (House number, Street, City, Province, Country, Zip code)","^[\\d]+[ ][a-zA-Z0-9,\\-\\. ]*$");
@@ -298,6 +300,8 @@ public class PASApp {
 							    			address = cust.get(cusAccTwo).getAddress();
 							    			do {
 							    				System.out.println("=============================================================");
+							    				System.out.println("                   Policy holder details                     ");
+							    				System.out.println("=============================================================");
 								    			bDay = birthDateVerifier("Enter the birthday: (format: Jan 01 1991) ");
 								    			licNum = stringVerifier("Driver's license number: ", "^[a-zA-Z0-9][a-zA-Z0-9- ]*$");
 								    			dateLic = licenseDateVerifier("Enter the date issued of the license: (format: Jan 01 1991) ", bDay); 
@@ -311,6 +315,8 @@ public class PASApp {
 							    	else { 
 								    		//policy holder details
 							    			do {
+							    				System.out.println("=============================================================");
+							    				System.out.println("                   Policy holder details                     ");
 								    			System.out.println("============================================================");
 								    			fName = stringVerifier("Enter your first name: (You may add your second name)", "^[a-zA-Z][a-zA-Z ]*$");
 									    		lName = stringVerifier("Enter your last name: ", "^[a-zA-Z][a-zA-Z ]*$");
@@ -339,6 +345,8 @@ public class PASApp {
 								    	 	while(numCar > 0) {
 									    		//vehicle details
 								    	 		do {
+								    	 			System.out.println("=============================================================");
+								    				System.out.println("                      Vehicle details                        ");
 								    	 			System.out.println("=============================================================");
 										    		carMake = stringVerifier("Enter the car make: ", "^[a-zA-Z][a-zA-Z ]*$");
 										    		carModel = stringVerifier("Enter the car model: ", "^[a-zA-Z][a-zA-z0-9-. ]*$");
@@ -454,7 +462,7 @@ public class PASApp {
 			    	if(clNum > 999999) {
 			    		clearScreen();
 			    		System.out.println("========================================================");
-			    		System.out.println("Claiming is not available right now. ");
+			    		System.out.println("         Claiming is not available right now.           ");
 			    		System.out.println("========================================================");
 			    	}
 			    	else {
@@ -480,6 +488,9 @@ public class PASApp {
 					    	    }
 				    		}
 				    		if(isFound == true) {
+				    			System.out.println("=============================================================");
+			    				System.out.println("                      Claim details                          ");
+			    				System.out.println("=============================================================");
 			    	    		cust.get(getAccNumb).pol.get(polSear).setClaimCounter(++polClNum);
 				    	    	String clNumb = String.format("%05d", clNum);
 				    	    	dateLic = cust.get(getAccNumb).pol.get(polSear).polyHol.getDateLic();
