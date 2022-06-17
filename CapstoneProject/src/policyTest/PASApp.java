@@ -352,7 +352,7 @@ public class PASApp {
 							System.out.println("-------------------------------");
 							Locale locale = new Locale("en", "US");      
 							NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
-							System.out.println(" Total Premium: $" + currencyFormatter.format(total));
+							System.out.println(" Total Premium: " + currencyFormatter.format(total));
 							System.out.println("-------------------------------\n");
 							
 							System.out.println("-------------------------------");
