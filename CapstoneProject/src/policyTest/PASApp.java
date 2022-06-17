@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -22,6 +23,7 @@ public class PASApp {
 		int accountNumGenerator = 0; 
 		int policyNumGenerator = 0;
 		int claimNumGenerator = 0;
+		Period diff;
 		
 		do {
 
@@ -147,23 +149,28 @@ public class PASApp {
 								lnamePol = checkerString(input, "Last Name: ", true);	
 							}
 							
+							
 							do{
 								birthDate = checkerDate(input,"Input birth date(yyyy-mm-dd):\nex.'2022-09-18': ", true);
-								if((LocalDate.now().getYear() - birthDate.getYear()) < 18){
+								diff = Period.between(birthDate, LocalDate.now());
+
+								if(diff.getYears() < 18){
 									System.out.println("You are not yet legal to have this kind of policy.");
 								}
-							}while((LocalDate.now().getYear() - birthDate.getYear()) < 18);
-							int placer = birthDate.plusYears(18).getYear();
+							}while(diff.getYears() < 18);
+
+
+							
 							System.out.print("Input license number: ");
 							String license = input.nextLine();
 							do{
 								licenseDate = checkerDate(input, "Input license date issued(yyyy-mm-dd):\n ex.'2022-09-18': ", true);
-								if(licenseDate.isBefore(birthDate) || licenseDate.isEqual(birthDate) || licenseDate.getYear() < placer){
+								if(licenseDate.isBefore(birthDate.plusYears(18))|| licenseDate.isEqual(birthDate)){
 									System.out.println("Date mismatch with your birth date!");
 								}
 								
-							}while(licenseDate.isBefore(birthDate) || licenseDate.isEqual(birthDate) || licenseDate.getYear() < placer );
-							int licenseYear =licenseDate.getYear() ;
+							}while(licenseDate.isBefore(birthDate.plusYears(18)) || licenseDate.isEqual(birthDate));
+							int licenseYear =licenseDate.getYear();
 							//initial creation for the policy
 							customerAccounts.get(indexGet).addPolicyAct(new Policy(effectDate, 
 																			new PolicyHolder(fnamePol, lnamePol, birthDate, license, licenseDate)));
