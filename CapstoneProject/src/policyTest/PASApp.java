@@ -39,7 +39,7 @@ public class PASApp {
 			
 			//main menu user interface
 			
-			clrscrn(0, false);
+			clrscrn();
 			choice = checkerInt(input, "-------------------------------\n          PAS System           \n-------------------------------\n"+ 
 								"[1] Create Customer Account\n[2] Get quote and Buy Policy\n[3] Cancel Policy\n" + 
 								"[4] File Accident Claim\n[5] Search Customer Account\n[6] Search Policy\n[7] Search Claim\n" +
@@ -50,13 +50,13 @@ public class PASApp {
 			switch(choice) {
 			
 				case 1: //Creating Account
-					clrscrn(1, true);
+					clrscrn();
 					
 
 					if(accountNumGenerator > 9998){ //checker if the number of accounts exceed the amount needed
 						System.out.println("No more room for a new account.");
 						System.out.println("Returning to main menu.");
-						clrscrn(1, false);
+						clrscrn();
 					}
 					else{
 						String decision1;
@@ -99,7 +99,7 @@ public class PASApp {
 											&& y.getAddress().equalsIgnoreCase(address)) {
 										System.out.println("Account already exist!");
 										accExist = true;
-										clrscrn(1, false);
+										clrscrn();
 										break;
 									}
 								}
@@ -117,12 +117,12 @@ public class PASApp {
 							
 							else if(decision1.isEmpty()) { //additional checker for null input
 							     System.out.println("Going back to main menu...");
-								 clrscrn(1, false);
+								 clrscrn();
 							}
 
 							else{
 								System.out.println("Going back to main menu...");
-								clrscrn(1, false);
+								clrscrn();
 							}
 
 						
@@ -133,7 +133,7 @@ public class PASApp {
 					break;
 					
 				case 2: // Quote/Buy policy
-					clrscrn(1, true);
+					clrscrn();
 					//initializing local variables
 					int indexGet = 0;
 					boolean wrongDate = true;
@@ -146,7 +146,7 @@ public class PASApp {
 					if(policyNumGenerator > 99998){ //checks if the maximum number of policies is achieved
 						System.out.println("No more room for a new policy.");
 						System.out.println("Returning to main menu.");
-						clrscrn(1, false);
+						clrscrn();
 					}
 
 					else{
@@ -173,7 +173,7 @@ public class PASApp {
 							boolean checkerProceed = false;
 							int licenseYear;
 							do{
-								clrscrn(1, true);
+								clrscrn();
 								System.out.println("\n-------------------------------");
 								System.out.println("    Policy Holder Details");
 								System.out.println("-------------------------------");
@@ -279,7 +279,7 @@ public class PASApp {
 							
 							while(numVehicle > 0) { //Adding vehicle details
 								do{
-									clrscrn(1, true);
+									clrscrn();
 									System.out.println("\n-------------------------------");
 									System.out.println("       Vehicle Details");
 									System.out.println("-------------------------------");
@@ -301,7 +301,7 @@ public class PASApp {
 										}
 										
 										else{	
-											clrscrn(0, false);
+											clrscrn();
 										}
 									}while(!checkInp);
 
@@ -322,7 +322,7 @@ public class PASApp {
 											}
 										}
 										else{
-											clrscrn(0, false);
+											clrscrn();
 										}
 									}while(!(checkInp));
 									
@@ -366,7 +366,7 @@ public class PASApp {
 								}while(!checkerProceed);
 								
 							}
-							clrscrn(1, true);
+							clrscrn();
 							customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1)
 													.getDetails();
 							
@@ -403,7 +403,7 @@ public class PASApp {
 								customerAccounts.get(indexGet).getPolicyAct().remove(customerAccounts.get(indexGet).getPolicyAct().size() - 1);
 								policyNumGenerator--;
 
-								clrscrn(1, false);
+								clrscrn();
 							}
 
 							else{
@@ -412,7 +412,7 @@ public class PASApp {
 								customerAccounts.get(indexGet).getPolicyAct().remove(customerAccounts.get(indexGet).getPolicyAct().size() - 1);
 								policyNumGenerator--;
 
-								clrscrn(1, false);
+								clrscrn();
 							}
 
 						}
@@ -421,7 +421,7 @@ public class PASApp {
 
 						else {
 							System.out.println("Account does not exist!");
-							clrscrn(1, false);
+							clrscrn();
 						}
 
 					}
@@ -431,7 +431,7 @@ public class PASApp {
 					break;
 					
 				case 3:
-					clrscrn(1,true);
+					clrscrn();
 					int indexPol = 0, indexCus = 0;
 					String confirm;
 					accExist = false;
@@ -458,7 +458,7 @@ public class PASApp {
 					
 					if(!accExist){ //checks if account exist
 						System.out.println("Policy does not exist!");
-						clrscrn(1, false);
+						clrscrn();
 					}
 
 					else{ 
@@ -482,12 +482,12 @@ public class PASApp {
 	
 							else if(confirm.isEmpty()){
 								System.out.println("Going back to main menu");
-								clrscrn(1, false);
+								clrscrn();
 							}
 
 							else{
 								System.out.println("Going back to main menu");
-								clrscrn(1, false);
+								clrscrn();
 							}
 						}
 					}
@@ -495,7 +495,7 @@ public class PASApp {
 					break;
 					
 				case 4:
-					clrscrn(1,true);
+					clrscrn();
 					String status = "";
 					accExist = false;
 					boolean checkerAccidentDate = false;
@@ -506,7 +506,7 @@ public class PASApp {
 					if(claimNumGenerator > 9998){
 						System.out.println("No more room for claims.");
 						System.out.println("Returning to main menu");
-						clrscrn(1, false);
+						clrscrn();
 					}
 
 					else{
@@ -530,7 +530,7 @@ public class PASApp {
 
 						if(!accExist){
 							System.out.println("Policy does not exist!\nReturning to main menu...");
-							clrscrn(1, false);
+							clrscrn();
 						}
 
 						else{
@@ -538,10 +538,10 @@ public class PASApp {
 							if(status.equals("Scheduled") || status.equals("Expired")){ // checks if the policy can be claimed
 								System.out.println("Policy expired or not yet enforced");
 								System.out.println("Returning to main menu...");
-								clrscrn(2, false);
+								clrscrn();
 							}
 							else{
-								clrscrn(1, true);
+								clrscrn();
 
 								System.out.println("\n-------------------------------");
 								System.out.println("        Claim Details");
@@ -589,14 +589,14 @@ public class PASApp {
 									claims.remove(claims.size()-1);
 									claimNumGenerator--;
 									System.out.println("Claim cancelled!\nReturning to main menu...");
-									clrscrn(1, false);
+									clrscrn();
 								}
 
 								else{
 									claims.remove(claims.size()-1);
 									claimNumGenerator--;
 									System.out.println("Claim cancelled!\nReturning to main menu...");
-									clrscrn(1, false);
+									clrscrn();
 								}
 							}
 						}
@@ -608,7 +608,7 @@ public class PASApp {
 					
 					
 				case 5:
-					clrscrn(1,true);
+					clrscrn();
 					accExist = false;
 
 					loadStatus(customerAccounts);
@@ -632,7 +632,7 @@ public class PASApp {
 						}
 						if(!accExist){
 							System.out.println("No customer found!");
-							clrscrn(1, false);
+							clrscrn();
 						}
 						
 					}
@@ -657,7 +657,7 @@ public class PASApp {
 
 					if(!accExist){
 						System.out.println("No account exist");
-						clrscrn(1, false);
+						clrscrn();
 					}
 					break;
 					
@@ -666,7 +666,7 @@ public class PASApp {
 					accExist = false;
 
 					loadStatus(customerAccounts);
-					clrscrn(1,true);
+					clrscrn();
 					accExist = false;
 					System.out.println("\n-------------------------------");
 					System.out.println("        Search Policy");
@@ -686,7 +686,7 @@ public class PASApp {
 
 						if(!accExist){
 							System.out.println("No policy exist!");
-							clrscrn(1, false);
+							clrscrn();
 						}
 
 					}
@@ -694,7 +694,7 @@ public class PASApp {
 					break;
 					
 				case 7:
-					clrscrn(1,true);
+					clrscrn();
 					accExist = false;
 					loadStatus(customerAccounts);
 					System.out.println("\n-------------------------------");
@@ -714,7 +714,7 @@ public class PASApp {
 
 					if(!accExist){
 						System.out.println("No claim exist!");
-						clrscrn(1, false);
+						clrscrn();
 					}
 
 					break;
@@ -725,7 +725,7 @@ public class PASApp {
 				
 				default:
 					System.out.println("Wrong input!");
-					clrscrn(1,false);
+					clrscrn();
 					
 				
 			}
@@ -736,18 +736,10 @@ public class PASApp {
 		input.close();
 	}
 	
-	private static void clrscrn(int timer, boolean showMessage) { //for clearing screen
-		if(showMessage){
-			System.out.println("Processing...");
+	private static void clrscrn() { //for clearing screen
+		for(int x = 0; x < 50 ; x++) {
+			System.out.println(" ");
 		}
-		try {
-			TimeUnit.SECONDS.sleep(timer);
-			System.out.print("\033[H\033[2J");  
-			System.out.flush();  
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
 	}
 
 	private static void pressAnyKeyToContinue(Scanner input){  //press any key to continue function
@@ -769,7 +761,7 @@ public class PASApp {
 			while(!inpt.hasNextInt()) {
 				System.out.println("wrong input!");
 				inpt.next();
-				clrscrn(1, false);
+				clrscrn();
 				System.out.print(msg);
 			}
 			
@@ -791,7 +783,7 @@ public class PASApp {
 			while(!inpt.hasNextInt()) {
 				System.out.println("wrong input!");
 				inpt.next();
-				clrscrn(1, false);
+				clrscrn();
 				System.out.print(msg);
 			}
 
@@ -809,7 +801,7 @@ public class PASApp {
 					String input = inpt.nextLine();
 					if(input.length() > 1){
 						System.out.println("Wrong input in length!");
-						clrscrn(1, false);
+						clrscrn();
 						System.out.print(msg);
 					}
 					else{
@@ -817,7 +809,7 @@ public class PASApp {
 						accepted = true;
 					}
 				} catch (NumberFormatException e) {
-					//clrscrn(0, false);
+					//clrscrn();
 					//System.out.print(msg);
 					System.out.println(e.getMessage());
 				} catch (Exception e){
@@ -851,7 +843,7 @@ public class PASApp {
 				}
 				catch(Exception e){
 					System.out.println("Wrong input for date, follow the format");
-					clrscrn(1,false);
+					clrscrn();
 					
 				}
 			}while(!isFinished);
@@ -872,7 +864,7 @@ public class PASApp {
 				}
 				catch(Exception e){
 					System.out.println("Wrong input for date, follow the format");
-					clrscrn(1,false);
+					clrscrn();
 					
 				}
 			}while(!isFinished);
@@ -888,7 +880,7 @@ public class PASApp {
 		while(!inpt.hasNextDouble()) {
 			System.out.println("wrong input!");
 			inpt.next();
-			clrscrn(1,false);
+			clrscrn();
 			System.out.print(msg);
 		}
 
@@ -896,7 +888,7 @@ public class PASApp {
 			output = inpt.nextDouble();
 			if(output <= 0){
 				System.out.println("Negative values or 0 are not accepted.");
-				clrscrn(1,false);
+				clrscrn();
 				System.out.print(msg);
 			}
 		}while(output <= 0);
