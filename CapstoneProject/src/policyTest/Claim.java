@@ -3,7 +3,7 @@ package policyTest;
 import java.time.LocalDate;
 
 
-public class Claim implements InterfaceApp{
+public class Claim{
 
 	private String claimNum;
 	private LocalDate accidentDate;
@@ -59,7 +59,7 @@ public class Claim implements InterfaceApp{
 		this.cost = cost;
 	}
 
-	@Override
+	
 	public void getDetails() {
 		System.out.println("-------------------------------");
 		System.out.println("    Details of your Claim      ");

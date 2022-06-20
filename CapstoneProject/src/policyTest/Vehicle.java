@@ -3,7 +3,7 @@ package policyTest;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class Vehicle implements InterfaceApp{
+public class Vehicle{
 
 	private String make;
 	private String model;
@@ -79,8 +79,6 @@ public class Vehicle implements InterfaceApp{
 	}
 
 	
-
-	@Override
 	public void getDetails() {
 		Locale locale = new Locale("en", "US");      
 		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);

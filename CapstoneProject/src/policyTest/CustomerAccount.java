@@ -2,7 +2,7 @@ package policyTest;
 
 import java.util.ArrayList;
 
-public class CustomerAccount implements InterfaceApp{
+public class CustomerAccount{
 
 	private String accountNum;
 	private String fname;
@@ -78,7 +78,6 @@ public class CustomerAccount implements InterfaceApp{
 		policyHolders.add(policyAct.get(policyAct.size()-1).getPolicyHolder());
 	}
 	
-	@Override
 	public void getDetails(){
 		int count = 1;
 		

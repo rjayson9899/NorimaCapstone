@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 
-public class Policy implements InterfaceApp {
+public class Policy {
 	private String policyNum;
 	private LocalDate effectDate;
 	private LocalDate expDate;
@@ -112,7 +112,6 @@ public class Policy implements InterfaceApp {
 		}
 	}
 
-	@Override
 	public void getDetails() {
 		Locale locale = new Locale("en", "US");      
 		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
