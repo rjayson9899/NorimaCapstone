@@ -352,20 +352,20 @@ public class PASApp {
 					inputId = getPositiveIntLimitedInput("Input Policy Number to file claim: ", 6, true);
 					
 					// Search customer accounts for a matching policy
-					currentAccount = null;
+					tempPolicy = null;
 					for (CustomerAccount custObj: customerList) {
 						if (custObj.hasPolicy(inputId)) {
-							currentAccount = custObj;
+							tempPolicy = custObj.getPolicyMatchingId(inputId);
 						}
 					}
 					
 					// Checks if a matching account was found
-					if (currentAccount!=null) {
+					if (tempPolicy != null) {
 						// Verifies if policy is expired or not in force
-						if (currentAccount.getPolicyMatchingId(inputId).isExpired()) {
+						if (tempPolicy.isExpired()) {
 							System.out.println("\nPolicy selected is expired");
 						} 
-						else if (!(currentAccount.getPolicyMatchingId(inputId).isInForce())) {
+						else if (!(tempPolicy.isInForce())) {
 							System.out.println("\nPolicy not in force");
 						}
 						else {
@@ -374,7 +374,7 @@ public class PASApp {
 							// Prevent progress if no unique ID can be generated
 							if (uniqueId > 0) {
 								tempClaim = makeClaim(uniqueId);
-								effectiveDate = currentAccount.getPolicyMatchingId(inputId).getEffectiveDate();
+								effectiveDate = tempPolicy.getEffectiveDate();
 								
 								// Verify if accident date falls inside policy effective range
 								if (tempClaim.getAccidentDate().isBefore(effectiveDate)) {
@@ -514,7 +514,7 @@ public class PASApp {
 				System.out.println();
 			}
 			
-		} while (choice != 8);
+		} while (choice != 8);		
 	}
 	
 	// HELPER METHODS
