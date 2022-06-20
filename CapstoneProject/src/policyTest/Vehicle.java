@@ -3,6 +3,14 @@ package policyTest;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+/**
+ * Java Course 4, Capstone
+ * 
+ * Vehicle Class
+   *
+ * @author Mac Kristan B. Isaac
+ */
+
 public class Vehicle{
 
 	private String make;
@@ -15,6 +23,7 @@ public class Vehicle{
 	private String color;
 	private double premium;
 	
+	//constructor
 	public Vehicle(String make, String model, int year, String type, String fuel, double price, String color, int yearLicense) {
 		this.make = make;
 		this.model = model;
@@ -26,6 +35,7 @@ public class Vehicle{
 		this.yearLicense = yearLicense;
 	}
 	
+	//getters and setters
 	public String getMake() {
 		return make;
 	}
@@ -62,6 +72,7 @@ public class Vehicle{
 	public void setPrice(double price) {
 		this.price = price;
 	}
+	//calls the rating engine class to calculate premium
 	public double getPremium() {
 		this.premium = RatingEngine.rate(year, price, yearLicense);
 		return premium;
@@ -78,7 +89,7 @@ public class Vehicle{
 		this.color = color;
 	}
 
-	
+	//outputting the details of a vehicle
 	public void getDetails() {
 		Locale locale = new Locale("en", "US");      
 		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);

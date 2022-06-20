@@ -5,6 +5,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ * Java Course 4, Capstone
+ * 
+ * Policy Class
+   *
+ * @author Mac Kristan B. Isaac
+ */
+
 
 public class Policy {
 	private String policyNum;
@@ -15,12 +23,13 @@ public class Policy {
 	private double cost;
 	private String status;
 	
-	
+	//constructor
 	public Policy(LocalDate effectDate, PolicyHolder policyHolder) {
 		this.effectDate = effectDate;
 		this.policyHolder = policyHolder;
 	}
 	
+	//getters and setters
 	public String getPolicyNum() {
 		return policyNum;
 	}
@@ -61,7 +70,7 @@ public class Policy {
 		this.cost = cost;
 	}
 
-	
+	//ID generation
 	public void generateId(int count) {
 		int accountNumInt = count + 1;
 		policyNum = Integer.toString(accountNumInt);
@@ -77,6 +86,7 @@ public class Policy {
 		return status;
 	}
 
+	//setting the status of the policy based on dates
 	public void setStatus() {
 		LocalDate present = LocalDate.now(); 
 		if((present.isAfter(effectDate) || present.equals(effectDate)) && present.isBefore(expDate)){
@@ -91,11 +101,12 @@ public class Policy {
 		}
 	}
 
+	//setting the status manually from main 
 	public void setStatus(String status) {
 		this.status = status;
 	}
 	
-
+	//checking the date if it has already passed
 	public static boolean checkDate(LocalDate inputDate){
 		
 		LocalDate date = LocalDate.now();
@@ -112,6 +123,7 @@ public class Policy {
 		}
 	}
 
+	//fot ouputting policy details
 	public void getDetails() {
 		Locale locale = new Locale("en", "US");      
 		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);

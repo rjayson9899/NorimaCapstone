@@ -10,6 +10,14 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ * Java Course 4, Capstone
+ * 
+ * Main Drivere Class
+   *
+ * @author Mac Kristan B. Isaac
+ */
+
 
 
 public class PASApp {
@@ -51,7 +59,7 @@ public class PASApp {
 						clrscrn(1, false);
 					}
 					else{
-						Character decision1;
+						String decision1;
 						accExist = false;
 						System.out.println("\n-------------------------------");
 						System.out.println("       Creating account");
@@ -81,9 +89,11 @@ public class PASApp {
 						System.out.println("address: " + address);
 						System.out.println("-------------------------------");
 						System.out.print("Proceed to creating account? (y/any key)");
-						decision1 = input.nextLine().charAt(0);
+						
+						decision1 = input.nextLine();
+				
 							
-							if(decision1.equals('y') || decision1.equals('Y')) { // finilizing the policy when bought
+							if(decision1.equals("y") || decision1.equals("Y")) { // finilizing the policy when bought
 								for(CustomerAccount y: customerAccounts) { //for each loop to check if an account already exist
 									if(y.getFname().equalsIgnoreCase(fname) && y.getLname().equalsIgnoreCase(lname)
 											&& y.getAddress().equalsIgnoreCase(address)) {
@@ -93,6 +103,7 @@ public class PASApp {
 										break;
 									}
 								}
+							
 								
 								if(!accExist) { //occurs if account does not exist
 									customerAccounts.add(new CustomerAccount(fname, lname, address));
@@ -104,9 +115,14 @@ public class PASApp {
 								}	
 							}
 							
-							else {
+							else if(decision1.isEmpty()) { //additional checker for null input
 							     System.out.println("Going back to main menu...");
 								 clrscrn(1, false);
+							}
+
+							else{
+								System.out.println("Going back to main menu...");
+								clrscrn(1, false);
 							}
 
 						
@@ -170,9 +186,9 @@ public class PASApp {
 								System.out.println("Set expired date to: " + expiredDate);
 								
 								System.out.print("Is the account owner also the policy holder? (y/any key) ");
-								Character decision = input.nextLine().charAt(0);
+								String decision = input.nextLine();
 								
-								if(decision.equals('y') || decision.equals('Y')) { //condition if the account owner is also the policy holder
+								if(decision.equals("y") || decision.equals("Y")) { //condition if the account owner is also the policy holder
 									for(CustomerAccount c: customerAccounts) {
 										if(c.getAccountNum().equals(accNum)) {
 											fnamePol = c.getFname();
@@ -184,9 +200,14 @@ public class PASApp {
 									}
 								}
 									
-								else {
+								else if(decision.isEmpty()) {
 									fnamePol = checkerString(input, "First Name: ", true);
 									lnamePol = checkerString(input, "Last Name: ", true);	
+								}
+
+								else{
+									fnamePol = checkerString(input, "First Name: ", true);
+									lnamePol = checkerString(input, "Last Name: ", true);
 								}
 								
 								
@@ -223,9 +244,9 @@ public class PASApp {
 								System.out.println("license date issued: " + licenseDate);
 								System.out.println("-------------------------------");
 								System.out.print("Are you sure about these inputs? (y/any) ");
-								Character decision2 = input.nextLine().charAt(0);
+								String decision2 = input.nextLine();
 							
-							if(decision2.equals('y') || decision2.equals('Y')) { // finilizing the policy when bought
+							if(decision2.equals("y") || decision2.equals("Y")) { // finilizing the policy when bought
 							//initial creation for the policy
 								checkerProceed = true;
 								customerAccounts.get(indexGet).addPolicyAct(new Policy(effectDate, 
@@ -237,6 +258,10 @@ public class PASApp {
 																		
 								policyNumGenerator++;
 							}
+							else if(decision.isEmpty()){
+								System.out.println("Proceeding to redo inputs...");
+							}
+
 							else{
 								System.out.println("Proceeding to redo inputs...");
 							}
@@ -314,19 +339,25 @@ public class PASApp {
 									System.out.println("Year: " + year);
 									System.out.println("type: " + typeString);
 									System.out.println("Fuel: " + fuelString);
-									System.out.println("Price: " + price);
+									Locale locale = new Locale("en", "US");      
+									NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+									System.out.println("Price: " + currencyFormatter.format(price));
 									System.out.println("Color: " + color);
 									System.out.println("-------------------------------");
 									System.out.println("Are you sure about the details of this vehicle? (y/any key) ");
-									Character decision = input.nextLine().charAt(0);
+									String decision = input.nextLine();
 							
-									if(decision.equals('y') || decision.equals('Y')) { // finilizing the policy when bought
+									if(decision.equals("y") || decision.equals("Y")) { // finilizing the policy when bought
 										checkerProceed = true;
 										customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1)
 														.addVehicles(new Vehicle(make,model,year, typeString, fuelString, price, color, licenseYear));
 									
 									numVehicle--;
 									}
+									else if(decision.isEmpty()){
+										System.out.println("Proceeding to redo inputs...");
+									}
+
 									else{
 										System.out.println("Proceeding to redo inputs...");
 									}
@@ -357,17 +388,27 @@ public class PASApp {
 							
 							System.out.println("-------------------------------");
 							System.out.println("Would you like to buy the policy? (y/any key)");
-							Character decision = input.nextLine().charAt(0);
+							String decision = input.nextLine();
 							
-							if(decision.equals('y') || decision.equals('Y')) { // finilizing the policy when bought
+							if(decision.equals("y") || decision.equals("Y")) { // finilizing the policy when bought
 								customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).setStatus();
 								System.out.println("Policy bought! Your policy number is: " + 
 								customerAccounts.get(indexGet).getPolicyAct().get(customerAccounts.get(indexGet).getPolicyAct().size() - 1).getPolicyNum());
 								pressAnyKeyToContinue(input);
 							}
 							
-							else {
+							else if(decision.isEmpty()){
 								System.out.println("Policy cancelled!\nReturning to main menu..."); //remove the policy from the arraylist
+								customerAccounts.get(indexGet).getPolicyHolders().remove(customerAccounts.get(indexGet).getPolicyHolders().size() - 1);
+								customerAccounts.get(indexGet).getPolicyAct().remove(customerAccounts.get(indexGet).getPolicyAct().size() - 1);
+								policyNumGenerator--;
+
+								clrscrn(1, false);
+							}
+
+							else{
+								System.out.println("Policy cancelled!\nReturning to main menu..."); //remove the policy from the arraylist
+								customerAccounts.get(indexGet).getPolicyHolders().remove(customerAccounts.get(indexGet).getPolicyHolders().size() - 1);
 								customerAccounts.get(indexGet).getPolicyAct().remove(customerAccounts.get(indexGet).getPolicyAct().size() - 1);
 								policyNumGenerator--;
 
@@ -392,7 +433,7 @@ public class PASApp {
 				case 3:
 					clrscrn(1,true);
 					int indexPol = 0, indexCus = 0;
-					Character confirm;
+					String confirm;
 					accExist = false;
 
 					loadStatus(customerAccounts);
@@ -429,9 +470,9 @@ public class PASApp {
 						else{
 							
 							System.out.println("Would you like to cancel this policy? (y/any key)");
-							confirm = input.nextLine().charAt(0);
+							confirm = input.nextLine();
 	
-							if(confirm.equals('y') || confirm.equals('Y')){
+							if(confirm.equals("y") || confirm.equals("Y")){
 								LocalDate expDate = checkerDate(input, "Input new expiration date(yyyy-mm-dd):\nex.'2022-09-18': ", false);
 								customerAccounts.get(indexCus).getPolicyAct().get(indexPol).setExpDate(expDate);;
 								customerAccounts.get(indexCus).getPolicyAct().get(indexPol).setStatus();
@@ -439,6 +480,11 @@ public class PASApp {
 								pressAnyKeyToContinue(input);
 							}
 	
+							else if(confirm.isEmpty()){
+								System.out.println("Going back to main menu");
+								clrscrn(1, false);
+							}
+
 							else{
 								System.out.println("Going back to main menu");
 								clrscrn(1, false);
@@ -531,14 +577,21 @@ public class PASApp {
 								claims.get(claims.size()-1).getDetails();
 								input.nextLine();
 								System.out.println("Would you like to proceed with this policy? (y/any key)");
-								confirm = input.nextLine().charAt(0);
+								confirm = input.nextLine();
 	
-								if(confirm.equals('y') || confirm.equals('Y')){
+								if(confirm.equals("y") || confirm.equals("Y")){
 									System.out.println("Successfully filed a claim!");
 									System.out.println("Your claim number is: " + claims.get(claims.size()-1).getClaimNum());
 									pressAnyKeyToContinue(input);
 								}
 								
+								else if(confirm.isEmpty()){
+									claims.remove(claims.size()-1);
+									claimNumGenerator--;
+									System.out.println("Claim cancelled!\nReturning to main menu...");
+									clrscrn(1, false);
+								}
+
 								else{
 									claims.remove(claims.size()-1);
 									claimNumGenerator--;
@@ -650,7 +703,7 @@ public class PASApp {
 					System.out.print("Input claim number: ");
 					String claimNum = input.nextLine();
 					
-					for(Claim c: claims){
+					for(Claim c: claims){ //loop that searches the claim
 						if(c.getClaimNum().equals(claimNum)){
 							accExist = true;
 							c.getDetails();
@@ -670,12 +723,6 @@ public class PASApp {
 					System.exit(0);
 					break;
 				
-				case 9: // for checking
-					policyNumGenerator = 9999;
-					accountNumGenerator = 9999;
-					claimNumGenerator = 99999;
-					break;
-
 				default:
 					System.out.println("Wrong input!");
 					clrscrn(1,false);
@@ -884,8 +931,6 @@ public class PASApp {
 				}
 			}
 		}
-		
-
 		return output;
 	}
 

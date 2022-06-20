@@ -4,9 +4,19 @@ import java.util.Calendar;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+/**
+ * Java Course 4, Capstone
+ * 
+ * Rating Engine Class
+   *
+ * @author Mac Kristan B. Isaac
+ */
+
 public class RatingEngine {
-		static Locale locale = new Locale("en", "US");      
-		static NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+	static Locale locale = new Locale("en", "US");      
+	static NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+	
+	//A static function for calculating the premium along with a few outputs.
 	public static double rate(int yearCar, double vp, int yearLicense) {
 		
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -54,6 +64,7 @@ public class RatingEngine {
 		return premium;
 	}
 
+	//static method for calculating premium without the output
 	public static double rateCalOnly(int yearCar, double vp, int yearLicense) {
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 		int ageCar = currentYear - yearCar;

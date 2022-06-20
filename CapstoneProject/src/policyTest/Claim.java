@@ -2,6 +2,14 @@ package policyTest;
 
 import java.time.LocalDate;
 
+/**
+ * Java Course 4, Capstone
+ * 
+ * Claim Class
+   *
+ * @author Mac Kristan B. Isaac
+ */
+
 
 public class Claim{
 
@@ -12,6 +20,7 @@ public class Claim{
 	private String descriptionDam;
 	private double cost;
 	
+	//Constructor
 	public Claim( LocalDate accidentDate, String address, String descriptionAcc,
 					String descriptionDam, double cost) {
 		
@@ -22,6 +31,7 @@ public class Claim{
 		this.cost = cost;
 	}
 	
+	//getters and setters
 	public String getClaimNum() {
 		return claimNum;
 	}
@@ -59,7 +69,7 @@ public class Claim{
 		this.cost = cost;
 	}
 
-	
+	//output for the claims
 	public void getDetails() {
 		System.out.println("-------------------------------");
 		System.out.println("    Details of your Claim      ");
@@ -72,6 +82,7 @@ public class Claim{
 		System.out.println("Estimated cost of damage: $" + cost);
 	}
 
+	//ID generation
 	public void generateId(int count) {
 		int accountNumInt = count + 1;
 		claimNum = Integer.toString(accountNumInt);
@@ -82,10 +93,9 @@ public class Claim{
 		}
 		sb.append(claimNum);
 		claimNum = sb.toString();
-		
-		//input code for id generation
 	}
 
+	//verifying if the claim is valid
 	public static boolean verifyDate(LocalDate effDate, LocalDate expDate){
 		LocalDate dateNow = LocalDate.now();
 		if(dateNow.isBefore(effDate) || dateNow.isAfter(expDate)){

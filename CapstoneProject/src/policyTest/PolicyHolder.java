@@ -2,6 +2,14 @@ package policyTest;
 
 import java.time.LocalDate;
 
+/**
+ * Java Course 4, Capstone
+ * 
+ * Policy Holder Class
+   *
+ * @author Mac Kristan B. Isaac
+ */
+
 public class PolicyHolder{
 
 	private String fname;
@@ -10,7 +18,7 @@ public class PolicyHolder{
 	private String license;
 	private LocalDate licenseIssueDate;
 	
-	
+	//constructor
 	public PolicyHolder(String fname, String lname,LocalDate dateOfBirth, String license, LocalDate licenseDateIssueDate) {
 		this.fname = fname;
 		this.lname = lname;
@@ -19,6 +27,7 @@ public class PolicyHolder{
 		this.licenseIssueDate = licenseDateIssueDate;
 	}
 	
+	//getters and setters
 	public String getFname() {
 		return fname;
 	}
@@ -52,6 +61,7 @@ public class PolicyHolder{
 		this.dateOfBirth = dateOfBirth;
 	}
 
+	//outputting policy holder details
 	public void getDetails() {
 		System.out.println("-------------------------------");
 		System.out.println("       Policy Holder           ");
