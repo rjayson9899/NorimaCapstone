@@ -10,6 +10,7 @@
  *@Modified by:
  *
  */
+
 public class Vehicle {
 	private String vehicleMake;
 	private String vehicleModel;

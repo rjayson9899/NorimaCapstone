@@ -1,3 +1,7 @@
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 /**
  * Java Course 4 Module 3, Norima Java Developer Capstone Project
  * CustomerAccount Class File
@@ -10,8 +14,6 @@
  *@Modified by:
  *
  */
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 public class CustomerAccount {
 	private int accountNumber;
@@ -77,6 +79,7 @@ public class CustomerAccount {
 
 	public void displayCustomerPolicy(int policyID) {
 		String policyStatus = "";
+		NumberFormat money = NumberFormat.getCurrencyInstance();
 		LocalDate dateNow = LocalDate.now();
 		
 		
@@ -85,8 +88,6 @@ public class CustomerAccount {
 		
 		for (Policy polObj : policyList) {
 			if (polObj.getPolicyNumber() == policyID) {
-				String totalPremium = String.format("%.2f", polObj.getTotalPremium());
-				
 				if (polObj.getEffectiveDatePolicy().compareTo(dateNow) > 0) {
 					policyStatus = "Scheduled";
 				} else if (polObj.getEffectiveDatePolicy().compareTo(dateNow) > 0 || polObj.getExpirationDatePolicy().compareTo(dateNow) < 0){
@@ -95,7 +96,7 @@ public class CustomerAccount {
 					policyStatus = "Active";
 				}
 				System.out.printf("%06d \t\t\t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", policyID, polObj.getEffectiveDatePolicy(),
-						polObj.getExpirationDatePolicy(), polObj.getName(), totalPremium, policyStatus);
+						polObj.getExpirationDatePolicy(), polObj.getName(), money.format(polObj.getTotalPremium()), policyStatus);
 			}
 		}
 	}

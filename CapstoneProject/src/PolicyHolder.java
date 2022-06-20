@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 /**
  * Java Course 4 Module 3, Norima Java Developer Capstone Project
  * Policy Holder File
@@ -10,7 +12,6 @@
  *@Modified by:
  *
  */
-import java.time.LocalDate;
 
 public class PolicyHolder {
 	private String firstName;

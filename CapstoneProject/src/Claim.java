@@ -1,3 +1,6 @@
+import java.text.NumberFormat;
+import java.time.LocalDate;
+
 /**
  * Java Course 4 Module 3, Norima Java Developer Capstone Project
  * Claim Class File 
@@ -10,7 +13,6 @@
  *@Modified by:
  *
  */
-import java.time.LocalDate;
 
 public class Claim {
 	
@@ -70,12 +72,13 @@ public class Claim {
 	}
 	
 	public void displayClaimDetails() {
+		NumberFormat money = NumberFormat.getCurrencyInstance();
 		String claimNumber = "C" + String.format("%06d", this.claimNumber);
 		
 		System.out.printf("%-20s \t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", "Claim Number", "Accident Date",
 				"Accident Location", "Accident Description", "Vehicle Damage", "Repair Cost");
 		System.out.printf("%-20s \t%-20s \t%-20s \t%-20s \t%-20s \t%-20s\n", claimNumber, this.dateOfAccident, this.addressOfAccident,
-				this.descriptionOfAccident, this.descriptionOfDamage, this.damageRepairCost);
+				this.descriptionOfAccident, this.descriptionOfDamage, money.format(this.damageRepairCost));
 	}
 	
 }

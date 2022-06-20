@@ -1,3 +1,7 @@
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 /**
  * Java Course 4 Module 3, Norima Java Developer Capstone Project
  * Policy Class File
@@ -10,8 +14,6 @@
  *@Modified by:
  *
  */
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 public class Policy {
 	private int policyNumber;
@@ -72,6 +74,7 @@ public class Policy {
 	}
 	
 	public void createPolicyQuote() {
+		NumberFormat money = NumberFormat.getCurrencyInstance();
 		double premium;
 		this.totalPremium = 0;
 		System.out.println("=========================");
@@ -82,11 +85,11 @@ public class Policy {
 			premium = RatingEngine.computePremium(vehicleObj.getVehiclePrice(), policyHolder.getLicensedYear(), vehicleObj.getVehicleYear());
 			vehicleObj.setVehiclePremium(premium);
 			this.totalPremium += premium;
-			System.out.printf("%-20s \t%-20s \t%.2f\n", vehicleObj.getVehicleMake(), vehicleObj.getVehicleModel(), premium);
+			System.out.printf("%-20s \t%-20s \t%-20s\n", vehicleObj.getVehicleMake(), vehicleObj.getVehicleModel(), money.format(premium));
 		}
 		System.out.println();
 		System.out.println("============================================================");
-		System.out.printf("Total Vehicle Premium: %.2f\n", totalPremium);
+		System.out.printf("Total Vehicle Premium: %s\n", money.format(totalPremium));
 	}
 
 	public void cancelPolicy() { //Changes the expiration date to a year before

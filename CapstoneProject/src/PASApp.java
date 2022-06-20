@@ -1,3 +1,9 @@
+import java.text.NumberFormat;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Java Course 4 Module 3, Norima Java Developer Capstone Project
@@ -11,11 +17,6 @@
  *@Modified by:
  *
  */
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 public class PASApp {
 	private static Scanner input = new Scanner(System.in);
@@ -90,6 +91,7 @@ public class PASApp {
 				// Validation if full
 				if (tempID <= CustomerAccount.CUSTOMER_MAX) {
 					// Create a Customer Account
+					System.out.println();
 					System.out.println("===============================");
 					System.out.println("  Creating a Customer Account  ");
 					System.out.println("===============================");
@@ -106,7 +108,7 @@ public class PASApp {
 						System.out.println("Last Name: " + lastName);
 						System.out.println("Address: " + customerAddress);
 						System.out.println("==========================================================================");
-						inputString = getStringCharInput("Are you sure about your inputs? [y] Yes, [any letter/s] No: ");
+						inputString = getStringCharInput("Are you sure about your inputs? [y] if Yes, [any letter/s] if No: ");
 					} while (!inputString.equalsIgnoreCase("y"));
 
 					for (CustomerAccount custObj : customerList) {
@@ -170,6 +172,7 @@ public class PASApp {
 						// Validation if Customer is Policy Holder
 						inputString = getStringCharInput("Input [y] if Account Holder is same as Policy Holder, [any letter/s] if not: ");
 						if (inputString.equalsIgnoreCase("y")) {
+							System.out.println();
 							System.out.println("===============================================");
 							System.out.println("  Account Holder is the same as Policy Holder  ");
 							System.out.println("===============================================");
@@ -215,6 +218,7 @@ public class PASApp {
 							policy.setPolicyHolder(policyHolderObj);
 
 						} else {
+							System.out.println();
 							System.out.println("==========================");
 							System.out.println("  Create a Policy Holder  ");
 							System.out.println("==========================");
@@ -285,6 +289,8 @@ public class PASApp {
 								vehiclePrice = getDoubleInput("Input Vehicle Purchase Price: ");
 								vehicleColor = getStringCharInput("Input Vehicle Color: ");
 								
+								NumberFormat money = NumberFormat.getCurrencyInstance();
+								
 								System.out.println();
 								System.out.println("============================");
 								System.out.println("  Create a Vehicle Details  ");
@@ -295,12 +301,12 @@ public class PASApp {
 								System.out.println("Type: " + vehicleType);
 								System.out.println("Fuel Type: " + vehicleFuel);
 								System.out.println("Color: " + vehicleColor);
-								System.out.printf("Price: %.2f\n", vehiclePrice);
+								System.out.printf("Price: %s\n", money.format(vehiclePrice));
 								System.out.println("================================================================================");
 								inputString = getStringCharInput("Are you sure about your inputs? [y] if Yes, [any letter/s] if No: ");
 							} while (!inputString.equalsIgnoreCase("y"));
 							
-							inputString = getStringCharInput("Do you want to add another vehicle [y] to add more [any letter/s] for No: ");
+							inputString = getStringCharInput("Do you want to add another vehicle [y] to add more [any letter/s] if No: ");
 							vehicleObj = new Vehicle(vehicleMake, vehicleModel, vehicleYear, vehicleType, vehicleFuel, vehiclePrice, vehicleColor);
 							policy.addVehicle(vehicleObj);
 							
@@ -313,16 +319,29 @@ public class PASApp {
 
 						// Verification if get policy or not (If Yes Issue Policy Date)
 						System.out.println();
-						inputString = getStringCharInput("Get the policy? [y] for yes [any letter/s] for No: ");
+						inputString = getStringCharInput("Get the policy? [y] if yes [any letter/s] if No: ");
 
 						if (inputString.equalsIgnoreCase("y")) {
 							// Create a Policy Date
+							System.out.println();
 							System.out.println("========================");
 							System.out.println("  Create a Policy Date  ");
 							System.out.println("========================");
-							customDate = getPolicyDateInput();
-							effectiveDatePolicy = customDate;
-							policy.setEffectiveDatePolicy(effectiveDatePolicy);
+							do {
+								customDate = getPolicyDateInput();
+								effectiveDatePolicy = customDate;
+								policy.setEffectiveDatePolicy(effectiveDatePolicy);
+								
+								System.out.println();
+								System.out.println("========================");
+								System.out.println("  Policy Date Details   ");
+								System.out.println("========================");
+								System.out.println("Effective Date: " + effectiveDatePolicy);
+								System.out.println("Expiration Date: " + effectiveDatePolicy.plusMonths(6));
+								System.out.println("================================================================================");
+								inputString = getStringCharInput("Are you sure about your inputs? [y] if Yes, [any letter/s] if No: ");
+							} while (!inputString.equalsIgnoreCase("y"));
+							
 							customer.addPolicy(policy);
 							System.out.println("\nPolicy is Created");
 							System.out.printf("Policy Number is: %06d\n", tempID);
@@ -339,6 +358,7 @@ public class PASApp {
 				break;
 			case 3: // Cancel a specific policy, Change the expiration date of a policy to an
 					// earlier date than specified
+				System.out.println();
 				System.out.println("===================");
 				System.out.println("  Cancel a Policy  ");
 				System.out.println("===================");
@@ -359,6 +379,7 @@ public class PASApp {
 
 				break;
 			case 4: // Claim Functionality
+				System.out.println();
 				System.out.println("================");
 				System.out.println("  File a Claim  ");
 				System.out.println("================");
@@ -395,6 +416,7 @@ public class PASApp {
 					}
 					if (tempID >= 0) {
 						// Create a Claim
+						System.out.println();
 						System.out.println("=============================================");
 						System.out.println("  Filing an Accident Claim against a Policy  ");
 						System.out.println("=============================================");
@@ -416,14 +438,16 @@ public class PASApp {
 								}
 								
 								if (dateOfAccident.isBefore(effectiveDatePolicy) || dateOfAccident.isAfter(expirationDatePolicy)) {
-									System.out.println("Accident date must be in the range of the Effective Date and the Expiration Date "
-											+ "of the policy");
+									System.out.println("Accident date must be in the range of the Effective Date " + effectiveDatePolicy +  
+											" and the Expiration Date " + expirationDatePolicy + " of the policy");
 								}		
 							} while (dateOfAccident.isBefore(effectiveDatePolicy) || dateOfAccident.isAfter(expirationDatePolicy));
 							addressOfAccident = getStringInput("Enter the address of where the accident happened: ");
 							descriptionOfAccident = getStringInput("Enter the description of the accident: ");
 							descriptionOfDamage = getStringInput("Enter the description of damage to vehicle: ");
 							damageRepairCost = getDoubleInput("Enter estimated cost of repairs: ");
+							
+							NumberFormat money = NumberFormat.getCurrencyInstance();
 							
 							System.out.println();
 							System.out.println("=============================================");
@@ -433,7 +457,7 @@ public class PASApp {
 							System.out.println("Location: " + addressOfAccident);
 							System.out.println("Description: " + descriptionOfAccident);
 							System.out.println("Damage: " + descriptionOfDamage);
-							System.out.printf("Repair Cost: %.2f\n", damageRepairCost);
+							System.out.printf("Repair Cost: %s\n", money.format(damageRepairCost));
 							inputString = getStringCharInput("Are you sure about your inputs? [y] if Yes, [any letter/s] if No : ");
 						} while (!inputString.equalsIgnoreCase("y")); 
 
@@ -453,6 +477,7 @@ public class PASApp {
 
 			case 5: // Search Account Functionality
 				isMatch = false;
+				System.out.println();
 				System.out.println("=========================");
 				System.out.println("  Search for an Account  ");
 				System.out.println("=========================");
@@ -486,6 +511,7 @@ public class PASApp {
 				break;
 
 			case 6: // Search Policy Functionality
+				System.out.println();
 				System.out.println("=======================");
 				System.out.println("  Search for a Policy  ");
 				System.out.println("=======================");
@@ -505,6 +531,7 @@ public class PASApp {
 				break;
 
 			case 7: // Search Claim Functionality
+				System.out.println();
 				System.out.println("======================");
 				System.out.println("  Search for a Claim  ");
 				System.out.println("======================");
