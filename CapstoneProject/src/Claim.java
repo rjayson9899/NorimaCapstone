@@ -28,7 +28,7 @@ public class Claim {
 	/**
 	 * Constructor
 	 * 
-	 * ID to be inputed must be an int and the constructor will automatically
+	 * ID to be inputted must be an int and the constructor will automatically
 	 * convert the value to its appropriate format.
 	 * 
 	 * @param claimNumber - unique ID
