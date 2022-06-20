@@ -869,11 +869,11 @@ public class PASApp {
 				strIn = "";
 			}
 			else if (strIn.matches("^[,\\d\\.\\- ]*$")) {
-				System.out.println("\nInput cannot purely be numbers\n");
+				System.out.println("\nInput cannot purely be numbers with \".\", \"-\", and \",\"\n");
 				strIn = "";
 			}
 			else if (!(strIn.matches("^[a-zA-Z0-9,\\.\\- ]*$"))) {
-				System.out.println("\nInput cannot contain special characters\n");
+				System.out.println("\nInput cannot contain special characters except for \".\", \"-\", and \",\"\n");
 				strIn = "";
 			}
 		} while(strIn.equals(""));
