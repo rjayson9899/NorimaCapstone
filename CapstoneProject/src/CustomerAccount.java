@@ -68,24 +68,21 @@ public class CustomerAccount {
 	
 	/**
 	 * Returns the policy containing the id matching the parameter.
-	 * Throws an exception if a policy matching the ID is not found.
+	 * Returns null if no matching policy is found.
 	 * 
-	 * Use this function only after confirming if CustomerAccount instance
-	 * has a matching policy. Method hasPolicy() can confirm if instance has
-	 * a Policy matching input ID.
+	 * Best used with hasPolicy() method.
 	 * 
 	 * @param id - policy ID to match
-	 * @return Policy - Policy instance with policy ID matching param
-	 * @throws IllegalArgumentException - if instance does not contain policy with matching id
+	 * @return Policy - Policy instance with policy ID matching param, null if no match is found
 	 */
-	public Policy getPolicyMatchingId(int id) throws IllegalArgumentException {
+	public Policy getPolicyMatchingId(int id) {
 		for (Policy polObj: policyList) {
 			if (polObj.getPolicyNumber() == id) {
 				return polObj;
 			}
 		}
 		
-		throw new IllegalArgumentException("No Policy found with matching ID");
+		return null;
 	}
 	
 	/**
@@ -117,17 +114,14 @@ public class CustomerAccount {
 	/**
 	 * Cancels a Policy matching provided ID param.
 	 * Returns a boolean value to denote if policy was canceled or not.
-	 * Throws an exception if no matching policy is found.
+	 * Also returns false if no matching policy is found
 	 * 
-	 * Use this function only after confirming if CustomerAccount instance
-	 * has a matching policy. Method hasPolicy() can confirm if instance has
-	 * a Policy matching input ID.
+	 * Best used with hasPolicy() method.
 	 * 
 	 * @param policyId - Policy to cancel
-	 * @return boolean - true if policy is cancelled, false if policy is already expired
-	 * @throws IllegalArgumentException
+	 * @return boolean - true if policy is cancelled, false if policy is already cancelled or no match was found
 	 */
-	public boolean cancelAccountPolicy(int policyId) throws IllegalArgumentException {
+	public boolean cancelAccountPolicy(int policyId) {
 		for (Policy polObj: policyList) {
 			if (polObj.getPolicyNumber() == policyId) {
 				if (polObj.isExpired()) {
@@ -140,7 +134,7 @@ public class CustomerAccount {
 			}
 		}
 		
-		throw new IllegalArgumentException("No Policy found with matching ID");
+		return false;
 	}
 	
 	/**

@@ -101,7 +101,7 @@ public class PASApp {
 						}
 					}
 					else {
-						System.out.println("No space left to add a new account");
+						System.out.println("\nNo space left to add a new account");
 					}
 					
 					break;
@@ -123,7 +123,7 @@ public class PASApp {
 				 * match is found, the program will return to the main menu.
 				 * 
 				 * When inputting policy holder information, the user can decide if the holder will
-				 * be the customer themself or a custom named entity. Information to collect will
+				 * be the customer themselves or a custom named entity. Information to collect will
 				 * be adjusted based on their decision. Refer to makeHolder() helper methods for how
 				 * input will be handled. For a policy holder to be valid, the following
 				 * conditions must be met:
@@ -146,6 +146,7 @@ public class PASApp {
 				 * If the user decides to not get the policy, the policy creation process is cancelled.
 				 * 
 				 * Case makes use of the following helper methods:
+				 * 		> getPositiveIntLimitedInput()
 				 * 		> makeHolder()
 				 * 		> makeVehicle()
 				 * 		> getDate()
@@ -264,7 +265,7 @@ public class PASApp {
 									System.out.printf("\nPolicy created with id %06d\n", uniqueId);
 								}
 								else {
-									System.out.println("Policy buy cancelled.");
+									System.out.println("\nPolicy buy cancelled.");
 								}
 							}
 							else {
@@ -272,11 +273,11 @@ public class PASApp {
 							}
 						}
 						else {
-							System.out.println("No account found");
+							System.out.println("\nNo account found");
 						}
 					}
 					else {
-						System.out.println("No space left to add a new policy");
+						System.out.println("\nNo space left to add a new policy");
 					}
 					break;
 					
@@ -305,17 +306,17 @@ public class PASApp {
 						if (custObj.hasPolicy(inputId)) {
 							// Cancels found policy or notifies user if policy is already cancelled
 							if (custObj.cancelAccountPolicy(inputId)) {
-								System.out.printf("Policy %06d Cancelled\n", inputId);
+								System.out.printf("\nPolicy %06d Cancelled\n", inputId);
 							}
 							else {
-								System.out.println("Policy already expired");
+								System.out.println("\nPolicy already expired");
 							}
 							foundHit = true;
 						}
 					}
 					
 					if (!foundHit) {
-						System.out.println("No match found");
+						System.out.println("\nNo match found");
 					}
 					
 					break;
@@ -362,10 +363,10 @@ public class PASApp {
 					if (currentAccount!=null) {
 						// Verifies if policy is expired or not in force
 						if (currentAccount.getPolicyMatchingId(inputId).isExpired()) {
-							System.out.println("Policy selected is expired");
+							System.out.println("\nPolicy selected is expired");
 						} 
 						else if (!(currentAccount.getPolicyMatchingId(inputId).isInForce())) {
-							System.out.println("Policy not in force");
+							System.out.println("\nPolicy not in force");
 						}
 						else {
 							uniqueId = Claim.generateUniqueId(claimList);
@@ -377,15 +378,15 @@ public class PASApp {
 								
 								// Verify if accident date falls inside policy effective range
 								if (tempClaim.getAccidentDate().isBefore(effectiveDate)) {
-									System.out.println("Cannot file claim for accident that occured before effective date: " + effectiveDate);
+									System.out.println("\nCannot file claim for accident that occured before effective date: " + effectiveDate);
 								}
 								else {
 									claimList.add(tempClaim);
-									System.out.printf("Claim added with id %s\n", tempClaim.getClaimNumber());
+									System.out.printf("\nClaim added with id %s\n", tempClaim.getClaimNumber());
 								}
 							}
 							else {
-								System.out.println("No space left to add a new claim");
+								System.out.println("\nNo space left to add a new claim");
 							}
 						}
 					}
@@ -424,7 +425,7 @@ public class PASApp {
 					}
 					
 					if(!foundHit) {
-						System.out.println("No match found");
+						System.out.println("\nNo match found");
 					}
 					break;
 					
@@ -455,7 +456,7 @@ public class PASApp {
 					}
 					
 					if(!foundHit) {
-						System.out.println("No match found");
+						System.out.println("\nNo match found");
 					}
 					break;
 				
@@ -497,14 +498,14 @@ public class PASApp {
 					}
 					
 					if(!foundHit) {
-						System.out.println("No match found");
+						System.out.println("\nNo match found");
 					}
 					break;
 				case 8:
-					System.out.println("Exiting...");
+					System.out.println("\nExiting...");
 					break;
 				default:
-					System.out.println("Invalid Choice");
+					System.out.println("\nInvalid Choice");
 			}
 			
 			if (choice != 8) {
@@ -514,32 +515,6 @@ public class PASApp {
 			}
 			
 		} while (choice != 8);
-		
-		//DEBUG
-		// ===========================================================================================
-		System.out.println("Data dump");
-		CustomerAccount.printCustomerAccountHeader();
-		for (CustomerAccount cstObj: customerList) {
-			cstObj.printCustomerAccountDetails();
-		}
-		CustomerAccount.printPolicyHeader();
-		for (CustomerAccount cstObj: customerList) {
-			cstObj.printPolicies();
-		}
-		CustomerAccount.printVehicleHeader();
-		for(CustomerAccount cstObj: customerList) {
-			cstObj.printVehicles();
-		}
-		CustomerAccount.printPolicyHolderHeader();
-		for(CustomerAccount cstObj: customerList) {
-			cstObj.printPolicyHolders();
-		}
-		Claim.printClaimHeader();
-		for (Claim clmObj: claimList) {
-			clmObj.printClaimDetails();
-		}
-		// ===========================================================================================
-		
 	}
 	
 	// HELPER METHODS
@@ -876,49 +851,8 @@ public class PASApp {
 				strIn = "";
 			}
 		} while(strIn.equals(""));
-
+		
 		return strIn;
-	}
-	
-	/**
-	 * Return inputed integer after verifying if input is valid.
-	 * Can display custom message that repeats for every input attempt.
-	 * 
-	 * Input:
-	 * 		(String)	getIntString	- Input to be verified.
-	 * 
-	 * Verification is done via exception handling. Invalid inputs involve values
-	 * that cannot be normally parsed by Integer.parseInt()
-	 * 
-	 * @param message - Custom message to display for every input attempt
-	 * @return int - validated integer
-	 */
-	@Deprecated
-	private static int getValidInt(String message) {
-		boolean isInvalid = true;
-		String getIntString = "";
-		int parsedInt = 0;
-		
-		do {
-			System.out.print(message);
-			try {
-				getIntString = in.nextLine();
-				getIntString = getIntString.trim();
-
-				parsedInt = Integer.parseInt(getIntString);
-				isInvalid = false;
-			}
-			catch(NumberFormatException e) {
-				if (getIntString.equals("")) {
-					System.out.println("\nInput cannot be blank\n");
-				}
-				else {
-					System.out.println("\nInput is not valid\n");
-				}
-			}
-		} while (isInvalid);
-		
-		return parsedInt;
 	}
 	
 	/**
@@ -982,12 +916,16 @@ public class PASApp {
 	 * Returns inputed int value after verification.
 	 * Can display custom message that repeats for every input attempt.
 	 * 
-	 * Has the same behavior as getValidInt() but with input length limitations.
-	 * Length limit is set based on value of limit param.
+	 * Verification is done via exception handling when an input string is
+	 * parsed into an integer. Should an exception be thrown by Integer.parseInt(),
+	 * the input is recognized as invalid and the user must input another string.
+	 * 
+	 * Additionally, the length of an input is limited based on the value of the
+	 * limit param. this sets the maximum length a string can be. The minimum length
+	 * will still remain as 1.
 	 * 
 	 * If the requireLimitAsMinimum param is true, the minimum length will be 
-	 * the same as the value set in limit. Otherwise, program will allow inputs
-	 * with length less than or equal to the value of limit param.
+	 * the same as the value set in limit.
 	 * 
 	 * Limit only applies to the numeric portion of the input which means when
 	 * a negative number is inputed, the negative sign will not count as an
