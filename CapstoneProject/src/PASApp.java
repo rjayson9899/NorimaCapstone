@@ -168,7 +168,7 @@ public class PASApp {
 							}
 						}
 					
-						// Prevent progression if no user was found matching inputed account number
+						// Prevent progression if no user was found matching inputted account number
 						if (currentAccount != null) {
 							tempPolicy = new Policy(uniqueId);
 							
@@ -222,7 +222,7 @@ public class PASApp {
 							} while (strIn.equalsIgnoreCase("y"));
 							
 							// Prevent progression if the policy holder details are invalid
-							if (tempHolder.hasValidBirthDate() || tempHolder.hasValidLicenseDate()) {
+							if (tempHolder.hasValidBirthDate() && tempHolder.hasValidLicenseDate()) {
 								tempPolicy.setPolicyHolder(tempHolder);
 								
 								// Add cars to policy
@@ -269,7 +269,7 @@ public class PASApp {
 								}
 							}
 							else {
-								System.out.println("\nNo valid policy holder inputed, policy creation aborted.");
+								System.out.println("\nNo valid policy holder inputted, policy creation aborted.");
 							}
 						}
 						else {
@@ -716,7 +716,7 @@ public class PASApp {
 	 * Inputs:
 	 * 		(int)	year	-	Year of date to create, limited to 1900 to present year
 	 * 		(int)	month	-	Month of date to create, limited to 1 - 12
-	 * 		(int)	day		-	Day of date to create, limited to valid days of month and year inputed
+	 * 		(int)	day		-	Day of date to create, limited to valid days of month and year inputted
 	 * 
 	 * All inputs for each date component makes use getIntLimitedInput() method. 
 	 * This ensures that each input has a limited amount of digits when inputting.
@@ -815,14 +815,14 @@ public class PASApp {
 	 * 		> Does not consist of only ".", "-", and "," characters
 	 * 		> Must consist of alphabetic values. May contain digits, whitespace, ".", "-", and "," characters.
 	 * 
-	 * Inputed String will always be trimmed before processing.
+	 * inputted String will always be trimmed before processing.
 	 * 
 	 * Can display custom message that repeats for every input attempt.
 	 * 
 	 * Input:
 	 * 		(String)	strIn	- String to be verified.
 	 * 
-	 * Program will ask for a new input if a blank string or a string that only is inputed.
+	 * Program will ask for a new input if a blank string or a string that only is inputted.
 	 * 
 	 * @param message - Custom message to display for every input attempt
 	 * @return String instance
@@ -913,7 +913,7 @@ public class PASApp {
 	}
 	
 	/**
-	 * Returns inputed int value after verification.
+	 * Returns inputted int value after verification.
 	 * Can display custom message that repeats for every input attempt.
 	 * 
 	 * Verification is done via exception handling when an input string is
@@ -928,7 +928,7 @@ public class PASApp {
 	 * the same as the value set in limit.
 	 * 
 	 * Limit only applies to the numeric portion of the input which means when
-	 * a negative number is inputed, the negative sign will not count as an
+	 * a negative number is inputted, the negative sign will not count as an
 	 * additional character.
 	 * 
 	 * @param message - Custom message to display for every input attempt
@@ -995,11 +995,11 @@ public class PASApp {
 	}
 	
 	/**
-	 * Returns inputed int value after verification.
+	 * Returns inputted int value after verification.
 	 * Can display custom message that repeats for every input attempt.
 	 * 
 	 * Makes use of the behavior of getIntLimitedInput but adds an additional
-	 * condition. Program will also check if the value inputed is positive.
+	 * condition. Program will also check if the value inputted is positive.
 	 * If it is not positive, the program will force the user to input another
 	 * value.
 	 * 
