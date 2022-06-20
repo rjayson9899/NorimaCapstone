@@ -40,8 +40,7 @@ public class RatingEngine {
 	 * 		10						|	0.60%
 	 * 		15						|	0.40%
 	 * 		20						|	0.20%
-	 * 		40						|	0.10%
-	 * 		> 40					|	0.05%
+	 * 		>= 40					|	0.10%
 	 * 
 	 * @param licenseYear - year license was issued
 	 * @param vehicleYear - year of vehicle
@@ -78,7 +77,7 @@ public class RatingEngine {
 			vpf = 0.001;
 		}
 		else {
-			vpf = 0.0005;
+			vpf = 0.001;
 		}
 		
 		dlx = yearNow - licenseYear;

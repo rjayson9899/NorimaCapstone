@@ -514,7 +514,33 @@ public class PASApp {
 				System.out.println();
 			}
 			
-		} while (choice != 8);		
+		} while (choice != 8);
+		
+		//DEBUG
+		// ===========================================================================================
+		System.out.println("Data dump");
+		CustomerAccount.printCustomerAccountHeader();
+		for (CustomerAccount cstObj: customerList) {
+			cstObj.printCustomerAccountDetails();
+		}
+		CustomerAccount.printPolicyHeader();
+		for (CustomerAccount cstObj: customerList) {
+			cstObj.printPolicies();
+		}
+		CustomerAccount.printVehicleHeader();
+		for(CustomerAccount cstObj: customerList) {
+			cstObj.printVehicles();
+		}
+		CustomerAccount.printPolicyHolderHeader();
+		for(CustomerAccount cstObj: customerList) {
+			cstObj.printPolicyHolders();
+		}
+		Claim.printClaimHeader();
+		for (Claim clmObj: claimList) {
+			clmObj.printClaimDetails();
+		}
+		// ===========================================================================================
+		
 	}
 	
 	// HELPER METHODS
@@ -570,13 +596,13 @@ public class PASApp {
 			make = getStringWord("Enter make: ");
 			model = getStringWord("Enter model: ");
 			
-			// Gets Year of vehicle, requires input to be between 1900 and current year
+			// Gets Year of vehicle, range is between now and 40 years before
 			do {
 				year = getIntLimitedInput("Enter year: ", 4, true);
-				if (year > yearNow || year < 1900) {
-					System.out.println("\nCar year must be between 1900 and " + yearNow + "\n");
+				if (year > yearNow || year < (yearNow - 39)) {
+					System.out.println("\nCar year must be between " + (yearNow - 39) + " and " + yearNow + "\n");
 				}
-			} while (year > yearNow || year < 1900);
+			} while (year > yearNow || year < (yearNow - 39));
 			
 			
 			type = getStringWord("Enter type: ");
