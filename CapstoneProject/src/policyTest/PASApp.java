@@ -1,7 +1,6 @@
 package policyTest;
 
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
